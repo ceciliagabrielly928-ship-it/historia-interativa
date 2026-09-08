@@ -1,6 +1,7 @@
 # app.py
 import streamlit as st
 from story import HISTORY, get_cena
+import streamlit.components.v1 as components
 
 # Configuração da página
 st.set_page_config(
@@ -14,9 +15,9 @@ st.set_page_config(
 def aplicar_css():
     st.markdown("""
         <style>
-        /* RESET COMPLETO */
+        /* RESET COMPLETO - REMOVE TUDO DO STREAMLIT */
         .stApp {
-            background: #1a1a1a !important;
+            background: #0a0a0a !important;
         }
         
         .main > div {
@@ -27,6 +28,7 @@ def aplicar_css():
         .block-container {
             padding: 0 !important;
             max-width: 100% !important;
+            padding-top: 0 !important;
         }
         
         /* Esconder TODOS os elementos do Streamlit */
@@ -35,8 +37,14 @@ def aplicar_css():
         header {display: none !important;}
         .stDeployButton {display: none !important;}
         .stAlert {display: none !important;}
+        .stException {display: none !important;}
         
-        /* Container principal - fundo preto */
+        /* Esconder qualquer botão do Streamlit */
+        .stButton button {
+            display: none !important;
+        }
+        
+        /* Container principal */
         .main-container {
             background: #0a0a0a;
             min-height: 100vh;
@@ -62,12 +70,12 @@ def aplicar_css():
             font-family: 'Georgia', serif;
             margin-bottom: 10px;
             letter-spacing: 4px;
-            text-shadow: 0 0 60px rgba(255,215,0,0.2);
+            text-shadow: 0 0 60px rgba(212,168,67,0.15);
         }
         
         .subtitulo {
-            font-size: 1.2rem;
-            color: #888;
+            font-size: 1rem;
+            color: #666;
             font-family: 'Arial', sans-serif;
             margin-bottom: 30px;
             letter-spacing: 6px;
@@ -75,18 +83,18 @@ def aplicar_css():
         }
         
         .linha-dourada {
-            width: 80px;
+            width: 60px;
             height: 2px;
             background: #d4a843;
-            margin: 20px auto;
+            margin: 15px auto 25px auto;
         }
         
         /* Imagem da capa */
         .capa-container {
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(212,168,67,0.1);
-            margin: 20px 0 30px 0;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+            margin: 20px 0 35px 0;
         }
         
         .capa-container img {
@@ -101,7 +109,7 @@ def aplicar_css():
             padding: 18px 60px;
             background: #d4a843;
             color: #0a0a0a !important;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 4px;
@@ -109,14 +117,14 @@ def aplicar_css():
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
             font-family: 'Arial', sans-serif;
+            text-decoration: none;
         }
         
         .btn-comecar:hover {
             background: #e8c86a;
             transform: scale(1.02);
-            box-shadow: 0 10px 40px rgba(212,168,67,0.4);
+            box-shadow: 0 10px 40px rgba(212,168,67,0.3);
         }
         
         /* ===== PÁGINA DA HISTÓRIA ===== */
@@ -139,11 +147,11 @@ def aplicar_css():
             display: block;
             width: 100%;
             max-width: 400px;
-            margin: 30px auto 0 auto;
+            margin: 35px auto 0 auto;
             padding: 16px;
             background: transparent;
             color: #d4a843;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 6px;
@@ -163,10 +171,10 @@ def aplicar_css():
         /* ===== TELA DE ESCOLHA ===== */
         .pergunta-escolha {
             color: #ffffff;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 300;
             text-align: center;
-            margin: 30px 0;
+            margin: 30px 0 25px 0;
             font-family: 'Georgia', serif;
             letter-spacing: 2px;
         }
@@ -183,7 +191,7 @@ def aplicar_css():
             padding: 16px 20px;
             background: transparent;
             color: #ffffff;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 3px;
@@ -210,7 +218,7 @@ def aplicar_css():
         
         .mensagem-final {
             color: #d4a843;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 300;
             font-family: 'Georgia', serif;
             margin: 30px 0;
@@ -222,7 +230,7 @@ def aplicar_css():
             padding: 14px 40px;
             background: transparent;
             color: #888;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 4px;
@@ -254,7 +262,12 @@ def aplicar_css():
             }
             
             .pergunta-escolha {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
+            }
+            
+            .btn-comecar {
+                padding: 14px 40px;
+                font-size: 0.9rem;
             }
         }
         </style>
@@ -299,41 +312,33 @@ if cena:
             <div class="capa-container">
                 <img src="{cena['imagem']}" alt="Capa da história">
             </div>
-            
-            <button class="btn-comecar" onclick="window.location.href='?comecar=true'">▶ COMEÇAR</button>
         </div>
         """, unsafe_allow_html=True)
         
-        # Botão começar (Streamlit)
+        # BOTÃO COMEÇAR USANDO STREAMLIT (funciona 100%)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("", key="btn_comecar", use_container_width=True, type="primary"):
+            if st.button("▶ COMEÇAR", key="btn_comecar", use_container_width=True):
                 ir_para_cena("cena_01")
         
-        # Esconder o botão do Streamlit (vamos mostrar só o HTML)
+        # Esconder o botão do Streamlit e mostrar um HTML estilizado
         st.markdown("""
         <style>
+        /* Esconder o botão original do Streamlit */
         .stButton button {
             display: none !important;
         }
         </style>
         """, unsafe_allow_html=True)
         
-        # JavaScript para o botão HTML
-        st.markdown("""
-        <script>
-        document.querySelector('.btn-comecar').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = window.location.href.split('?')[0] + '?comecar=true';
-        });
-        </script>
-        """, unsafe_allow_html=True)
-        
-        # Detectar clique no botão HTML
-        import urllib.parse
-        query_params = st.query_params
-        if query_params.get("comecar") == "true":
-            ir_para_cena("cena_01")
+        # HTML do botão bonito que chama o botão do Streamlit
+        components.html("""
+        <div style="display:flex; justify-content:center; margin-top:10px;">
+            <button class="btn-comecar" onclick="document.querySelector('.stButton button').click();">
+                ▶ COMEÇAR
+            </button>
+        </div>
+        """, height=80)
     
     # ===== CENA NORMAL =====
     elif cena["tipo"] == "cena":
@@ -344,26 +349,19 @@ if cena:
             <img src="{cena['imagem']}" class="imagem-historia" alt="Página da história">
         """, unsafe_allow_html=True)
         
-        # Botão continuar (HTML)
-        st.markdown("""
-            <button class="btn-continuar" id="btn-continuar">▶ CONTINUAR</button>
-        """, unsafe_allow_html=True)
-        
-        # Botão Streamlit escondido
+        # Botão continuar (Streamlit escondido)
         if st.button("", key="btn_continuar", use_container_width=True):
             if "proxima" in cena:
                 ir_para_cena(cena["proxima"])
         
-        st.markdown("""
-        <style>
-        .stButton button {display: none !important;}
-        </style>
-        <script>
-        document.getElementById('btn-continuar').addEventListener('click', function() {
-            document.querySelector('.stButton button').click();
-        });
-        </script>
-        """, unsafe_allow_html=True)
+        # HTML do botão bonito
+        components.html("""
+        <div style="display:flex; justify-content:center; margin-top:30px;">
+            <button class="btn-continuar" onclick="document.querySelector('.stButton button').click();">
+                ▶ CONTINUAR
+            </button>
+        </div>
+        """, height=80)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -381,17 +379,9 @@ if cena:
             <p class="pergunta-escolha">{cena.get("pergunta", "O que fazer?")}</p>
         """, unsafe_allow_html=True)
         
-        # Botões de escolha (HTML)
+        # Botões Streamlit escondidos
         opcoes = list(cena["opcoes"].items())
         if len(opcoes) >= 2:
-            st.markdown(f"""
-            <div class="container-escolhas">
-                <button class="btn-escolha" id="escolha_1">{opcoes[0][0]}</button>
-                <button class="btn-escolha" id="escolha_2">{opcoes[1][0]}</button>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Botões Streamlit escondidos
             col1, col2 = st.columns(2)
             with col1:
                 if st.button("", key="escolha_1", use_container_width=True):
@@ -400,19 +390,17 @@ if cena:
                 if st.button("", key="escolha_2", use_container_width=True):
                     ir_para_cena(opcoes[1][1])
             
-            st.markdown("""
-            <style>
-            .stButton button {display: none !important;}
-            </style>
-            <script>
-            document.getElementById('escolha_1').addEventListener('click', function() {
-                document.querySelectorAll('.stButton button')[0].click();
-            });
-            document.getElementById('escolha_2').addEventListener('click', function() {
-                document.querySelectorAll('.stButton button')[1].click();
-            });
-            </script>
-            """, unsafe_allow_html=True)
+            # HTML dos botões bonitos
+            components.html(f"""
+            <div style="display:flex; gap:20px; justify-content:center; max-width:700px; margin:0 auto;">
+                <button class="btn-escolha" onclick="document.querySelectorAll('.stButton button')[0].click();" style="flex:1;">
+                    {opcoes[0][0]}
+                </button>
+                <button class="btn-escolha" onclick="document.querySelectorAll('.stButton button')[1].click();" style="flex:1;">
+                    {opcoes[1][0]}
+                </button>
+            </div>
+            """, height=100)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -431,24 +419,18 @@ if cena:
                 <p class="mensagem-final">✦ {cena['mensagem']} ✦</p>
             """, unsafe_allow_html=True)
         
-        # Botão reiniciar
-        st.markdown("""
-            <button class="btn-reiniciar" id="btn-reiniciar">↻ RECOMEÇAR</button>
-        """, unsafe_allow_html=True)
-        
+        # Botão reiniciar (Streamlit escondido)
         if st.button("", key="btn_reiniciar", use_container_width=True):
             reiniciar_historia()
         
-        st.markdown("""
-        <style>
-        .stButton button {display: none !important;}
-        </style>
-        <script>
-        document.getElementById('btn-reiniciar').addEventListener('click', function() {
-            document.querySelector('.stButton button').click();
-        });
-        </script>
-        """, unsafe_allow_html=True)
+        # HTML do botão bonito
+        components.html("""
+        <div style="display:flex; justify-content:center; margin-top:10px;">
+            <button class="btn-reiniciar" onclick="document.querySelector('.stButton button').click();">
+                ↻ RECOMEÇAR
+            </button>
+        </div>
+        """, height=80)
         
         st.markdown('</div>', unsafe_allow_html=True)
 
