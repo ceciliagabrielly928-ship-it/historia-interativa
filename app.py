@@ -1,287 +1,269 @@
 # app.py
 import streamlit as st
 from story import HISTORY, get_cena
-import base64
 
 # Configuração da página
 st.set_page_config(
-    page_title="História em Quadrinhos Interativa",
-    page_icon="🎨",
+    page_title="História em Quadrinhos",
+    page_icon="📚",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# CSS SUPER ESTILIZADO
+# CSS para layout de QUADRINHO
 def aplicar_css():
     st.markdown("""
         <style>
-        /* Reset e fundo */
+        /* RESET COMPLETO */
         .stApp {
-            background: linear-gradient(135deg, #0F0E17 0%, #1A1A2E 50%, #16213E 100%);
+            background: #1a1a1a !important;
         }
         
         .main > div {
             padding: 0 !important;
+            max-width: 100% !important;
         }
         
-        /* Container principal */
+        .block-container {
+            padding: 0 !important;
+            max-width: 100% !important;
+        }
+        
+        /* Esconder TODOS os elementos do Streamlit */
+        #MainMenu {display: none !important;}
+        footer {display: none !important;}
+        header {display: none !important;}
+        .stDeployButton {display: none !important;}
+        .stAlert {display: none !important;}
+        
+        /* Container principal - fundo preto */
         .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            background: #0a0a0a;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         
-        /* Título da história */
-        .titulo-historia {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 50%, #FFD93D 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-            margin: 20px 0;
-            font-family: 'Georgia', serif;
-            text-shadow: 0 0 40px rgba(255,107,107,0.3);
-            letter-spacing: 2px;
-        }
-        
-        /* Descrição */
-        .descricao-historia {
-            font-size: 1.2rem;
-            color: #A8A8B3;
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-            font-family: 'Arial', sans-serif;
-            line-height: 1.8;
-            padding: 0 20px;
-        }
-        
-        /* Container da imagem */
-        .imagem-container {
-            width: 100%;
+        /* ===== TELA INICIAL ===== */
+        .pagina-inicial {
             max-width: 900px;
-            margin: 0 auto;
-            border-radius: 20px;
+            width: 100%;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .titulo-principal {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            font-family: 'Georgia', serif;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 60px rgba(255,215,0,0.2);
+        }
+        
+        .subtitulo {
+            font-size: 1.2rem;
+            color: #888;
+            font-family: 'Arial', sans-serif;
+            margin-bottom: 30px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+        }
+        
+        .linha-dourada {
+            width: 80px;
+            height: 2px;
+            background: #d4a843;
+            margin: 20px auto;
+        }
+        
+        /* Imagem da capa */
+        .capa-container {
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 80px rgba(255,107,107,0.1);
-            transition: transform 0.3s ease;
-            position: relative;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(212,168,67,0.1);
+            margin: 20px 0 30px 0;
         }
         
-        .imagem-container:hover {
-            transform: scale(1.01);
+        .capa-container img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
         
-        .imagem-container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #FF6B6B, #FF8E53, #FFD93D, #6C5CE7);
-            background-size: 400% 400%;
-            border-radius: 22px;
-            z-index: -1;
-            animation: gradient 3s ease infinite;
+        /* ===== BOTÃO COMEÇAR ===== */
+        .btn-comecar {
+            display: inline-block;
+            padding: 18px 60px;
+            background: #d4a843;
+            color: #0a0a0a !important;
+            font-size: 1.2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: 'Arial', sans-serif;
         }
         
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .btn-comecar:hover {
+            background: #e8c86a;
+            transform: scale(1.02);
+            box-shadow: 0 10px 40px rgba(212,168,67,0.4);
+        }
+        
+        /* ===== PÁGINA DA HISTÓRIA ===== */
+        .historia-container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
         }
         
         .imagem-historia {
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 20px;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
         
-        /* Pergunta de escolha */
-        .pergunta-escolha {
-            font-size: 1.8rem;
-            color: #FFFFFF;
-            text-align: center;
-            margin: 30px 0;
-            font-weight: bold;
-            text-shadow: 0 0 30px rgba(255,107,107,0.3);
-            font-family: 'Georgia', serif;
-        }
-        
-        .pergunta-escolha::before {
-            content: '⚡ ';
-        }
-        
-        .pergunta-escolha::after {
-            content: ' ⚡';
-        }
-        
-        /* Mensagem final */
-        .mensagem-final {
-            font-size: 1.5rem;
-            color: #FFD93D;
-            text-align: center;
-            margin: 30px 0;
-            font-weight: bold;
-            text-shadow: 0 0 30px rgba(255,217,61,0.3);
-            background: rgba(255,107,107,0.1);
-            padding: 20px 40px;
-            border-radius: 15px;
-            border: 2px solid rgba(255,107,107,0.2);
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Botões personalizados */
-        .stButton > button {
+        /* ===== BOTÃO CONTINUAR ===== */
+        .btn-continuar {
+            display: block;
             width: 100%;
-            padding: 16px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 15px;
-            border: none;
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
-            color: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(255,107,107,0.3);
+            max-width: 400px;
+            margin: 30px auto 0 auto;
+            padding: 16px;
+            background: transparent;
+            color: #d4a843;
+            font-size: 1rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        .stButton > button:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(255,107,107,0.5);
-            background: linear-gradient(135deg, #FF8E53 0%, #FFD93D 100%);
-        }
-        
-        .stButton > button:active {
-            transform: translateY(0px) scale(0.98);
-        }
-        
-        /* Botões de escolha */
-        .botao-escolha {
-            width: 100%;
-            padding: 18px 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 15px;
-            border: 2px solid rgba(255,107,107,0.3);
-            background: rgba(255,107,107,0.1);
-            color: white;
-            transition: all 0.3s ease;
+            letter-spacing: 6px;
+            border: 2px solid #d4a843;
+            border-radius: 4px;
             cursor: pointer;
-            backdrop-filter: blur(10px);
-            text-align: center;
+            transition: all 0.3s ease;
             font-family: 'Arial', sans-serif;
+            text-align: center;
         }
         
-        .botao-escolha:hover {
-            background: rgba(255,107,107,0.3);
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(255,107,107,0.3);
-            border-color: #FF6B6B;
+        .btn-continuar:hover {
+            background: #d4a843;
+            color: #0a0a0a;
         }
         
-        /* Indicador de progresso */
-        .indicador-cena {
-            color: rgba(255,255,255,0.3);
+        /* ===== TELA DE ESCOLHA ===== */
+        .pergunta-escolha {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 300;
             text-align: center;
-            font-size: 0.9rem;
-            margin-top: 20px;
-            font-family: 'Arial', sans-serif;
-            letter-spacing: 3px;
+            margin: 30px 0;
+            font-family: 'Georgia', serif;
+            letter-spacing: 2px;
+        }
+        
+        .container-escolhas {
+            display: flex;
+            gap: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .btn-escolha {
+            flex: 1;
+            padding: 16px 20px;
+            background: transparent;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 3px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
         }
         
-        /* Esconder elementos do Streamlit */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        header {visibility: hidden;}
+        .btn-escolha:hover {
+            border-color: #d4a843;
+            color: #d4a843;
+            background: rgba(212,168,67,0.05);
+        }
         
-        /* Responsividade */
+        /* ===== TELA FINAL ===== */
+        .final-container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .mensagem-final {
+            color: #d4a843;
+            font-size: 1.4rem;
+            font-weight: 300;
+            font-family: 'Georgia', serif;
+            margin: 30px 0;
+            letter-spacing: 2px;
+        }
+        
+        .btn-reiniciar {
+            display: inline-block;
+            padding: 14px 40px;
+            background: transparent;
+            color: #888;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .btn-reiniciar:hover {
+            border-color: #d4a843;
+            color: #d4a843;
+        }
+        
+        /* ===== RESPONSIVO ===== */
         @media (max-width: 768px) {
-            .titulo-historia {
-                font-size: 2.5rem;
+            .titulo-principal {
+                font-size: 2.8rem;
             }
             
-            .descricao-historia {
-                font-size: 1rem;
-                padding: 0 20px;
+            .container-escolhas {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .btn-escolha {
+                padding: 14px;
             }
             
             .pergunta-escolha {
-                font-size: 1.3rem;
-            }
-            
-            .stButton > button {
-                font-size: 1rem;
-                padding: 14px 20px;
-            }
-            
-            .botao-escolha {
-                font-size: 0.9rem;
-                padding: 14px 15px;
-            }
-            
-            .mensagem-final {
                 font-size: 1.2rem;
-                padding: 15px 20px;
             }
-        }
-        
-        /* Animação de fade in */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .fade-in {
-            animation: fadeInUp 0.6s ease-out;
-        }
-        
-        /* Linha decorativa */
-        .linha-decorativa {
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, #FF6B6B, #FFD93D);
-            margin: 20px auto;
-            border-radius: 3px;
         }
         </style>
     """, unsafe_allow_html=True)
 
-# Função para exibir imagem com estilo
-def exibir_imagem(caminho_imagem):
-    try:
-        st.markdown(f"""
-            <div class="imagem-container fade-in">
-                <img src="{caminho_imagem}" class="imagem-historia" alt="Página da história">
-            </div>
-        """, unsafe_allow_html=True)
-    except Exception as e:
-        st.error(f"❌ Erro ao carregar imagem: {e}")
-        st.info(f"Verifique se a imagem '{caminho_imagem}' existe na pasta assets/images/")
-
-# Funções de navegação
+# --- FUNÇÕES DE NAVEGAÇÃO ---
 def inicializar_estado():
     if "cena_atual" not in st.session_state:
         st.session_state.cena_atual = "inicio"
-    if "historico" not in st.session_state:
-        st.session_state.historico = []
 
 def ir_para_cena(cena_id):
     if cena_id in HISTORY:
@@ -290,85 +272,184 @@ def ir_para_cena(cena_id):
 
 def reiniciar_historia():
     st.session_state.cena_atual = "inicio"
-    st.session_state.historico = []
     st.rerun()
 
-# Aplicar CSS
+# --- APLICAR CSS ---
 aplicar_css()
 
-# Inicializar estado
+# --- INICIALIZAR ---
 inicializar_estado()
 
-# Container principal
+# --- CONTAINER PRINCIPAL ---
 st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
-# Obter cena atual
+# --- PEGAR CENA ATUAL ---
 cena_id = st.session_state.cena_atual
 cena = get_cena(cena_id)
 
 if cena:
-    # TELA INICIAL
+    # ===== TELA INICIAL =====
     if cena["tipo"] == "inicio":
+        st.markdown(f"""
+        <div class="pagina-inicial">
+            <h1 class="titulo-principal">{cena.get("titulo", "História")}</h1>
+            <div class="linha-dourada"></div>
+            <p class="subtitulo">{cena.get("descricao", "")}</p>
+            
+            <div class="capa-container">
+                <img src="{cena['imagem']}" alt="Capa da história">
+            </div>
+            
+            <button class="btn-comecar" onclick="window.location.href='?comecar=true'">▶ COMEÇAR</button>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Botão começar (Streamlit)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.markdown(f'<h1 class="titulo-historia fade-in">{cena.get("titulo", "História em Quadrinhos")}</h1>', unsafe_allow_html=True)
-            st.markdown('<div class="linha-decorativa"></div>', unsafe_allow_html=True)
-            
-            exibir_imagem(cena["imagem"])
-            
-            if "descricao" in cena:
-                st.markdown(f'<p class="descricao-historia fade-in">{cena["descricao"]}</p>', unsafe_allow_html=True)
-            
-            if st.button("🌟 Começar a História", key="btn_comecar", use_container_width=True):
-                if "cena_01" in HISTORY:
-                    ir_para_cena("cena_01")
-                else:
-                    st.error("Erro: Primeira cena não encontrada!")
+            if st.button("", key="btn_comecar", use_container_width=True, type="primary"):
+                ir_para_cena("cena_01")
+        
+        # Esconder o botão do Streamlit (vamos mostrar só o HTML)
+        st.markdown("""
+        <style>
+        .stButton button {
+            display: none !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # JavaScript para o botão HTML
+        st.markdown("""
+        <script>
+        document.querySelector('.btn-comecar').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = window.location.href.split('?')[0] + '?comecar=true';
+        });
+        </script>
+        """, unsafe_allow_html=True)
+        
+        # Detectar clique no botão HTML
+        import urllib.parse
+        query_params = st.query_params
+        if query_params.get("comecar") == "true":
+            ir_para_cena("cena_01")
     
-    # CENA NORMAL
+    # ===== CENA NORMAL =====
     elif cena["tipo"] == "cena":
-        exibir_imagem(cena["imagem"])
+        st.markdown('<div class="historia-container">', unsafe_allow_html=True)
         
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("▶ Continuar", key="btn_continuar", use_container_width=True):
-                if "proxima" in cena:
-                    ir_para_cena(cena["proxima"])
-                else:
-                    st.error("Erro: Próxima cena não definida!")
+        # Imagem
+        st.markdown(f"""
+            <img src="{cena['imagem']}" class="imagem-historia" alt="Página da história">
+        """, unsafe_allow_html=True)
         
-        st.markdown(f'<p class="indicador-cena">📖 {cena_id.replace("_", " ").title()}</p>', unsafe_allow_html=True)
+        # Botão continuar (HTML)
+        st.markdown("""
+            <button class="btn-continuar" id="btn-continuar">▶ CONTINUAR</button>
+        """, unsafe_allow_html=True)
+        
+        # Botão Streamlit escondido
+        if st.button("", key="btn_continuar", use_container_width=True):
+            if "proxima" in cena:
+                ir_para_cena(cena["proxima"])
+        
+        st.markdown("""
+        <style>
+        .stButton button {display: none !important;}
+        </style>
+        <script>
+        document.getElementById('btn-continuar').addEventListener('click', function() {
+            document.querySelector('.stButton button').click();
+        });
+        </script>
+        """, unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
     
-    # CENA DE ESCOLHA
+    # ===== CENA DE ESCOLHA =====
     elif cena["tipo"] == "escolha":
-        exibir_imagem(cena["imagem"])
+        st.markdown('<div class="historia-container">', unsafe_allow_html=True)
         
-        st.markdown(f'<p class="pergunta-escolha">{cena.get("pergunta", "O que fazer?")}</p>', unsafe_allow_html=True)
+        # Imagem
+        st.markdown(f"""
+            <img src="{cena['imagem']}" class="imagem-historia" alt="Página da história">
+        """, unsafe_allow_html=True)
         
-        col1, col2 = st.columns(2)
+        # Pergunta
+        st.markdown(f"""
+            <p class="pergunta-escolha">{cena.get("pergunta", "O que fazer?")}</p>
+        """, unsafe_allow_html=True)
         
+        # Botões de escolha (HTML)
         opcoes = list(cena["opcoes"].items())
         if len(opcoes) >= 2:
-            with col1:
-                if st.button(f"✨ {opcoes[0][0]}", key="escolha_1", use_container_width=True):
-                    ir_para_cena(opcoes[0][1])
+            st.markdown(f"""
+            <div class="container-escolhas">
+                <button class="btn-escolha" id="escolha_1">{opcoes[0][0]}</button>
+                <button class="btn-escolha" id="escolha_2">{opcoes[1][0]}</button>
+            </div>
+            """, unsafe_allow_html=True)
             
+            # Botões Streamlit escondidos
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("", key="escolha_1", use_container_width=True):
+                    ir_para_cena(opcoes[0][1])
             with col2:
-                if st.button(f"🔥 {opcoes[1][0]}", key="escolha_2", use_container_width=True):
+                if st.button("", key="escolha_2", use_container_width=True):
                     ir_para_cena(opcoes[1][1])
+            
+            st.markdown("""
+            <style>
+            .stButton button {display: none !important;}
+            </style>
+            <script>
+            document.getElementById('escolha_1').addEventListener('click', function() {
+                document.querySelectorAll('.stButton button')[0].click();
+            });
+            document.getElementById('escolha_2').addEventListener('click', function() {
+                document.querySelectorAll('.stButton button')[1].click();
+            });
+            </script>
+            """, unsafe_allow_html=True)
         
-        st.markdown(f'<p class="indicador-cena">📖 {cena_id.replace("_", " ").title()}</p>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
     
-    # FINAL
+    # ===== FINAL =====
     elif cena["tipo"] == "final":
-        exibir_imagem(cena["imagem"])
+        st.markdown('<div class="final-container">', unsafe_allow_html=True)
         
+        # Imagem
+        st.markdown(f"""
+            <img src="{cena['imagem']}" class="imagem-historia" alt="Final da história">
+        """, unsafe_allow_html=True)
+        
+        # Mensagem
         if "mensagem" in cena:
-            st.markdown(f'<p class="mensagem-final fade-in">🎬 {cena["mensagem"]}</p>', unsafe_allow_html=True)
+            st.markdown(f"""
+                <p class="mensagem-final">✦ {cena['mensagem']} ✦</p>
+            """, unsafe_allow_html=True)
         
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("🔄 Recomeçar História", key="btn_reiniciar", use_container_width=True):
-                reiniciar_historia()
+        # Botão reiniciar
+        st.markdown("""
+            <button class="btn-reiniciar" id="btn-reiniciar">↻ RECOMEÇAR</button>
+        """, unsafe_allow_html=True)
+        
+        if st.button("", key="btn_reiniciar", use_container_width=True):
+            reiniciar_historia()
+        
+        st.markdown("""
+        <style>
+        .stButton button {display: none !important;}
+        </style>
+        <script>
+        document.getElementById('btn-reiniciar').addEventListener('click', function() {
+            document.querySelector('.stButton button').click();
+        });
+        </script>
+        """, unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
