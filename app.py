@@ -10,11 +10,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# CSS - REMOVE TUDO
+# CSS BÁSICO E LIMPO
 def aplicar_css():
     st.markdown("""
         <style>
-        /* Remove TUDO do Streamlit */
+        /* Remove tudo do Streamlit */
         .stApp {
             background: #0a0a0a !important;
         }
@@ -31,12 +31,6 @@ def aplicar_css():
         footer {display: none !important;}
         header {display: none !important;}
         .stDeployButton {display: none !important;}
-        .stAlert {display: none !important;}
-        
-        /* Remove os labels dos botões */
-        .stButton > label {
-            display: none !important;
-        }
         
         /* Container principal */
         .main-container {
@@ -91,7 +85,7 @@ def aplicar_css():
             display: block;
         }
         
-        /* Botões - ESTILIZAÇÃO SEM TEXTOS */
+        /* Botões - TODOS OS BOTÕES USAM STREAMLIT */
         .stButton button {
             width: 100% !important;
             padding: 16px 40px !important;
@@ -105,7 +99,6 @@ def aplicar_css():
             color: #d4a843 !important;
             transition: all 0.3s ease !important;
             font-family: 'Arial', sans-serif !important;
-            margin: 0 !important;
         }
         
         .stButton button:hover {
@@ -143,12 +136,6 @@ def aplicar_css():
             text-align: center;
             margin: 30px 0;
             font-family: 'Georgia', serif;
-        }
-        
-        /* Remove espaços extras dos botões */
-        .element-container {
-            margin: 0 !important;
-            padding: 0 !important;
         }
         
         /* Responsivo */
@@ -200,10 +187,10 @@ if cena:
             <p class="subtitulo">{cena.get("descricao", "")}</p>
         """, unsafe_allow_html=True)
         
-        # Capa
+        # Capa - ALT VAZIO!
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="Capa">
+                <img src="{cena['imagem']}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
@@ -217,10 +204,10 @@ if cena:
     
     # ===== CENA NORMAL =====
     elif cena["tipo"] == "cena":
-        # Imagem
+        # Imagem - ALT VAZIO!
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="Página">
+                <img src="{cena['imagem']}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
@@ -233,10 +220,10 @@ if cena:
     
     # ===== CENA DE ESCOLHA =====
     elif cena["tipo"] == "escolha":
-        # Imagem
+        # Imagem - ALT VAZIO!
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="Página">
+                <img src="{cena['imagem']}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
@@ -248,18 +235,18 @@ if cena:
         if len(opcoes) >= 2:
             col1, col2 = st.columns(2)
             with col1:
-                if st.button(f"{opcoes[0][0]}", key="escolha_1", use_container_width=True):
+                if st.button(opcoes[0][0], key="escolha_1", use_container_width=True):
                     ir_para_cena(opcoes[0][1])
             with col2:
-                if st.button(f"{opcoes[1][0]}", key="escolha_2", use_container_width=True):
+                if st.button(opcoes[1][0], key="escolha_2", use_container_width=True):
                     ir_para_cena(opcoes[1][1])
     
     # ===== FINAL =====
     elif cena["tipo"] == "final":
-        # Imagem
+        # Imagem - ALT VAZIO!
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="Final">
+                <img src="{cena['imagem']}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
