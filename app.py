@@ -252,7 +252,7 @@ if cena:
         
         # Mensagem
         if "mensagem" in cena:
-            st.markdown(f'<p class="mensagem">✦ {cena["mensagem"]} ✦</p>', unsafe_allow_html=True)
+            st.markdown(f'<p class="mensagem"> {cena["mensagem"]}, unsafe_allow_html=True)
         
         # Botão RECOMEÇAR
         col1, col2, col3 = st.columns([1, 2, 1])
