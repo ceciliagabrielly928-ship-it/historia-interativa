@@ -58,13 +58,13 @@ HISTORY = {
     "final_a": {
         "tipo": "final",
         "imagem": "assets/images/final_a.png",
-        "mensagem": "Você seguiu pela floresta e encontrou o tesouro! 🌟"
+        "mensagem": "Você seguiu pela floresta e encontrou o tesouro! "
     },
     
     "final_b": {
         "tipo": "final",
         "imagem": "assets/images/final_b.png",
-        "mensagem": "Você voltou para a cidade e se tornou um herói respeitado! 🏆"
+        "mensagem": "Você voltou para a cidade e se tornou um herói respeitado! "
     }
 }
 
