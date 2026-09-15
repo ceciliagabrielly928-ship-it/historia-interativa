@@ -17,25 +17,25 @@ HISTORY = {
     # ==========================================
     "pagina_01": {
         "tipo": "cena",
-        "imagem": "assets/images/pagina_01.png",
+        "imagem": "assets/imagens/pagina_01.png",
         "proxima": "pagina_02"
     },
     
     "pagina_02": {
         "tipo": "cena",
-        "imagem": "assets/images/pagina_02.png",
+        "imagem": "assets/imagens/pagina_02.png",
         "proxima": "pagina_03"
     },
     
     "pagina_03": {
         "tipo": "cena",
-        "imagem": "assets/images/pagina_03.png",
+        "imagem": "assets/imagens/pagina_03.png",
         "proxima": "pagina_04"
     },
     
     "pagina_04": {
         "tipo": "cena",
-        "imagem": "assets/images/pagina_04.png",
+        "imagem": "assets/imagens/pagina_04.png",
         "proxima": "pagina_05"
     },
     
