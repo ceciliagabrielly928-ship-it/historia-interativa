@@ -8,7 +8,7 @@ HISTORY = {
     "inicio": {
         "tipo": "inicio",
         "imagem": "assets/imagens/capa.png",
-        "titulo": "A Garrafa do Futuro",
+        "titulo": "A Garrafa do Futuro!!!",
         "descricao": "Uma história sobre escolhas e o destino do planeta"
     },
     
