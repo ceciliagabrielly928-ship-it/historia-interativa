@@ -7,7 +7,7 @@ HISTORY = {
     # ==========================================
     "inicio": {
         "tipo": "inicio",
-        "imagem": "https://placehold.co/800x1200/1a4a1a/ffffff?text=PAGINA+07A",
+        "imagem": "/workspaces/historia-interativa/assets/imagens/capa.png",
         "titulo": "A Garrafa do Futuro",
         "descricao": "Uma história sobre escolhas e o destino do planeta"
     },
