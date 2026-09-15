@@ -19,7 +19,6 @@ st.set_page_config(
 def aplicar_css():
     st.markdown("""
         <style>
-        /* Remove tudo do Streamlit */
         .stApp { background: #0a0a0a !important; }
         .main > div { padding: 0 !important; max-width: 100% !important; }
         .block-container { padding: 0 !important; max-width: 100% !important; padding-top: 0 !important; }
@@ -28,7 +27,6 @@ def aplicar_css():
         header {display: none !important;}
         .stDeployButton {display: none !important;}
         
-        /* Container principal */
         .main-container {
             background: #0a0a0a;
             min-height: 100vh;
@@ -39,12 +37,11 @@ def aplicar_css():
             padding: 20px;
         }
         
-        /* Títulos */
         .titulo {
             font-size: 3.5rem;
             font-weight: 900;
             color: #ffffff;
-            font-family: 'Georgia', serif;
+            font-family: Georgia, serif;
             text-align: center;
             margin-bottom: 5px;
         }
@@ -65,7 +62,6 @@ def aplicar_css():
             margin: 10px auto 25px auto;
         }
         
-        /* Imagens */
         .imagem-container {
             max-width: 900px;
             width: 100%;
@@ -81,7 +77,6 @@ def aplicar_css():
             display: block;
         }
         
-        /* Botões */
         .stButton button {
             width: 100% !important;
             padding: 16px 40px !important;
@@ -94,7 +89,7 @@ def aplicar_css():
             background: transparent !important;
             color: #d4a843 !important;
             transition: all 0.3s ease !important;
-            font-family: 'Arial', sans-serif !important;
+            font-family: Arial, sans-serif !important;
         }
         
         .stButton button:hover {
@@ -103,7 +98,6 @@ def aplicar_css():
             box-shadow: 0 10px 40px rgba(212,168,67,0.3) !important;
         }
         
-        /* Botão COMEÇAR (dourado cheio) */
         .btn-comecar button {
             background: #d4a843 !important;
             color: #0a0a0a !important;
@@ -115,26 +109,23 @@ def aplicar_css():
             transform: scale(1.02) !important;
         }
         
-        /* Pergunta */
         .pergunta {
             color: #ffffff;
             font-size: 1.4rem;
             font-weight: 300;
             text-align: center;
             margin: 30px 0 20px 0;
-            font-family: 'Georgia', serif;
+            font-family: Georgia, serif;
         }
         
-        /* Mensagem final */
         .mensagem {
             color: #d4a843;
             font-size: 1.3rem;
             text-align: center;
             margin: 30px 0;
-            font-family: 'Georgia', serif;
+            font-family: Georgia, serif;
         }
         
-        /* Responsivo */
         @media (max-width: 768px) {
             .titulo { font-size: 2.5rem; }
             .stButton button { font-size: 0.8rem !important; padding: 14px 20px !important; }
@@ -144,7 +135,7 @@ def aplicar_css():
 
 
 # ==========================================
-# QUIZ - PERGUNTAS
+# DADOS DO QUIZ (2 perguntas = 2 desafios)
 # ==========================================
 PERGUNTAS_QUIZ = [
     {
@@ -171,13 +162,11 @@ PERGUNTAS_QUIZ = [
 
 
 # ==========================================
-# FUNÇÕES DE ESTADO
+# ESTADO
 # ==========================================
 def inicializar_estado():
     if "cena_atual" not in st.session_state:
         st.session_state.cena_atual = "inicio"
-    if "quiz_pergunta_atual" not in st.session_state:
-        st.session_state.quiz_pergunta_atual = 0
     if "quiz_pontuacao" not in st.session_state:
         st.session_state.quiz_pontuacao = 0
     if "quiz_respondeu" not in st.session_state:
@@ -190,21 +179,14 @@ def inicializar_estado():
 
 def ir_para_cena(cena_id):
     st.session_state.cena_atual = cena_id
+    st.session_state.quiz_respondeu = False
+    st.session_state.quiz_resposta_dada = None
+    st.session_state.quiz_finalizado = False
     st.rerun()
 
 
 def reiniciar_historia():
     st.session_state.cena_atual = "inicio"
-    st.session_state.quiz_pergunta_atual = 0
-    st.session_state.quiz_pontuacao = 0
-    st.session_state.quiz_respondeu = False
-    st.session_state.quiz_resposta_dada = None
-    st.session_state.quiz_finalizado = False
-    st.rerun()
-
-
-def reiniciar_quiz():
-    st.session_state.quiz_pergunta_atual = 0
     st.session_state.quiz_pontuacao = 0
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
@@ -213,18 +195,23 @@ def reiniciar_quiz():
 
 
 # ==========================================
-# RENDERIZAÇÃO: QUIZ
+# DESAFIO: QUIZ (usado para pergunta 1 e pergunta 2)
 # ==========================================
-def renderizar_quiz():
+def renderizar_quiz(numero_pergunta):
+    """numero_pergunta: 0 ou 1 (índice da pergunta)"""
+    
     st.markdown("""
         <style>
-        .quiz-container {
+        .quiz-wrapper {
+            background: #0d1f0d !important;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .quiz-box {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
-        
-        .card-pergunta {
+        .quiz-card {
             background: rgba(20, 40, 20, 0.9);
             border: 2px solid #4ade80;
             border-radius: 16px;
@@ -232,8 +219,7 @@ def renderizar_quiz():
             margin-bottom: 25px;
             box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
         }
-        
-        .numero-pergunta {
+        .quiz-numero {
             color: #4ade80;
             font-size: 0.9rem;
             font-weight: bold;
@@ -242,15 +228,13 @@ def renderizar_quiz():
             margin-bottom: 15px;
             font-family: Arial, sans-serif;
         }
-        
-        .texto-pergunta {
+        .quiz-texto {
             color: #ffffff;
             font-size: 1.15rem;
             line-height: 1.6;
             font-family: Georgia, serif;
         }
-        
-        .karla-icone {
+        .quiz-karla {
             display: inline-block;
             background: #4ade80;
             color: #0d1f0d;
@@ -264,183 +248,32 @@ def renderizar_quiz():
             margin-right: 10px;
             vertical-align: middle;
         }
-        
-        .feedback-acerto {
-            background: rgba(74, 222, 128, 0.15);
-            border-left: 4px solid #4ade80;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #4ade80;
-            font-size: 1.1rem;
-            font-weight: bold;
-            font-family: Arial, sans-serif;
-        }
-        
-        .feedback-erro {
-            background: rgba(239, 68, 68, 0.15);
-            border-left: 4px solid #ef4444;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #fca5a5;
-            font-size: 1.1rem;
-            font-weight: bold;
-            font-family: Arial, sans-serif;
-        }
-        
-        .resposta-correta {
-            color: #4ade80;
-            display: block;
-            margin-top: 10px;
-            font-size: 1rem;
-        }
-        
-        .resultado-final {
-            text-align: center;
-            padding: 40px;
-            background: rgba(20, 40, 20, 0.9);
-            border: 2px solid #4ade80;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.3);
-        }
-        
-        .resultado-titulo {
-            color: #4ade80;
-            font-size: 2.5rem;
-            font-family: Georgia, serif;
-            margin-bottom: 10px;
-        }
-        
-        .resultado-pontuacao {
-            color: #ffffff;
-            font-size: 3rem;
-            font-weight: bold;
-            font-family: Georgia, serif;
-            margin: 20px 0;
-        }
-        
-        .resultado-mensagem {
-            color: #a7f3d0;
-            font-size: 1.2rem;
-            font-family: Georgia, serif;
-            margin-top: 20px;
-            line-height: 1.6;
-        }
-        
-        .progresso {
-            color: #a7f3d0;
-            font-size: 0.9rem;
-            text-align: center;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            font-family: Arial, sans-serif;
-        }
-        
-        .barra-progresso {
-            width: 100%;
-            height: 6px;
-            background: rgba(74, 222, 128, 0.2);
-            border-radius: 3px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        
-        .barra-progresso-preenchida {
-            height: 100%;
-            background: linear-gradient(90deg, #4ade80, #22c55e);
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-        
-        /* Botões do quiz */
-        .quiz-container .stButton button {
-            border: 2px solid #4ade80 !important;
-            background: rgba(74, 222, 128, 0.1) !important;
-            color: #ffffff !important;
-            border-radius: 10px !important;
-            text-align: left !important;
-            text-transform: none !important;
-            letter-spacing: 0 !important;
-            padding: 16px 20px !important;
-            font-size: 1rem !important;
-        }
-        
-        .quiz-container .stButton button:hover {
-            background: rgba(74, 222, 128, 0.3) !important;
-            color: #ffffff !important;
-        }
         </style>
     """, unsafe_allow_html=True)
     
-    st.markdown('<div class="quiz-container">', unsafe_allow_html=True)
+    st.markdown('<div class="quiz-wrapper"><div class="quiz-box">', unsafe_allow_html=True)
     
-    total = len(PERGUNTAS_QUIZ)
+    pergunta = PERGUNTAS_QUIZ[numero_pergunta]
     
-    # ===== TELA FINAL =====
-    if st.session_state.quiz_finalizado:
-        pontuacao = st.session_state.quiz_pontuacao
-        
-        if pontuacao == total:
-            mensagem = "🌟 Perfeito! Karla está orgulhosa de vocês! O futuro do planeta está em boas mãos!"
-            emoji = "🏆"
-        elif pontuacao == 1:
-            mensagem = "💚 Muito bem! Vocês estão no caminho certo para salvar o futuro!"
-            emoji = "🌱"
-        else:
-            mensagem = "📚 Karla acredita em vocês! Revisem as decisões e tentem novamente."
-            emoji = "🌍"
-        
-        st.markdown(f"""
-            <div class="resultado-final">
-                <div style="font-size: 4rem; margin-bottom: 10px;">{emoji}</div>
-                <h1 class="resultado-titulo">Quiz Concluído!</h1>
-                <div class="resultado-pontuacao">{pontuacao} / {total}</div>
-                <p class="resultado-mensagem">{mensagem}</p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("🔄 Jogar Novamente", key="quiz_reiniciar"):
-                reiniciar_quiz()
-        st.markdown('</div>', unsafe_allow_html=True)
-        return
-    
-    # ===== PERGUNTA ATUAL =====
-    pergunta_atual = st.session_state.quiz_pergunta_atual
-    pergunta = PERGUNTAS_QUIZ[pergunta_atual]
-    progresso_pct = (pergunta_atual / total) * 100
-    
+    # Card da pergunta
     st.markdown(f"""
-        <div class="progresso">Pergunta {pergunta_atual + 1} de {total}</div>
-        <div class="barra-progresso">
-            <div class="barra-progresso-preenchida" style="width: {progresso_pct}%;"></div>
+        <div class="quiz-card">
+            <div class="quiz-numero">
+                <span class="quiz-karla">K</span> Desafio de Karla
+            </div>
+            <div class="quiz-texto">{pergunta["pergunta"]}</div>
         </div>
     """, unsafe_allow_html=True)
     
-    st.markdown(f"""
-        <div class="card-pergunta">
-            <div class="numero-pergunta">
-                <span class="karla-icone">K</span> Karla pergunta:
-            </div>
-            <div class="texto-pergunta">{pergunta["pergunta"]}</div>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # ===== NÃO RESPONDEU: MOSTRA BOTÕES =====
+    # ===== NÃO RESPONDEU =====
     if not st.session_state.quiz_respondeu:
         for letra, texto in pergunta["alternativas"].items():
-            if st.button(f"{letra})  {texto}", key=f"alt_{pergunta_atual}_{letra}"):
+            if st.button(f"{letra})  {texto}", key=f"alt_{numero_pergunta}_{letra}"):
                 st.session_state.quiz_respondeu = True
                 st.session_state.quiz_resposta_dada = letra
-                if letra == pergunta["correta"]:
-                    st.session_state.quiz_pontuacao += 1
                 st.rerun()
     
-    # ===== RESPONDEU: MOSTRA FEEDBACK =====
+    # ===== RESPONDEU =====
     else:
         resposta_dada = st.session_state.quiz_resposta_dada
         resposta_correta = pergunta["correta"]
@@ -448,7 +281,7 @@ def renderizar_quiz():
         for letra, texto in pergunta["alternativas"].items():
             if letra == resposta_correta:
                 st.markdown(f"""
-                    <div style="padding: 12px 20px; margin-bottom: 8px; border-radius: 10px;
+                    <div style="padding: 14px 20px; margin-bottom: 8px; border-radius: 10px;
                                 background: rgba(74, 222, 128, 0.2); border: 2px solid #4ade80;
                                 color: #ffffff; font-family: Arial;">
                         <strong>{letra})</strong> {texto} ✅
@@ -456,7 +289,7 @@ def renderizar_quiz():
                 """, unsafe_allow_html=True)
             elif letra == resposta_dada:
                 st.markdown(f"""
-                    <div style="padding: 12px 20px; margin-bottom: 8px; border-radius: 10px;
+                    <div style="padding: 14px 20px; margin-bottom: 8px; border-radius: 10px;
                                 background: rgba(239, 68, 68, 0.2); border: 2px solid #ef4444;
                                 color: #ffffff; font-family: Arial;">
                         <strong>{letra})</strong> {texto} ❌
@@ -464,7 +297,7 @@ def renderizar_quiz():
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                    <div style="padding: 12px 20px; margin-bottom: 8px; border-radius: 10px;
+                    <div style="padding: 14px 20px; margin-bottom: 8px; border-radius: 10px;
                                 background: rgba(255, 255, 255, 0.05); border: 1px solid #333;
                                 color: #888; font-family: Arial;">
                         <strong>{letra})</strong> {texto}
@@ -473,204 +306,182 @@ def renderizar_quiz():
         
         if resposta_dada == resposta_correta:
             st.markdown("""
-                <div class="feedback-acerto">
-                    ✅ Resposta correta! Vocês estão ajudando a salvar o futuro!
+                <div style="background: rgba(74, 222, 128, 0.15); border-left: 4px solid #4ade80;
+                            border-radius: 8px; padding: 20px; margin: 20px 0; color: #4ade80;
+                            font-size: 1.1rem; font-weight: bold; font-family: Arial;">
+                    ✅ Resposta correta! Karla está orgulhosa de vocês!
                 </div>
             """, unsafe_allow_html=True)
         else:
             texto_correto = pergunta["alternativas"][resposta_correta]
             st.markdown(f"""
-                <div class="feedback-erro">
-                    ❌ Resposta incorreta. Karla avisa que essa decisão não ajuda o planeta.
-                    <span class="resposta-correta">💡 Resposta correta: {resposta_correta}) {texto_correto}</span>
+                <div style="background: rgba(239, 68, 68, 0.15); border-left: 4px solid #ef4444;
+                            border-radius: 8px; padding: 20px; margin: 20px 0; color: #fca5a5;
+                            font-size: 1.1rem; font-weight: bold; font-family: Arial;">
+                    ❌ Resposta incorreta.
+                    <span style="color: #4ade80; display: block; margin-top: 10px; font-size: 1rem;">
+                        💡 Resposta correta: {resposta_correta}) {texto_correto}
+                    </span>
                 </div>
             """, unsafe_allow_html=True)
         
+        # Botão recomeçar
         st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if pergunta_atual < total - 1:
-                if st.button("➡️ Próxima Pergunta", key="quiz_proxima"):
-                    st.session_state.quiz_pergunta_atual += 1
-                    st.session_state.quiz_respondeu = False
-                    st.session_state.quiz_resposta_dada = None
-                    st.rerun()
-            else:
-                if st.button("🏁 Ver Resultado", key="quiz_ver_resultado"):
-                    st.session_state.quiz_finalizado = True
-                    st.rerun()
+            if st.button("↻ RECOMEÇAR HISTÓRIA", key=f"reiniciar_quiz_{numero_pergunta}"):
+                reiniciar_historia()
     
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
 
 # ==========================================
-# RENDERIZAÇÃO: DESAFIO DOS PLÁSTICOS (7 números)
+# DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
 # ==========================================
 def renderizar_desafio_plasticos():
-    st.markdown("""
-        <style>
-        .desafio-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .desafio-card {
+    html_desafio = """
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Arial, sans-serif;
             background: #f5f1e8;
+            color: #222;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto;
+            background: white;
             border-radius: 20px;
-            padding: 30px;
-            color: #222;
+            padding: 35px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
-        .desafio-card h1 {
+        h1 {
             text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
+            font-size: 28px;
+            margin-bottom: 25px;
             color: #222;
         }
-        .karla-box {
+        .karla {
             background: #f0f0f0;
             border-radius: 12px;
             padding: 18px;
-            margin-bottom: 20px;
-            font-size: 1rem;
+            margin-bottom: 25px;
+            font-size: 16px;
             line-height: 1.5;
             color: #222;
         }
-        .karla-box strong { display: block; margin-bottom: 5px; color: #222; }
+        .karla strong { display: block; margin-bottom: 5px; }
+        h2 {
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #222;
+        }
         .banco {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            margin: 20px 0;
+            margin-bottom: 30px;
         }
         .palavra {
             background: #eeeeee;
             border-radius: 8px;
             padding: 9px 13px;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 14px;
             color: #222;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    # HTML do desafio (JavaScript funcional)
-    html_desafio = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f1e8;
-            color: #222;
-            padding: 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-        h1 { text-align: center; font-size: 26px; margin-bottom: 20px; }
-        .karla {
-            background: #f0f0f0;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        .karla strong { display: block; margin-bottom: 5px; }
-        h2 { font-size: 18px; margin-top: 20px; margin-bottom: 10px; }
-        .banco {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-bottom: 25px;
-        }
-        .palavra {
-            background: #eeeeee;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-weight: bold;
-            font-size: 13px;
         }
         .numeros {
             display: flex;
             justify-content: space-between;
-            gap: 8px;
-            margin: 25px 0;
+            gap: 10px;
+            margin: 30px 0;
         }
         .numero {
             flex: 1;
-            min-height: 60px;
+            min-height: 70px;
             border: none;
             border-bottom: 3px solid #222;
             background: transparent;
-            font-size: 26px;
+            font-size: 30px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
+            color: #222;
         }
         .numero:hover { background: #f0f0f0; }
         .numero.selecionado { background: #e6e6e6; }
         .numero.concluido { border-bottom: 4px solid #333; background: #dcdcdc; }
-        .desafio-box {
+        .desafio {
             display: none;
             margin-top: 20px;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
             background: #f7f7f7;
         }
-        .desafio-box.ativo { display: block; }
-        .pista-titulo { font-weight: bold; font-size: 17px; margin-bottom: 10px; }
-        .pista { font-size: 16px; line-height: 1.5; margin-bottom: 18px; }
-        .opcoes { display: flex; flex-wrap: wrap; gap: 8px; }
+        .desafio.ativo { display: block; }
+        .pista-titulo {
+            font-weight: bold;
+            font-size: 19px;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        .pista {
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .opcoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
         .opcao {
             border: 2px solid #333;
             background: white;
             border-radius: 9px;
-            padding: 10px 15px;
+            padding: 11px 16px;
             cursor: pointer;
             font-weight: bold;
             transition: 0.2s;
+            font-size: 14px;
+            color: #222;
         }
         .opcao:hover { background: #eeeeee; }
         .opcao:disabled { cursor: default; }
-        .feedback { margin-top: 15px; font-weight: bold; font-size: 16px; min-height: 22px; }
-        .final-box {
+        .feedback {
+            margin-top: 18px;
+            font-weight: bold;
+            font-size: 17px;
+            min-height: 25px;
+        }
+        .final {
             display: none;
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 25px;
+            padding: 22px;
             background: #eeeeee;
             border-radius: 12px;
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-        }
-        .final-box button {
-            margin-top: 12px;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 8px;
-            background: #222;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
+            color: #222;
         }
         @media (max-width: 650px) {
-            .container { padding: 18px; }
-            h1 { font-size: 20px; }
-            .numeros { gap: 3px; }
-            .numero { font-size: 20px; min-height: 50px; }
-            .pista { font-size: 14px; }
+            .container { padding: 20px; }
+            h1 { font-size: 22px; }
+            .numeros { gap: 4px; }
+            .numero { font-size: 22px; min-height: 55px; }
+            .pista { font-size: 15px; }
         }
     </style>
     </head>
@@ -701,16 +512,14 @@ def renderizar_desafio_plasticos():
             <button class="numero" onclick="abrirDesafio(6)">⑥</button>
             <button class="numero" onclick="abrirDesafio(7)">⑦</button>
         </div>
-        <div id="desafio" class="desafio-box">
+        <div id="desafio" class="desafio">
             <div class="pista-titulo" id="pistaTitulo"></div>
             <div class="pista" id="pista"></div>
             <div class="opcoes" id="opcoes"></div>
             <div class="feedback" id="feedback"></div>
         </div>
-        <div id="final" class="final-box">
+        <div id="final" class="final">
             🎉 Parabéns! Você decodificou todos os tipos de plástico!
-            <br>
-            <button onclick="reiniciar()">Jogar novamente</button>
         </div>
     </div>
     <script>
@@ -773,44 +582,34 @@ def renderizar_desafio_plasticos():
             fb.style.color = "#b3261e";
         }
     }
-    
-    function reiniciar() {
-        resolvidos = [];
-        numeroAtual = null;
-        document.getElementById("final").style.display = "none";
-        document.getElementById("desafio").classList.remove("ativo");
-        document.querySelectorAll(".numero").forEach(b => {
-            b.classList.remove("concluido");
-            b.classList.remove("selecionado");
-        });
-    }
     </script>
     </body>
     </html>
     """
     
-    components.html(html_desafio, height=800, scrolling=True)
+    components.html(html_desafio, height=900, scrolling=True)
     
-    # Botão para voltar
+    # Botão recomeçar
     st.markdown("<br>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("⬅️ Voltar para o Quiz", key="voltar_quiz_plasticos"):
-            ir_para_cena("quiz")
+        if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_plasticos"):
+            reiniciar_historia()
 
 
 # ==========================================
-# RENDERIZAÇÃO: DESAFIO POLÍMERO
+# DESAFIO: POLÍMERO
 # ==========================================
 def renderizar_desafio_polimero():
     html_polimero = """
     <!DOCTYPE html>
-    <html>
+    <html lang="pt-BR">
     <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            margin: 0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -819,58 +618,74 @@ def renderizar_desafio_polimero():
             background: #f4f1eb;
             padding: 20px;
         }
-        .desafio-box {
-            width: 90%;
+        .desafio {
+            width: 100%;
             max-width: 650px;
             background: white;
-            padding: 35px;
+            padding: 40px;
             border-radius: 20px;
             text-align: center;
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
-        h1 { font-size: 22px; margin-bottom: 25px; color: #222; }
-        .pergunta { font-size: 17px; line-height: 1.6; color: #333; }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #222;
+        }
+        .pergunta {
+            font-size: 19px;
+            line-height: 1.6;
+            color: #333;
+        }
         .dica {
             display: none;
-            margin: 18px 0;
-            padding: 16px;
+            margin: 20px 0;
+            padding: 18px;
             background: #f5f5f5;
             border-left: 4px solid #555;
             border-radius: 8px;
             text-align: left;
             line-height: 1.5;
-            font-size: 14px;
+            font-size: 15px;
+            color: #333;
         }
         button {
             border: none;
-            padding: 12px 20px;
-            margin: 8px 4px;
+            padding: 13px 22px;
+            margin: 10px 5px;
             border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             background: #222;
             color: white;
             transition: 0.2s;
-            font-size: 14px;
+            font-size: 15px;
         }
-        button:hover { transform: translateY(-2px); opacity: 0.9; }
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
         input {
             width: 100%;
-            padding: 14px;
-            margin-top: 18px;
+            padding: 15px;
+            margin-top: 20px;
             border: 2px solid #ddd;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 16px;
             outline: none;
         }
         input:focus { border-color: #555; }
-        #resultado { margin-top: 18px; font-size: 17px; font-weight: bold; }
+        #resultado {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
         .acerto { color: #247a3d; }
         .erro { color: #b3261e; }
     </style>
     </head>
     <body>
-    <div class="desafio-box">
+    <div class="desafio">
         <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
         <p class="pergunta">
             O PET é um <strong>__________</strong> formado pela repetição
@@ -923,31 +738,39 @@ def renderizar_desafio_polimero():
     </html>
     """
     
-    components.html(html_polimero, height=600, scrolling=True)
+    components.html(html_polimero, height=650, scrolling=True)
     
+    # Botão recomeçar
     st.markdown("<br>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("⬅️ Voltar", key="voltar_polimero"):
-            ir_para_cena("quiz")
+        if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_polimero"):
+            reiniciar_historia()
 
 
 # ==========================================
-# APLICAR CSS E INICIALIZAR
+# APLICAR
 # ==========================================
 aplicar_css()
 inicializar_estado()
 
 # ==========================================
-# CONTAINER PRINCIPAL
+# CONTAINER
 # ==========================================
 st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
 cena_id = st.session_state.cena_atual
 
-# ===== PÁGINAS ESPECIAIS =====
-if cena_id == "quiz":
-    renderizar_quiz()
+# ==========================================
+# DESAFIOS (TELAS SEPARADAS)
+# ==========================================
+if cena_id == "desafio_quiz_1":
+    renderizar_quiz(0)
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.stop()
+
+if cena_id == "desafio_quiz_2":
+    renderizar_quiz(1)
     st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
 
@@ -961,11 +784,13 @@ if cena_id == "desafio_polimero":
     st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
 
-# ===== CENAS DA HISTÓRIA =====
+# ==========================================
+# CENAS DA HISTÓRIA
+# ==========================================
 cena = get_cena(cena_id)
 
 if cena:
-    # ===== TELA INICIAL =====
+    # ===== INÍCIO =====
     if cena["tipo"] == "inicio":
         st.markdown(f"""
             <h1 class="titulo">{cena.get("titulo", "História")}</h1>
@@ -986,7 +811,7 @@ if cena:
                 ir_para_cena("pagina_01")
             st.markdown('</div>', unsafe_allow_html=True)
     
-    # ===== CENA NORMAL =====
+    # ===== CENA =====
     elif cena["tipo"] == "cena":
         st.markdown(f"""
             <div class="imagem-container">
@@ -1000,7 +825,7 @@ if cena:
                 if "proxima" in cena:
                     ir_para_cena(cena["proxima"])
     
-    # ===== CENA DE ESCOLHA =====
+    # ===== ESCOLHA =====
     elif cena["tipo"] == "escolha":
         st.markdown(f"""
             <div class="imagem-container">
@@ -1031,22 +856,28 @@ if cena:
         if "mensagem" in cena:
             st.markdown(f'<p class="mensagem">✦ {cena["mensagem"]} ✦</p>', unsafe_allow_html=True)
         
-        # Botões especiais para o final
+        # Botão de desafio específico para cada final
         st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if cena_id == "pagina_12b":
-                # Final de VITÓRIA: mostrar opções de quiz e desafios
-                st.markdown("### 🎯 Continue aprendendo!")
-                if st.button("📝 Fazer o Quiz", key="ir_quiz", use_container_width=True):
-                    ir_para_cena("quiz")
-                if st.button("🔢 Decodificar os Plásticos", key="ir_desafio_plasticos", use_container_width=True):
-                    ir_para_cena("desafio_plasticos")
-                if st.button("🧪 Descobrir o Polímero", key="ir_desafio_polimero", use_container_width=True):
-                    ir_para_cena("desafio_polimero")
+            # Final 1 → Quiz Pergunta 1
+            if cena_id == "feedback_01b":
+                if st.button("🎯 FAZER O DESAFIO", key="ir_desafio_1", use_container_width=True):
+                    ir_para_cena("desafio_quiz_1")
             
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar", use_container_width=True):
-                reiniciar_historia()
+            # Final 2 → Quiz Pergunta 2
+            elif cena_id == "feedback_02a":
+                if st.button("🎯 FAZER O DESAFIO", key="ir_desafio_2", use_container_width=True):
+                    ir_para_cena("desafio_quiz_2")
+            
+            # Final 3 → Decodificar Plásticos
+            elif cena_id == "feedback_03a":
+                if st.button("🎯 FAZER O DESAFIO", key="ir_desafio_3", use_container_width=True):
+                    ir_para_cena("desafio_plasticos")
+            
+            # Final 4 (vitória) → Polímero
+            elif cena_id == "pagina_12b":
+                if st.button("🎯 FAZER O DESAFIO FINAL", key="ir_desafio_4", use_container_width=True):
+                    ir_para_cena("desafio_polimero")
 
 st.markdown('</div>', unsafe_allow_html=True)
