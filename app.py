@@ -706,13 +706,13 @@ def renderizar_desafio_plasticos():
         </div>
         <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
         <div class="numeros">
-            <button class="numero" onclick="abrirDesafio(1)">①</button>
-            <button class="numero" onclick="abrirDesafio(2)">②</button>
-            <button class="numero" onclick="abrirDesafio(3)">③</button>
-            <button class="numero" onclick="abrirDesafio(4)">④</button>
-            <button class="numero" onclick="abrirDesafio(5)">⑤</button>
-            <button class="numero" onclick="abrirDesafio(6)">⑥</button>
-            <button class="numero" onclick="abrirDesafio(7)">⑦</button>
+            <button class="numero" onclick="abrirDesafio(1)">1</button>
+            <button class="numero" onclick="abrirDesafio(2)">2</button>
+            <button class="numero" onclick="abrirDesafio(3)">3</button>
+            <button class="numero" onclick="abrirDesafio(4)">4</button>
+            <button class="numero" onclick="abrirDesafio(5)">5</button>
+            <button class="numero" onclick="abrirDesafio(6)">6</button>
+            <button class="numero" onclick="abrirDesafio(7)">7</button>
         </div>
         <div id="desafio" class="desafio">
             <div class="pista-titulo" id="pistaTitulo"></div>
