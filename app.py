@@ -64,6 +64,7 @@ def aplicar_css():
         .stApp { background: #ffffff !important; }
         .main > div { padding: 0 !important; max-width: 100% !important; }
         .block-container { padding: 0 !important; max-width: 100% !important; padding-top: 0 !important; }
+        .stApp > div:first-child { margin-top: 0 !important; }
         #MainMenu {display: none !important;}
         footer {display: none !important;}
         header {display: none !important;}
