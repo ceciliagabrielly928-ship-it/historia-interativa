@@ -72,7 +72,7 @@ def aplicar_css():
         
         .main-container {
             background: #ffffff;
-            min-height: 10vh;
+            min-height: 0vh;
             width: 100%;
             display: flex;
             flex-direction: column;
