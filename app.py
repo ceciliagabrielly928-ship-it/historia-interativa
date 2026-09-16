@@ -107,7 +107,7 @@ def aplicar_css():
         }
         
         .imagem-container {
-            width: min(1200px, 100%);
+            width: min(1000px, 100%);
             margin: 0 auto 22px auto;
             background: #ffffff;
             border: 1px solid #e5e5e5;
@@ -118,7 +118,7 @@ def aplicar_css():
         
         .imagem-container img {
             width: 100%;
-            max-height: 78vh;
+            max-height: 85vh;
             height: auto;
             object-fit: contain;
             display: block;
