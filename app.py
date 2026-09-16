@@ -9,15 +9,28 @@ from pathlib import Path
 
 @st.cache_data(show_spinner=False)
 def imagem_base64(caminho):
-    """Converte uma imagem local em Base64 para o <img> do HTML."""
-    arquivo = Path(caminho)
-    if not arquivo.is_absolute():
-        arquivo = Path(__file__).parent / arquivo
+    """Converte a imagem do projeto em Base64 para o <img> do HTML.
+    Aceita caminhos relativos e também caminhos antigos do Codespaces.
+    """
+    recebido = Path(str(caminho))
+    raiz = Path(__file__).parent
 
-    if not arquivo.exists():
+    candidatos = []
+    if recebido.is_absolute():
+        candidatos.append(recebido)
+        # Converte caminhos antigos /workspaces/... para a pasta atual do projeto.
+        partes = recebido.parts
+        if "assets" in partes:
+            i = partes.index("assets")
+            candidatos.append(raiz.joinpath(*partes[i:]))
+    else:
+        candidatos.append(raiz / recebido)
+        candidatos.append(Path.cwd() / recebido)
+
+    arquivo = next((x for x in candidatos if x.exists() and x.is_file()), None)
+    if arquivo is None:
         return ""
 
-    extensao = arquivo.suffix.lower()
     tipos = {
         ".png": "image/png",
         ".jpg": "image/jpeg",
@@ -25,8 +38,7 @@ def imagem_base64(caminho):
         ".gif": "image/gif",
         ".webp": "image/webp",
     }
-    tipo = tipos.get(extensao, "application/octet-stream")
-
+    tipo = tipos.get(arquivo.suffix.lower(), "application/octet-stream")
     dados = base64.b64encode(arquivo.read_bytes()).decode("utf-8")
     return f"data:{tipo};base64,{dados}"
 
@@ -135,16 +147,19 @@ def aplicar_css():
             display: block;
         }
 
-        /* A capa fica no topo e ocupa o maior espaço possível sem cortar a imagem */
+        /* A capa fica no topo. A caixa acompanha a imagem e nunca cria um
+           grande espaço branco quando o arquivo não é encontrado. */
         .imagem-capa {
-            min-height: min(78vh, 900px);
+            min-height: 0;
+            height: auto;
             margin-top: 0;
             margin-bottom: 28px;
         }
 
         .imagem-capa img {
             width: 100%;
-            max-height: min(78vh, 900px);
+            max-height: calc(100vh - 80px);
+            height: auto;
             object-fit: contain;
         }
 
