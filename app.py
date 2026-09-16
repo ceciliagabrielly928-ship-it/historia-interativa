@@ -3,44 +3,39 @@ import streamlit as st
 import streamlit.components.v1 as components
 from story import HISTORY, get_cena
 
-import base64
 from pathlib import Path
 
 
-@st.cache_data(show_spinner=False)
-def imagem_base64(caminho):
-    """Converte a imagem do projeto em Base64 para o <img> do HTML.
-    Aceita caminhos relativos e também caminhos antigos do Codespaces.
-    """
+def localizar_imagem(caminho):
+    """Encontra a imagem dentro do projeto, inclusive com caminhos antigos do Codespaces."""
     recebido = Path(str(caminho))
-    raiz = Path(__file__).parent
+    raiz = Path(__file__).resolve().parent
 
     candidatos = []
     if recebido.is_absolute():
         candidatos.append(recebido)
-        # Converte caminhos antigos /workspaces/... para a pasta atual do projeto.
         partes = recebido.parts
         if "assets" in partes:
             i = partes.index("assets")
             candidatos.append(raiz.joinpath(*partes[i:]))
     else:
-        candidatos.append(raiz / recebido)
-        candidatos.append(Path.cwd() / recebido)
+        candidatos.extend([
+            raiz / recebido,
+            Path.cwd() / recebido,
+        ])
 
-    arquivo = next((x for x in candidatos if x.exists() and x.is_file()), None)
-    if arquivo is None:
-        return ""
+    for arquivo in candidatos:
+        if arquivo.exists() and arquivo.is_file():
+            return arquivo
 
-    tipos = {
-        ".png": "image/png",
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".gif": "image/gif",
-        ".webp": "image/webp",
-    }
-    tipo = tipos.get(arquivo.suffix.lower(), "application/octet-stream")
-    dados = base64.b64encode(arquivo.read_bytes()).decode("utf-8")
-    return f"data:{tipo};base64,{dados}"
+    return None
+
+
+@st.cache_data(show_spinner=False)
+def caminho_imagem(caminho):
+    """Retorna o caminho real da imagem para o Streamlit."""
+    arquivo = localizar_imagem(caminho)
+    return str(arquivo) if arquivo else None
 
 # ==========================================
 # CONFIGURAÇÃO
@@ -83,7 +78,7 @@ def aplicar_css():
             max-width: 1500px;
             min-height: calc(100vh - 32px);
             margin: 16px auto;
-            padding: clamp(22px, 3vw, 42px);
+            padding: clamp(12px, 2vw, 24px);
             background: #ffffff;
             border-radius: 28px;
             box-shadow: 0 10px 35px rgba(0,0,0,0.10);
@@ -126,44 +121,43 @@ def aplicar_css():
         /* ===== IMAGEM ===== */
         .imagem-container {
             width: 100%;
-            max-width: 1420px;
+            max-width: 1500px;
             margin: 0 auto 24px auto;
+            padding: 0;
             background: #ffffff;
             border: 1px solid #eeeeee;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 8px 28px rgba(0,0,0,0.10);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .imagem-container img {
-            width: 100%;
-            max-width: 100%;
-            max-height: 76vh;
-            height: auto;
-            object-fit: contain;
-            display: block;
+        /* O Streamlit renderiza a imagem diretamente. Isso evita a tela
+           branca causada por <img> HTML sem uma URL pública. */
+        [data-testid="stImage"] {
+            width: 100% !important;
+            margin: 0 auto 24px auto !important;
+            display: flex !important;
+            justify-content: center !important;
         }
 
-        /* A capa fica no topo. A caixa acompanha a imagem e nunca cria um
-           grande espaço branco quando o arquivo não é encontrado. */
+        [data-testid="stImage"] img {
+            width: 100% !important;
+            max-width: 1500px !important;
+            height: auto !important;
+            max-height: 78vh !important;
+            object-fit: contain !important;
+            display: block !important;
+            border: 1px solid #eeeeee !important;
+            border-radius: 20px !important;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.10) !important;
+        }
+
         .imagem-capa {
-            min-height: 0;
-            height: auto;
             margin-top: 0;
-            margin-bottom: 28px;
-        }
-
-        .imagem-capa img {
-            width: 100%;
-            max-height: calc(100vh - 80px);
-            height: auto;
-            object-fit: contain;
         }
 
         /* ===== BOTÕES ===== */
+
         .stButton {
             display: flex;
             justify-content: center;
@@ -903,11 +897,11 @@ if cena:
     # ===== INÍCIO =====
     if cena["tipo"] == "inicio":
         # ===== IMAGEM DA CAPA: PRIMEIRO ELEMENTO DA TELA =====
-        st.markdown(f"""
-            <div class="imagem-container imagem-capa">
-                <img src="{imagem_base64(cena['imagem'])}" alt="Capa da história">
-            </div>
-        """, unsafe_allow_html=True)
+        imagem = caminho_imagem(cena["imagem"])
+        if imagem:
+            st.image(imagem, use_container_width=True)
+        else:
+            st.error(f"Imagem não encontrada: {cena['imagem']}")
 
         # Título e descrição aparecem depois da imagem
         st.markdown(f"""
@@ -925,11 +919,11 @@ if cena:
     
     # ===== CENA =====
     elif cena["tipo"] == "cena":
-        st.markdown(f"""
-            <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
-            </div>
-        """, unsafe_allow_html=True)
+        imagem = caminho_imagem(cena["imagem"])
+        if imagem:
+            st.image(imagem, use_container_width=True)
+        else:
+            st.error(f"Imagem não encontrada: {cena['imagem']}")
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -939,11 +933,11 @@ if cena:
     
     # ===== ESCOLHA =====
     elif cena["tipo"] == "escolha":
-        st.markdown(f"""
-            <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
-            </div>
-        """, unsafe_allow_html=True)
+        imagem = caminho_imagem(cena["imagem"])
+        if imagem:
+            st.image(imagem, use_container_width=True)
+        else:
+            st.error(f"Imagem não encontrada: {cena['imagem']}")
         
         st.markdown(f'<p class="pergunta">{cena.get("pergunta", "O que fazer?")}</p>', unsafe_allow_html=True)
         
@@ -959,11 +953,11 @@ if cena:
     
     # ===== FINAL =====
     elif cena["tipo"] == "final":
-        st.markdown(f"""
-            <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
-            </div>
-        """, unsafe_allow_html=True)
+        imagem = caminho_imagem(cena["imagem"])
+        if imagem:
+            st.image(imagem, use_container_width=True)
+        else:
+            st.error(f"Imagem não encontrada: {cena['imagem']}")
         
         if "mensagem" in cena:
             st.markdown(f'<p class="mensagem">✦ {cena["mensagem"]} ✦</p>', unsafe_allow_html=True)
