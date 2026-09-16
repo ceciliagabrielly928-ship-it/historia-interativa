@@ -2,40 +2,8 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from story import HISTORY, get_cena
-
 from pathlib import Path
-
-
-def localizar_imagem(caminho):
-    """Encontra a imagem dentro do projeto, inclusive com caminhos antigos do Codespaces."""
-    recebido = Path(str(caminho))
-    raiz = Path(__file__).resolve().parent
-
-    candidatos = []
-    if recebido.is_absolute():
-        candidatos.append(recebido)
-        partes = recebido.parts
-        if "assets" in partes:
-            i = partes.index("assets")
-            candidatos.append(raiz.joinpath(*partes[i:]))
-    else:
-        candidatos.extend([
-            raiz / recebido,
-            Path.cwd() / recebido,
-        ])
-
-    for arquivo in candidatos:
-        if arquivo.exists() and arquivo.is_file():
-            return arquivo
-
-    return None
-
-
-@st.cache_data(show_spinner=False)
-def caminho_imagem(caminho):
-    """Retorna o caminho real da imagem para o Streamlit."""
-    arquivo = localizar_imagem(caminho)
-    return str(arquivo) if arquivo else None
+import base64
 
 # ==========================================
 # CONFIGURAÇÃO
@@ -48,191 +16,169 @@ st.set_page_config(
 )
 
 # ==========================================
+# IMAGENS
+# ==========================================
+def caminho_imagem(caminho):
+    if not caminho:
+        return None
+    caminho = str(caminho).replace('\\', '/')
+    candidatos = [Path(caminho), Path(__file__).resolve().parent / caminho.lstrip('/')]
+    if '/assets/' in caminho:
+        rel = 'assets/' + caminho.split('/assets/', 1)[1]
+        candidatos.append(Path(__file__).resolve().parent / rel)
+    for arquivo in candidatos:
+        try:
+            if arquivo.is_file():
+                return arquivo
+        except OSError:
+            pass
+    return None
+
+def imagem_data_uri(caminho):
+    arquivo = caminho_imagem(caminho)
+    if arquivo is None:
+        return None
+    mime = {'.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.gif':'image/gif'}.get(arquivo.suffix.lower(), 'application/octet-stream')
+    dados = base64.b64encode(arquivo.read_bytes()).decode('ascii')
+    return f'data:{mime};base64,{dados}'
+
+def renderizar_imagem(caminho, alt='Imagem da história'):
+    uri = imagem_data_uri(caminho)
+    if uri is None:
+        st.error(f'Imagem não encontrada: {caminho}')
+        return False
+    st.markdown(f'''
+        <div class="imagem-container">
+            <img src="{uri}" alt="{alt}">
+        </div>
+    ''', unsafe_allow_html=True)
+    return True
+
+
+# ==========================================
 # CSS GLOBAL
 # ==========================================
 def aplicar_css():
     st.markdown("""
         <style>
-        /* ===== BASE ===== */
-        html, body, [data-testid="stAppViewContainer"] {
-            background: #ffffff !important;
-        }
-
-        .stApp {
-            background: #ffffff !important;
-            color: #222222 !important;
-        }
-
-        .main > div, .block-container {
-            padding: 0 !important;
-            max-width: 100% !important;
-        }
-
-        #MainMenu, footer, header, .stDeployButton {
-            display: none !important;
-        }
-
-        /* ===== CARTÃO PRINCIPAL ===== */
+        .stApp { background: #ffffff !important; }
+        .main > div { padding: 0 !important; max-width: 100% !important; }
+        .block-container { padding: 0 !important; max-width: 100% !important; padding-top: 0 !important; }
+        #MainMenu {display: none !important;}
+        footer {display: none !important;}
+        header {display: none !important;}
+        .stDeployButton {display: none !important;}
+        
         .main-container {
-            width: calc(100% - 32px);
-            max-width: 1500px;
-            min-height: calc(100vh - 32px);
-            margin: 16px auto;
-            padding: clamp(12px, 2vw, 24px);
             background: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.10);
+            min-height: 100vh;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            overflow: hidden;
+            padding: 18px 18px 40px 18px;
         }
-
-        /* ===== TÍTULO ===== */
+        
         .titulo {
-            width: 100%;
-            font-size: clamp(2rem, 4vw, 4rem);
-            line-height: 1.08;
-            font-weight: 800;
+            font-size: 3.5rem;
+            font-weight: 900;
             color: #222222;
-            font-family: Arial, sans-serif;
+            font-family: Georgia, serif;
             text-align: center;
-            margin: 0 0 8px 0;
+            margin-bottom: 5px;
         }
-
+        
         .subtitulo {
-            width: 100%;
-            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-            line-height: 1.4;
-            color: #667085;
+            font-size: 0.9rem;
+            color: #666;
             text-align: center;
-            margin: 0 0 8px 0;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
         }
-
+        
         .linha {
-            width: 90px;
-            height: 4px;
-            background: #e4aa2c;
-            border-radius: 999px;
-            margin: 12px auto 26px auto;
+            width: 60px;
+            height: 2px;
+            background: #d4a843;
+            margin: 10px auto 25px auto;
         }
-
-        /* ===== IMAGEM ===== */
+        
         .imagem-container {
-            width: 100%;
-            max-width: 1500px;
-            margin: 0 auto 24px auto;
-            padding: 0;
+            width: min(1200px, 100%);
+            margin: 0 auto 22px auto;
             background: #ffffff;
-            border: 1px solid #eeeeee;
-            border-radius: 20px;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 8px 28px rgba(0,0,0,0.10);
         }
-
-        /* O Streamlit renderiza a imagem diretamente. Isso evita a tela
-           branca causada por <img> HTML sem uma URL pública. */
-        [data-testid="stImage"] {
-            width: 100% !important;
-            margin: 0 auto 24px auto !important;
-            display: flex !important;
-            justify-content: center !important;
-        }
-
-        [data-testid="stImage"] img {
-            width: 100% !important;
-            max-width: 1500px !important;
-            height: auto !important;
-            max-height: 78vh !important;
-            object-fit: contain !important;
-            display: block !important;
-            border: 1px solid #eeeeee !important;
-            border-radius: 20px !important;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.10) !important;
-        }
-
-        .imagem-capa {
-            margin-top: 0;
-        }
-
-        /* ===== BOTÕES ===== */
-
-        .stButton {
-            display: flex;
-            justify-content: center;
-        }
-
-        .stButton button {
-            min-height: 52px !important;
-            padding: 12px 30px !important;
-            font-size: 0.95rem !important;
-            font-weight: 800 !important;
-            border-radius: 12px !important;
-            border: none !important;
-            background: #e4aa2c !important;
-            color: #ffffff !important;
-            transition: transform 0.18s ease, box-shadow 0.18s ease !important;
-        }
-
-        .stButton button:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 8px 20px rgba(228,170,44,0.28) !important;
-        }
-
-        .btn-comecar button {
-            background: #e4aa2c !important;
-            color: #ffffff !important;
-        }
-
-        /* ===== TEXTO DAS CENAS ===== */
-        .pergunta {
+        
+        .imagem-container img {
             width: 100%;
-            max-width: 1200px;
-            color: #44546a;
-            background: #f6f7f8;
-            border-left: 5px solid #718096;
-            border-radius: 12px;
-            padding: 18px 24px;
-            font-size: clamp(1rem, 1.8vw, 1.35rem);
-            line-height: 1.55;
-            text-align: left;
-            margin: 8px auto 22px auto;
-            font-family: Arial, sans-serif;
-            box-sizing: border-box;
+            max-height: 78vh;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
-
-        .mensagem {
-            color: #26834b;
-            font-size: clamp(1rem, 1.8vw, 1.3rem);
+        
+        .stButton button {
+            width: 100% !important;
+            padding: 16px 40px !important;
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 4px !important;
+            border-radius: 4px !important;
+            border: 2px solid #d4a843 !important;
+            background: transparent !important;
+            color: #d4a843 !important;
+            transition: all 0.3s ease !important;
+            font-family: Arial, sans-serif !important;
+        }
+        
+        .stButton button:hover {
+            background: #d4a843 !important;
+            color: #0a0a0a !important;
+            box-shadow: 0 10px 40px rgba(212,168,67,0.3) !important;
+        }
+        
+        .btn-comecar button {
+            background: #d4a843 !important;
+            color: #0a0a0a !important;
+            border: none !important;
+        }
+        
+        .btn-comecar button:hover {
+            background: #e8c86a !important;
+            transform: scale(1.02) !important;
+        }
+        
+        .pergunta {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 300;
             text-align: center;
-            margin: 18px 0;
-            font-family: Arial, sans-serif;
-            font-weight: 700;
+            margin: 30px 0 20px 0;
+            font-family: Georgia, serif;
         }
-
-        /* ===== RESPONSIVO ===== */
+        
+        .mensagem {
+            color: #d4a843;
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 30px 0;
+            font-family: Georgia, serif;
+        }
+        
         @media (max-width: 768px) {
-            .main-container {
-                width: calc(100% - 16px);
-                min-height: calc(100vh - 16px);
-                margin: 8px auto;
-                padding: 16px;
-                border-radius: 20px;
-            }
-
-            .imagem-container {
-                border-radius: 14px;
-                margin-bottom: 18px;
-            }
-
-            .imagem-container img {
-                max-height: 68vh;
-            }
-
-            .pergunta {
-                padding: 14px 16px;
-            }
+            .main-container { padding: 10px 10px 30px 10px; }
+            .titulo { font-size: 2.2rem; }
+            .imagem-container { border-radius: 16px; margin-bottom: 16px; }
+            .imagem-container img { max-height: 70vh; }
+            .stButton button { font-size: 0.8rem !important; padding: 14px 20px !important; }
         }
         </style>
     """, unsafe_allow_html=True)
@@ -307,7 +253,7 @@ def renderizar_quiz(numero_pergunta):
     st.markdown("""
         <style>
         .quiz-wrapper {
-            background: #ffffff !important;
+            background: #0d1f0d !important;
             min-height: 100vh;
             padding: 40px 20px;
         }
@@ -316,12 +262,12 @@ def renderizar_quiz(numero_pergunta):
             margin: 0 auto;
         }
         .quiz-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
+            background: rgba(20, 40, 20, 0.9);
+            border: 2px solid #4ade80;
             border-radius: 16px;
             padding: 30px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
         }
         .quiz-numero {
             color: #4ade80;
@@ -333,7 +279,7 @@ def renderizar_quiz(numero_pergunta):
             font-family: Arial, sans-serif;
         }
         .quiz-texto {
-            color: #333333;
+            color: #ffffff;
             font-size: 1.15rem;
             line-height: 1.6;
             font-family: Georgia, serif;
@@ -341,7 +287,7 @@ def renderizar_quiz(numero_pergunta):
         .quiz-karla {
             display: inline-block;
             background: #4ade80;
-            color: #ffffff;
+            color: #0d1f0d;
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -386,7 +332,7 @@ def renderizar_quiz(numero_pergunta):
             if letra == resposta_correta:
                 st.markdown(f"""
                     <div style="padding: 14px 20px; margin-bottom: 8px; border-radius: 10px;
-                                background: rgba(74, 222, 128, 0.2); border: 1px solid #e5e7eb;
+                                background: rgba(74, 222, 128, 0.2); border: 2px solid #4ade80;
                                 color: #ffffff; font-family: Arial;">
                         <strong>{letra})</strong> {texto} ✅
                     </div>
@@ -691,7 +637,7 @@ def renderizar_desafio_plasticos():
     </html>
     """
     
-    components.html(html_desafio, height=760, scrolling=False)
+    components.html(html_desafio, height=900, scrolling=True)
     
     # Botão recomeçar
     st.markdown("<br>", unsafe_allow_html=True)
@@ -719,15 +665,15 @@ def renderizar_desafio_polimero():
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
-            background: #ffffff;
+            background: #f4f1eb;
             padding: 20px;
         }
         .desafio {
             width: 100%;
-            max-width: 900px;
+            max-width: 650px;
             background: white;
-            padding: clamp(24px, 5vw, 48px);
-            border-radius: 22px;
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
@@ -842,7 +788,7 @@ def renderizar_desafio_polimero():
     </html>
     """
     
-    components.html(html_polimero, height=680, scrolling=False)
+    components.html(html_polimero, height=650, scrolling=True)
     
     # Botão recomeçar
     st.markdown("<br>", unsafe_allow_html=True)
@@ -896,14 +842,9 @@ cena = get_cena(cena_id)
 if cena:
     # ===== INÍCIO =====
     if cena["tipo"] == "inicio":
-        # ===== IMAGEM DA CAPA: PRIMEIRO ELEMENTO DA TELA =====
-        imagem = caminho_imagem(cena["imagem"])
-        if imagem:
-            st.image(imagem, use_container_width=True)
-        else:
-            st.error(f"Imagem não encontrada: {cena['imagem']}")
+        # A CAPA APARECE IMEDIATAMENTE AO ABRIR O SITE.
+        renderizar_imagem(cena["imagem"], "Capa da história")
 
-        # Título e descrição aparecem depois da imagem
         st.markdown(f"""
             <h1 class="titulo">{cena.get("titulo", "História")}</h1>
             <div class="linha"></div>
@@ -919,11 +860,7 @@ if cena:
     
     # ===== CENA =====
     elif cena["tipo"] == "cena":
-        imagem = caminho_imagem(cena["imagem"])
-        if imagem:
-            st.image(imagem, use_container_width=True)
-        else:
-            st.error(f"Imagem não encontrada: {cena['imagem']}")
+        renderizar_imagem(cena["imagem"])
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
@@ -933,11 +870,7 @@ if cena:
     
     # ===== ESCOLHA =====
     elif cena["tipo"] == "escolha":
-        imagem = caminho_imagem(cena["imagem"])
-        if imagem:
-            st.image(imagem, use_container_width=True)
-        else:
-            st.error(f"Imagem não encontrada: {cena['imagem']}")
+        renderizar_imagem(cena["imagem"])
         
         st.markdown(f'<p class="pergunta">{cena.get("pergunta", "O que fazer?")}</p>', unsafe_allow_html=True)
         
@@ -953,11 +886,7 @@ if cena:
     
     # ===== FINAL =====
     elif cena["tipo"] == "final":
-        imagem = caminho_imagem(cena["imagem"])
-        if imagem:
-            st.image(imagem, use_container_width=True)
-        else:
-            st.error(f"Imagem não encontrada: {cena['imagem']}")
+        renderizar_imagem(cena["imagem"])
         
         if "mensagem" in cena:
             st.markdown(f'<p class="mensagem">✦ {cena["mensagem"]} ✦</p>', unsafe_allow_html=True)
