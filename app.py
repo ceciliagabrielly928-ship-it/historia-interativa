@@ -405,7 +405,7 @@ def renderizar_desafio_plasticos():
 
     body {
         font-family: Arial, sans-serif;
-        background: #f7f4ee;
+        background:  #ffffff;
         color: #222;
         padding: 28px 20px 35px;
     }
