@@ -3,6 +3,32 @@ import streamlit as st
 import streamlit.components.v1 as components
 from story import HISTORY, get_cena
 
+import base64
+from pathlib import Path
+
+
+def imagem_base64(caminho):
+    """Converte uma imagem local em Base64 para o <img> do HTML."""
+    arquivo = Path(caminho)
+    if not arquivo.is_absolute():
+        arquivo = Path(__file__).parent / arquivo
+
+    if not arquivo.exists():
+        return ""
+
+    extensao = arquivo.suffix.lower()
+    tipos = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".gif": "image/gif",
+        ".webp": "image/webp",
+    }
+    tipo = tipos.get(extensao, "application/octet-stream")
+
+    dados = base64.b64encode(arquivo.read_bytes()).decode("utf-8")
+    return f"data:{tipo};base64,{dados}"
+
 # ==========================================
 # CONFIGURAÇÃO
 # ==========================================
@@ -800,7 +826,7 @@ if cena:
         
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
@@ -815,7 +841,7 @@ if cena:
     elif cena["tipo"] == "cena":
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
@@ -829,7 +855,7 @@ if cena:
     elif cena["tipo"] == "escolha":
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
@@ -849,7 +875,7 @@ if cena:
     elif cena["tipo"] == "final":
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{cena['imagem']}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="">
             </div>
         """, unsafe_allow_html=True)
         
