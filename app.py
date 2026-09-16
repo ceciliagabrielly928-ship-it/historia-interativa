@@ -397,144 +397,181 @@ def renderizar_desafio_plasticos():
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: #f7f4ee;
+        color: #222;
+        padding: 35px 20px;
+        min-height: 100%;
+    }
+
+    .desafio {
+        width: 100%;
+        max-width: 720px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 38px 45px;
+        border-radius: 22px;
+        text-align: center;
+        border: 1px solid #eee8dc;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.10);
+    }
+
+    h1 {
+        font-size: 25px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        margin-bottom: 28px;
+        color: #222;
+    }
+
+    h1::after {
+        content: "";
+        display: block;
+        width: 55px;
+        height: 3px;
+        background: #d4a843;
+        margin: 12px auto 0;
+        border-radius: 10px;
+    }
+
+    .pergunta {
+        font-size: 19px;
+        line-height: 1.7;
+        color: #333;
+        margin-bottom: 22px;
+    }
+
+    .pergunta strong {
+        color: #d4a843;
+    }
+
+    button {
+        border: none;
+        padding: 13px 25px;
+        margin: 8px 5px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        background: #222;
+        color: white;
+        transition: all 0.25s ease;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+
+    button:hover {
+        background: #d4a843;
+        color: #222;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(212,168,67,0.25);
+    }
+
+    #dicaBtn {
+        background: transparent;
+        color: #222;
+        border: 2px solid #d4a843;
+        margin-bottom: 20px;
+    }
+
+    #dicaBtn:hover {
+        background: #d4a843;
+    }
+
+    .dica {
+        display: none;
+        margin: 5px 0 22px;
+        padding: 17px 20px;
+        background: #faf7f0;
+        border-left: 4px solid #d4a843;
+        border-radius: 10px;
+        text-align: left;
+        line-height: 1.6;
+        font-size: 15px;
+        color: #444;
+    }
+
+    input {
+        width: 100%;
+        padding: 16px 18px;
+        margin-top: 8px;
+        border: 2px solid #e2ded5;
+        border-radius: 11px;
+        font-size: 16px;
+        outline: none;
+        text-align: center;
+        transition: all 0.2s ease;
+        color: #222;
+        background: #fff;
+    }
+
+    input::placeholder {
+        color: #999;
+    }
+
+    input:focus {
+        border-color: #d4a843;
+        box-shadow: 0 0 0 3px rgba(212,168,67,0.12);
+    }
+
+    #responderBtn {
+        background: #d4a843;
+        color: #222;
+        padding: 14px 32px;
+        margin-top: 14px;
+    }
+
+    #responderBtn:hover {
+        background: #e5c16b;
+    }
+
+    #resultado {
+        margin-top: 18px;
+        padding: 12px;
+        border-radius: 9px;
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    .acerto {
+        color: #247a3d;
+        background: #eef8f0;
+    }
+
+    .erro {
+        color: #b3261e;
+        background: #fff0ee;
+    }
+
+    @media (max-width: 650px) {
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f1e8;
-            color: #222;
-            padding: 20px;
-            min-height: 100vh;
+            padding: 20px 12px;
         }
-        .container {
-            width: 100%;
-            max-width: 950px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-        h1 {
-            text-align: center;
-            font-size: 28px;
-            margin-bottom: 25px;
-            color: #222;
-        }
-        .karla {
-            background: #f0f0f0;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 25px;
-            font-size: 16px;
-            line-height: 1.5;
-            color: #222;
-        }
-        .karla strong { display: block; margin-bottom: 5px; }
-        h2 {
-            font-size: 18px;
-            margin-top: 25px;
-            margin-bottom: 12px;
-            color: #222;
-        }
-        .banco {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .palavra {
-            background: #eeeeee;
-            border-radius: 8px;
-            padding: 9px 13px;
-            font-weight: bold;
-            font-size: 14px;
-            color: #222;
-        }
-        .numeros {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin: 30px 0;
-        }
-        .numero {
-            flex: 1;
-            min-height: 70px;
-            border: none;
-            border-bottom: 3px solid #222;
-            background: transparent;
-            font-size: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #222;
-        }
-        .numero:hover { background: #f0f0f0; }
-        .numero.selecionado { background: #e6e6e6; }
-        .numero.concluido { border-bottom: 4px solid #333; background: #dcdcdc; }
+
         .desafio {
-            display: none;
-            margin-top: 20px;
-            padding: 25px;
-            border-radius: 15px;
-            background: #f7f7f7;
+            padding: 28px 22px;
+            border-radius: 18px;
         }
-        .desafio.ativo { display: block; }
-        .pista-titulo {
-            font-weight: bold;
-            font-size: 19px;
-            margin-bottom: 10px;
-            color: #222;
+
+        h1 {
+            font-size: 21px;
         }
-        .pista {
+
+        .pergunta {
             font-size: 17px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            color: #333;
         }
-        .opcoes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+
+        input {
+            font-size: 15px;
         }
-        .opcao {
-            border: 2px solid #333;
-            background: white;
-            border-radius: 9px;
-            padding: 11px 16px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-            font-size: 14px;
-            color: #222;
-        }
-        .opcao:hover { background: #eeeeee; }
-        .opcao:disabled { cursor: default; }
-        .feedback {
-            margin-top: 18px;
-            font-weight: bold;
-            font-size: 17px;
-            min-height: 25px;
-        }
-        .final {
-            display: none;
-            margin-top: 25px;
-            padding: 22px;
-            background: #eeeeee;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            color: #222;
-        }
-        @media (max-width: 650px) {
-            .container { padding: 20px; }
-            h1 { font-size: 22px; }
-            .numeros { gap: 4px; }
-            .numero { font-size: 22px; min-height: 55px; }
-            .pista { font-size: 15px; }
-        }
-    </style>
+    }
+</style>
     </head>
     <body>
     <div class="container">
