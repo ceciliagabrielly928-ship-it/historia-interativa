@@ -135,6 +135,19 @@ def aplicar_css():
             display: block;
         }
 
+        /* A capa fica no topo e ocupa o maior espaço possível sem cortar a imagem */
+        .imagem-capa {
+            min-height: min(78vh, 900px);
+            margin-top: 0;
+            margin-bottom: 28px;
+        }
+
+        .imagem-capa img {
+            width: 100%;
+            max-height: min(78vh, 900px);
+            object-fit: contain;
+        }
+
         /* ===== BOTÕES ===== */
         .stButton {
             display: flex;
@@ -874,16 +887,18 @@ cena = get_cena(cena_id)
 if cena:
     # ===== INÍCIO =====
     if cena["tipo"] == "inicio":
+        # ===== IMAGEM DA CAPA: PRIMEIRO ELEMENTO DA TELA =====
+        st.markdown(f"""
+            <div class="imagem-container imagem-capa">
+                <img src="{imagem_base64(cena['imagem'])}" alt="Capa da história">
+            </div>
+        """, unsafe_allow_html=True)
+
+        # Título e descrição aparecem depois da imagem
         st.markdown(f"""
             <h1 class="titulo">{cena.get("titulo", "História")}</h1>
             <div class="linha"></div>
             <p class="subtitulo">{cena.get("descricao", "")}</p>
-        """, unsafe_allow_html=True)
-        
-        st.markdown(f"""
-            <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
-            </div>
         """, unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
