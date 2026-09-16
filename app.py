@@ -7,6 +7,7 @@ import base64
 from pathlib import Path
 
 
+@st.cache_data(show_spinner=False)
 def imagem_base64(caminho):
     """Converte uma imagem local em Base64 para o <img> do HTML."""
     arquivo = Path(caminho)
@@ -45,116 +46,171 @@ st.set_page_config(
 def aplicar_css():
     st.markdown("""
         <style>
-        .stApp { background: #0a0a0a !important; }
-        .main > div { padding: 0 !important; max-width: 100% !important; }
-        .block-container { padding: 0 !important; max-width: 100% !important; padding-top: 0 !important; }
-        #MainMenu {display: none !important;}
-        footer {display: none !important;}
-        header {display: none !important;}
-        .stDeployButton {display: none !important;}
-        
+        /* ===== BASE ===== */
+        html, body, [data-testid="stAppViewContainer"] {
+            background: #ffffff !important;
+        }
+
+        .stApp {
+            background: #ffffff !important;
+            color: #222222 !important;
+        }
+
+        .main > div, .block-container {
+            padding: 0 !important;
+            max-width: 100% !important;
+        }
+
+        #MainMenu, footer, header, .stDeployButton {
+            display: none !important;
+        }
+
+        /* ===== CARTÃO PRINCIPAL ===== */
         .main-container {
-            background: #0a0a0a;
-            min-height: 100vh;
+            width: calc(100% - 32px);
+            max-width: 1500px;
+            min-height: calc(100vh - 32px);
+            margin: 16px auto;
+            padding: clamp(22px, 3vw, 42px);
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.10);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .titulo {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #ffffff;
-            font-family: Georgia, serif;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-        
-        .subtitulo {
-            font-size: 0.9rem;
-            color: #666;
-            text-align: center;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-        
-        .linha {
-            width: 60px;
-            height: 2px;
-            background: #d4a843;
-            margin: 10px auto 25px auto;
-        }
-        
-        .imagem-container {
-            max-width: 900px;
-            width: 100%;
-            margin: 0 auto;
-            border-radius: 8px;
+            justify-content: flex-start;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
         }
-        
+
+        /* ===== TÍTULO ===== */
+        .titulo {
+            width: 100%;
+            font-size: clamp(2rem, 4vw, 4rem);
+            line-height: 1.08;
+            font-weight: 800;
+            color: #222222;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0 0 8px 0;
+        }
+
+        .subtitulo {
+            width: 100%;
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            line-height: 1.4;
+            color: #667085;
+            text-align: center;
+            margin: 0 0 8px 0;
+        }
+
+        .linha {
+            width: 90px;
+            height: 4px;
+            background: #e4aa2c;
+            border-radius: 999px;
+            margin: 12px auto 26px auto;
+        }
+
+        /* ===== IMAGEM ===== */
+        .imagem-container {
+            width: 100%;
+            max-width: 1420px;
+            margin: 0 auto 24px auto;
+            background: #ffffff;
+            border: 1px solid #eeeeee;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .imagem-container img {
             width: 100%;
+            max-width: 100%;
+            max-height: 76vh;
             height: auto;
+            object-fit: contain;
             display: block;
         }
-        
+
+        /* ===== BOTÕES ===== */
+        .stButton {
+            display: flex;
+            justify-content: center;
+        }
+
         .stButton button {
-            width: 100% !important;
-            padding: 16px 40px !important;
-            font-size: 1rem !important;
-            font-weight: 700 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 4px !important;
-            border-radius: 4px !important;
-            border: 2px solid #d4a843 !important;
-            background: transparent !important;
-            color: #d4a843 !important;
-            transition: all 0.3s ease !important;
-            font-family: Arial, sans-serif !important;
-        }
-        
-        .stButton button:hover {
-            background: #d4a843 !important;
-            color: #0a0a0a !important;
-            box-shadow: 0 10px 40px rgba(212,168,67,0.3) !important;
-        }
-        
-        .btn-comecar button {
-            background: #d4a843 !important;
-            color: #0a0a0a !important;
+            min-height: 52px !important;
+            padding: 12px 30px !important;
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
+            border-radius: 12px !important;
             border: none !important;
+            background: #e4aa2c !important;
+            color: #ffffff !important;
+            transition: transform 0.18s ease, box-shadow 0.18s ease !important;
         }
-        
-        .btn-comecar button:hover {
-            background: #e8c86a !important;
-            transform: scale(1.02) !important;
+
+        .stButton button:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 20px rgba(228,170,44,0.28) !important;
         }
-        
+
+        .btn-comecar button {
+            background: #e4aa2c !important;
+            color: #ffffff !important;
+        }
+
+        /* ===== TEXTO DAS CENAS ===== */
         .pergunta {
-            color: #ffffff;
-            font-size: 1.4rem;
-            font-weight: 300;
-            text-align: center;
-            margin: 30px 0 20px 0;
-            font-family: Georgia, serif;
+            width: 100%;
+            max-width: 1200px;
+            color: #44546a;
+            background: #f6f7f8;
+            border-left: 5px solid #718096;
+            border-radius: 12px;
+            padding: 18px 24px;
+            font-size: clamp(1rem, 1.8vw, 1.35rem);
+            line-height: 1.55;
+            text-align: left;
+            margin: 8px auto 22px auto;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
         }
-        
+
         .mensagem {
-            color: #d4a843;
-            font-size: 1.3rem;
+            color: #26834b;
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
             text-align: center;
-            margin: 30px 0;
-            font-family: Georgia, serif;
+            margin: 18px 0;
+            font-family: Arial, sans-serif;
+            font-weight: 700;
         }
-        
+
+        /* ===== RESPONSIVO ===== */
         @media (max-width: 768px) {
-            .titulo { font-size: 2.5rem; }
-            .stButton button { font-size: 0.8rem !important; padding: 14px 20px !important; }
+            .main-container {
+                width: calc(100% - 16px);
+                min-height: calc(100vh - 16px);
+                margin: 8px auto;
+                padding: 16px;
+                border-radius: 20px;
+            }
+
+            .imagem-container {
+                border-radius: 14px;
+                margin-bottom: 18px;
+            }
+
+            .imagem-container img {
+                max-height: 68vh;
+            }
+
+            .pergunta {
+                padding: 14px 16px;
+            }
         }
         </style>
     """, unsafe_allow_html=True)
@@ -229,7 +285,7 @@ def renderizar_quiz(numero_pergunta):
     st.markdown("""
         <style>
         .quiz-wrapper {
-            background: #0d1f0d !important;
+            background: #ffffff !important;
             min-height: 100vh;
             padding: 40px 20px;
         }
@@ -238,12 +294,12 @@ def renderizar_quiz(numero_pergunta):
             margin: 0 auto;
         }
         .quiz-card {
-            background: rgba(20, 40, 20, 0.9);
-            border: 2px solid #4ade80;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
             border-radius: 16px;
             padding: 30px;
             margin-bottom: 25px;
-            box-shadow: 0 10px 40px rgba(74, 222, 128, 0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
         .quiz-numero {
             color: #4ade80;
@@ -255,7 +311,7 @@ def renderizar_quiz(numero_pergunta):
             font-family: Arial, sans-serif;
         }
         .quiz-texto {
-            color: #ffffff;
+            color: #333333;
             font-size: 1.15rem;
             line-height: 1.6;
             font-family: Georgia, serif;
@@ -263,7 +319,7 @@ def renderizar_quiz(numero_pergunta):
         .quiz-karla {
             display: inline-block;
             background: #4ade80;
-            color: #0d1f0d;
+            color: #ffffff;
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -308,7 +364,7 @@ def renderizar_quiz(numero_pergunta):
             if letra == resposta_correta:
                 st.markdown(f"""
                     <div style="padding: 14px 20px; margin-bottom: 8px; border-radius: 10px;
-                                background: rgba(74, 222, 128, 0.2); border: 2px solid #4ade80;
+                                background: rgba(74, 222, 128, 0.2); border: 1px solid #e5e7eb;
                                 color: #ffffff; font-family: Arial;">
                         <strong>{letra})</strong> {texto} ✅
                     </div>
@@ -613,7 +669,7 @@ def renderizar_desafio_plasticos():
     </html>
     """
     
-    components.html(html_desafio, height=900, scrolling=True)
+    components.html(html_desafio, height=760, scrolling=False)
     
     # Botão recomeçar
     st.markdown("<br>", unsafe_allow_html=True)
@@ -641,15 +697,15 @@ def renderizar_desafio_polimero():
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
-            background: #f4f1eb;
+            background: #ffffff;
             padding: 20px;
         }
         .desafio {
             width: 100%;
-            max-width: 650px;
+            max-width: 900px;
             background: white;
-            padding: 40px;
-            border-radius: 20px;
+            padding: clamp(24px, 5vw, 48px);
+            border-radius: 22px;
             text-align: center;
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
@@ -764,7 +820,7 @@ def renderizar_desafio_polimero():
     </html>
     """
     
-    components.html(html_polimero, height=650, scrolling=True)
+    components.html(html_polimero, height=680, scrolling=False)
     
     # Botão recomeçar
     st.markdown("<br>", unsafe_allow_html=True)
@@ -826,7 +882,7 @@ if cena:
         
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
             </div>
         """, unsafe_allow_html=True)
         
@@ -841,7 +897,7 @@ if cena:
     elif cena["tipo"] == "cena":
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
             </div>
         """, unsafe_allow_html=True)
         
@@ -855,7 +911,7 @@ if cena:
     elif cena["tipo"] == "escolha":
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
             </div>
         """, unsafe_allow_html=True)
         
@@ -875,7 +931,7 @@ if cena:
     elif cena["tipo"] == "final":
         st.markdown(f"""
             <div class="imagem-container">
-                <img src="{imagem_base64(cena['imagem'])}" alt="">
+                <img src="{imagem_base64(cena['imagem'])}" alt="Imagem da cena">
             </div>
         """, unsafe_allow_html=True)
         
