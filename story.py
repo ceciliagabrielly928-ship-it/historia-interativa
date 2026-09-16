@@ -7,7 +7,7 @@ HISTORY = {
     # ==========================================
     "inicio": {
         "tipo": "inicio",
-        "imagem": "/workspaces/historia-interativa/assets/imagens/capa.png",
+        "imagem": "assets/imagens/capa.png",
         "titulo": "A Garrafa do Futuro",
         "descricao": "Uma história sobre escolhas e o destino do planeta"
     },
