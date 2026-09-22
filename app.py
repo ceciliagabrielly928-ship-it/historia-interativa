@@ -260,14 +260,6 @@ def reiniciar_historia():
 # DESAFIO: QUIZ
 # ==========================================
 
-# ==========================================
-# DESAFIO: QUIZ
-# ==========================================
-
-# ==========================================
-# DESAFIO: QUIZ
-# ==========================================
-
 def renderizar_quiz(numero_pergunta):
 
     pergunta = PERGUNTAS_QUIZ[numero_pergunta]
@@ -278,32 +270,25 @@ def renderizar_quiz(numero_pergunta):
     st.markdown(
         """
         <style>
+
         .quiz-wrapper {
-            max-width: 920px;
-            margin: 25px auto 35px auto;
+            max-width: 900px;
+            margin: 20px auto 35px auto;
         }
 
-        .quiz-card {
-            background: #ffffff;
-            border: 2px solid #d4a843;
-            border-radius: 24px;
-            padding: 25px 32px 30px 32px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.07);
-        }
-
+        /* TÍTULO */
         .quiz-header {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 14px;
-            margin-bottom: 22px;
+            margin: 5px 0 22px 0;
         }
 
         .quiz-linha {
+            width: 110px;
             height: 2px;
             background: #d4a843;
-            flex: 1;
-            max-width: 150px;
         }
 
         .quiz-k {
@@ -330,10 +315,11 @@ def renderizar_quiz(numero_pergunta):
             white-space: nowrap;
         }
 
+        /* PERGUNTA */
         .quiz-pergunta {
             background: #f8f8f8;
-            border-radius: 15px;
-            padding: 18px 24px;
+            border-radius: 16px;
+            padding: 20px 28px;
             margin-bottom: 20px;
             color: #222222;
             font-family: Arial, sans-serif;
@@ -342,12 +328,13 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
+        /* ALTERNATIVAS */
         div[data-testid="stButton"] {
             margin-bottom: 10px;
         }
 
         div[data-testid="stButton"] > button {
-            min-height: 52px;
+            min-height: 54px;
             border: 2px solid #d4a843 !important;
             border-radius: 13px !important;
             background: #ffffff !important;
@@ -356,9 +343,8 @@ def renderizar_quiz(numero_pergunta):
             font-size: 15px !important;
             font-weight: 500 !important;
             text-align: left !important;
-            padding: 12px 18px !important;
+            padding: 12px 20px !important;
             box-shadow: none !important;
-            transition: 0.15s ease;
         }
 
         div[data-testid="stButton"] > button:hover {
@@ -366,6 +352,7 @@ def renderizar_quiz(numero_pergunta):
             border-color: #c7962e !important;
         }
 
+        /* FEEDBACK */
         .quiz-feedback {
             margin-top: 12px;
             padding: 14px 18px;
@@ -373,6 +360,7 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
             font-family: Arial, sans-serif;
             font-size: 15px;
+            line-height: 1.5;
         }
 
         </style>
@@ -381,10 +369,10 @@ def renderizar_quiz(numero_pergunta):
     )
 
     # ==========================================
-    # CARTÃO PRINCIPAL
+    # TÍTULO
     # ==========================================
     st.markdown(
-        '<div class="quiz-wrapper"><div class="quiz-card">'
+        '<div class="quiz-wrapper">'
         '<div class="quiz-header">'
         '<div class="quiz-linha"></div>'
         '<span class="quiz-k">K</span>'
@@ -407,6 +395,9 @@ def renderizar_quiz(numero_pergunta):
     # ==========================================
     for letra, texto in pergunta["alternativas"].items():
 
+        # --------------------------------------
+        # ANTES DE RESPONDER
+        # --------------------------------------
         if not st.session_state.quiz_respondeu:
 
             if st.button(
@@ -422,29 +413,74 @@ def renderizar_quiz(numero_pergunta):
 
                 st.rerun()
 
+        # --------------------------------------
+        # DEPOIS DE RESPONDER
+        # --------------------------------------
         else:
 
             resposta_dada = st.session_state.quiz_resposta_dada
             correta = pergunta["correta"]
 
+            # RESPOSTA CORRETA
             if letra == correta:
 
                 st.markdown(
-                    f'<div style="padding:13px 18px;margin-bottom:10px;border-radius:13px;background:#edf7ed;border:2px solid #75ad75;color:#286b2f;font-family:Arial,sans-serif;font-size:15px;">✓ &nbsp; <strong>{letra})</strong> {texto}</div>',
+                    f"""
+                    <div style="
+                        padding: 14px 20px;
+                        margin-bottom: 10px;
+                        border-radius: 13px;
+                        background: #edf7ed;
+                        border: 2px solid #75ad75;
+                        color: #286b2f;
+                        font-family: Arial, sans-serif;
+                        font-size: 15px;
+                    ">
+                        ✓ &nbsp; <strong>{letra})</strong>&nbsp; {texto}
+                    </div>
+                    """,
                     unsafe_allow_html=True
                 )
 
+            # RESPOSTA ERRADA ESCOLHIDA
             elif letra == resposta_dada:
 
                 st.markdown(
-                    f'<div style="padding:13px 18px;margin-bottom:10px;border-radius:13px;background:#fff0f0;border:2px solid #d88b8b;color:#8a3030;font-family:Arial,sans-serif;font-size:15px;">✕ &nbsp; <strong>{letra})</strong> {texto}</div>',
+                    f"""
+                    <div style="
+                        padding: 14px 20px;
+                        margin-bottom: 10px;
+                        border-radius: 13px;
+                        background: #fff0f0;
+                        border: 2px solid #d88b8b;
+                        color: #8a3030;
+                        font-family: Arial, sans-serif;
+                        font-size: 15px;
+                    ">
+                        ✕ &nbsp; <strong>{letra})</strong>&nbsp; {texto}
+                    </div>
+                    """,
                     unsafe_allow_html=True
                 )
 
+            # OUTRAS ALTERNATIVAS
             else:
 
                 st.markdown(
-                    f'<div style="padding:13px 18px;margin-bottom:10px;border-radius:13px;background:#f5f5f5;border:1px solid #dddddd;color:#555555;font-family:Arial,sans-serif;font-size:15px;">&nbsp;&nbsp;&nbsp; <strong>{letra})</strong> {texto}</div>',
+                    f"""
+                    <div style="
+                        padding: 14px 20px;
+                        margin-bottom: 10px;
+                        border-radius: 13px;
+                        background: #f5f5f5;
+                        border: 1px solid #dddddd;
+                        color: #555555;
+                        font-family: Arial, sans-serif;
+                        font-size: 15px;
+                    ">
+                        <strong>{letra})</strong>&nbsp; {texto}
+                    </div>
+                    """,
                     unsafe_allow_html=True
                 )
 
@@ -459,20 +495,41 @@ def renderizar_quiz(numero_pergunta):
         if resposta_dada == correta:
 
             st.markdown(
-                '<div class="quiz-feedback" style="background:#edf7ed;border:1px solid #75ad75;color:#286b2f;"><strong>Resposta correta!</strong> 🎉</div>',
+                """
+                <div class="quiz-feedback"
+                     style="
+                        background:#edf7ed;
+                        border:1px solid #75ad75;
+                        color:#286b2f;
+                     ">
+                    <strong>Resposta correta!</strong> 🎉
+                </div>
+                """,
                 unsafe_allow_html=True
             )
 
         else:
 
             st.markdown(
-                f'<div class="quiz-feedback" style="background:#fff0f0;border:1px solid #d88b8b;color:#8a3030;"><strong>Não foi dessa vez!</strong><br>A resposta correta é <strong>{correta})</strong>.</div>',
+                f"""
+                <div class="quiz-feedback"
+                     style="
+                        background:#fff0f0;
+                        border:1px solid #d88b8b;
+                        color:#8a3030;
+                     ">
+                    <strong>Não foi dessa vez!</strong><br>
+                    A resposta correta é <strong>{correta})</strong>.
+                </div>
+                """,
                 unsafe_allow_html=True
             )
 
-    # Fecha o cartão
+    # ==========================================
+    # FECHA A ÁREA DO QUIZ
+    # ==========================================
     st.markdown(
-        '</div></div>',
+        '</div>',
         unsafe_allow_html=True
     )
 
@@ -485,7 +542,7 @@ def renderizar_quiz(numero_pergunta):
             "↻  RECOMEÇAR HISTÓRIA",
             key=f"reiniciar_quiz_{numero_pergunta}",
             use_container_width=True
-        ):
+             ):
             reiniciar_historia()
 # ==========================================
 # DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
