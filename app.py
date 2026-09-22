@@ -189,6 +189,73 @@ def aplicar_css():
 # DADOS DO QUIZ (2 perguntas = 2 desafios)
 # ==========================================
 
+PERGUNTAS_QUIZ = [
+    {
+        "pergunta": "Karla mostra a garrafa de PET encontrada pelos amigos e pergunta: qual decisão ajuda a dar um destino correto ao material e evita que ele permaneça no ambiente causando impactos?",
+        "alternativas": {
+            "A": "Juntá-la com outros resíduos sem separar os materiais",
+            "B": "Colocá-la no lixo comum junto aos demais resíduos",
+            "C": "Deixá-la em um terreno vazio até encontrar uma nova utilidade",
+            "D": "Levá-la a um ponto de coleta ou encaminhá-la para reciclagem"
+        },
+        "correta": "D"
+    },
+    {
+        "pergunta": "Depois de descobrirem o que significa PET, os amigos precisam escolher uma atitude para diminuir o problema antes que novas garrafas sejam produzidas. Qual decisão atende melhor a esse objetivo?",
+        "alternativas": {
+            "A": "Aumentar os pontos de coleta para receber mais garrafas descartáveis",
+            "B": "Guardar as garrafas usadas para evitar que sejam encontradas no ambiente",
+            "C": "Substituir garrafas descartáveis por recipientes que possam ser usados novamente",
+            "D": "Separar as garrafas usadas e enviá-las para uma cooperativa"
+        },
+        "correta": "C"
+    }
+]
+
+
+# ==========================================
+# ESTADO DO QUIZ
+# ==========================================
+
+def inicializar_estado():
+
+    if "cena_atual" not in st.session_state:
+        st.session_state.cena_atual = "inicio"
+
+    if "quiz_pontuacao" not in st.session_state:
+        st.session_state.quiz_pontuacao = 0
+
+    if "quiz_respondeu" not in st.session_state:
+        st.session_state.quiz_respondeu = False
+
+    if "quiz_resposta_dada" not in st.session_state:
+        st.session_state.quiz_resposta_dada = None
+
+    if "quiz_finalizado" not in st.session_state:
+        st.session_state.quiz_finalizado = False
+
+
+def ir_para_cena(cena_id):
+
+    st.session_state.cena_atual = cena_id
+    st.session_state.quiz_respondeu = False
+    st.session_state.quiz_resposta_dada = None
+    st.session_state.quiz_finalizado = False
+
+    st.rerun()
+
+
+def reiniciar_historia():
+
+    st.session_state.cena_atual = "inicio"
+    st.session_state.quiz_pontuacao = 0
+    st.session_state.quiz_respondeu = False
+    st.session_state.quiz_resposta_dada = None
+    st.session_state.quiz_finalizado = False
+
+    st.rerun()
+
+
 # ==========================================
 # DESAFIO: QUIZ
 # ==========================================
@@ -292,7 +359,6 @@ def renderizar_quiz(numero_pergunta):
 
         resposta_dada = st.session_state.quiz_resposta_dada
         resposta_correta = pergunta["correta"]
-
 
         for letra, texto in pergunta["alternativas"].items():
 
@@ -416,7 +482,7 @@ def renderizar_quiz(numero_pergunta):
                     line-height: 1.5;
                 ">
                     <strong>❌ Resposta incorreta.</strong><br><br>
-                    💡 A resposta correta é:
+                   💡 A resposta correta é:
                     <strong>{resposta_correta}) {texto_correto}</strong>
                 </div>
                 """,
@@ -428,7 +494,10 @@ def renderizar_quiz(numero_pergunta):
         # RECOMEÇAR
         # ==========================================
 
-        st.markdown("<div style='height:25px;'></div>", unsafe_allow_html=True)
+        st.markdown(
+            "<div style='height:25px;'></div>",
+            unsafe_allow_html=True
+        )
 
         col1, col2, col3 = st.columns([1, 2, 1])
 
@@ -441,7 +510,6 @@ def renderizar_quiz(numero_pergunta):
             ):
 
                 reiniciar_historia()
-
 # ==========================================
 # DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
 # ==========================================
