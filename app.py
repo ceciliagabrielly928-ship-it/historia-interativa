@@ -721,7 +721,7 @@ def renderizar_desafio_plasticos():
             <div class="feedback" id="feedback"></div>
         </div>
         <div id="final" class="final">
-            🎉 Parabéns! Você decodificou todos os tipos de plástico!
+            Parabéns! Você decodificou todos os tipos de plástico!
         </div>
     </div>
     <script>
@@ -731,7 +731,7 @@ def renderizar_desafio_plasticos():
         3: { pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.", resposta: "PVC" },
         4: { pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.", resposta: "LDPE" },
         5: { pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.", resposta: "PP" },
-        6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.", resposta: "PS" },
+        6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens.", resposta: "PS" },
         7: { pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.", resposta: "OTHER" }
     };
     const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
@@ -799,170 +799,387 @@ def renderizar_desafio_plasticos():
             reiniciar_historia()
 
 
+```python
 # ==========================================
 # DESAFIO: POLÍMERO
 # ==========================================
 def renderizar_desafio_polimero():
+
     html_polimero = """
     <!DOCTYPE html>
     <html lang="pt-BR">
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-family: Arial, sans-serif;
-            background: #f4f1eb;
-            padding: 20px;
-        }
-        .desafio {
-            width: 100%;
-            max-width: 650px;
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 30px;
+            background: #ffffff;
             color: #222;
+            padding: 28px 20px 35px;
         }
-        .pergunta {
-            font-size: 19px;
+
+        /* ===== CONTAINER PRINCIPAL ===== */
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 38px 45px 42px;
+            border: 1px solid #e9e2d6;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.09);
+        }
+
+        /* ===== TÍTULO ===== */
+
+        h1 {
+            text-align: center;
+            font-size: 27px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #222;
+            letter-spacing: 0.5px;
+        }
+
+        h1::after {
+            content: "";
+            display: block;
+            width: 55px;
+            height: 3px;
+            background: #d4a843;
+            border-radius: 10px;
+            margin: 13px auto 28px;
+        }
+
+        /* ===== FALA DA KARLA ===== */
+
+        .karla {
+            background: #faf7f0;
+            border-left: 4px solid #d4a843;
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 30px;
+            font-size: 16px;
             line-height: 1.6;
-            color: #333;
+            color: #444;
         }
+
+        .karla strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #222;
+            font-size: 14px;
+            letter-spacing: 1.5px;
+        }
+
+        /* ===== TÍTULO DA SEÇÃO ===== */
+
+        h2 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: #555;
+            text-align: center;
+        }
+
+        /* ===== PERGUNTA ===== */
+
+        .pergunta {
+            background: #faf8f4;
+            border: 1px solid #e8e1d5;
+            border-radius: 17px;
+            padding: 27px 30px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .pergunta-texto {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 22px;
+        }
+
+        .lacuna {
+            font-weight: 800;
+            color: #d4a843;
+        }
+
+        /* ===== DICA ===== */
+
         .dica {
             display: none;
             margin: 20px 0;
-            padding: 18px;
-            background: #f5f5f5;
-            border-left: 4px solid #555;
-            border-radius: 8px;
-            text-align: left;
-            line-height: 1.5;
-            font-size: 15px;
-            color: #333;
-        }
-        button {
-            border: none;
-            padding: 13px 22px;
-            margin: 10px 5px;
+            padding: 18px 20px;
+            background: #faf7f0;
+            border-left: 4px solid #d4a843;
             border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            background: #222;
-            color: white;
-            transition: 0.2s;
+            text-align: left;
+            line-height: 1.6;
             font-size: 15px;
+            color: #444;
         }
+
+        /* ===== BOTÕES ===== */
+
+        button {
+            border: 1px solid #cfc9bd;
+            background: #ffffff;
+            color: #333;
+            border-radius: 9px;
+            padding: 11px 18px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            margin: 5px;
+        }
+
         button:hover {
+            background: #d4a843;
+            border-color: #d4a843;
+            color: #222;
             transform: translateY(-2px);
-            opacity: 0.9;
         }
+
+        /* ===== INPUT ===== */
+
         input {
             width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            padding: 14px 16px;
+            margin-top: 10px;
+            border: 1px solid #cfc9bd;
+            border-radius: 9px;
             font-size: 16px;
+            font-family: Arial, sans-serif;
             outline: none;
+            color: #333;
+            background: #ffffff;
         }
-        input:focus { border-color: #555; }
+
+        input:focus {
+            border-color: #d4a843;
+            box-shadow: 0 0 0 2px rgba(212,168,67,0.12);
+        }
+
+        /* ===== BOTÃO RESPONDER ===== */
+
+        .responder {
+            background: #d4a843;
+            border-color: #d4a843;
+            color: #222;
+            margin-top: 15px;
+            padding: 12px 25px;
+        }
+
+        .responder:hover {
+            background: #c39736;
+            border-color: #c39736;
+        }
+
+        /* ===== FEEDBACK ===== */
+
         #resultado {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
+            margin-top: 18px;
+            min-height: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
         }
-        .acerto { color: #247a3d; }
-        .erro { color: #b3261e; }
+
+        .acerto {
+            color: #247a3d;
+        }
+
+        .erro {
+            color: #b3261e;
+        }
+
+        /* ===== CELULAR ===== */
+
+        @media (max-width: 650px) {
+
+            body {
+                padding: 15px 10px 25px;
+            }
+
+            .container {
+                padding: 27px 18px 30px;
+                border-radius: 19px;
+            }
+
+            h1 {
+                font-size: 21px;
+            }
+
+            .pergunta {
+                padding: 22px 16px;
+            }
+
+            .pergunta-texto {
+                font-size: 16px;
+            }
+
+            input {
+                font-size: 15px;
+            }
+        }
+
     </style>
     </head>
+
     <body>
-    <div class="desafio">
-        <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
-        <p class="pergunta">
-            O PET é um <strong>__________</strong> formado pela repetição
-            de unidades menores, formando uma cadeia de moléculas.
-        </p>
-        <button onclick="mostrarDica()" id="dicaBtn">💡 VER DICA</button>
-        <div class="dica" id="dica">
-            "Imagine um colar: uma grande estrutura construída pela repetição
-            de várias peças menores. Na Química, damos um nome específico para
-            esse tipo de estrutura. Começa com P."
+
+    <div class="container">
+
+        <h1>DESAFIO — DESCUBRA O POLÍMERO</h1>
+
+        <div class="karla">
+            <strong>KARLA:</strong>
+            "Nem todo plástico é igual. Alguns materiais são formados
+            pela repetição de pequenas unidades que se unem em longas cadeias."
         </div>
-        <input type="text" id="resposta" placeholder="Digite sua resposta..." autocomplete="off">
-        <button onclick="verificarResposta()" id="responderBtn">RESPONDER</button>
-        <div id="resultado"></div>
+
+        <h2>DESAFIO</h2>
+
+        <div class="pergunta">
+
+            <div class="pergunta-texto">
+                O PET é um <span class="lacuna">__________</span>
+                formado pela repetição de unidades menores,
+                formando uma cadeia de moléculas.
+            </div>
+
+            <button onclick="mostrarDica()" id="dicaBtn">
+                 VER DICA
+            </button>
+
+            <div class="dica" id="dica">
+                <strong>PISTA:</strong><br>
+                Imagine um colar: uma grande estrutura construída
+                pela repetição de várias peças menores.
+                Na Química, damos um nome específico para esse tipo
+                de estrutura. Começa com <strong>P</strong>.
+            </div>
+
+            <input
+                type="text"
+                id="resposta"
+                placeholder="Digite sua resposta..."
+                autocomplete="off"
+                onkeydown="if(event.key === 'Enter') verificarResposta()"
+            >
+
+            <button
+                onclick="verificarResposta()"
+                id="responderBtn"
+                class="responder"
+            >
+                RESPONDER
+            </button>
+
+            <div id="resultado"></div>
+
+        </div>
+
     </div>
+
     <script>
+
     function mostrarDica() {
+
         const d = document.getElementById("dica");
         const b = document.getElementById("dicaBtn");
+
         if (d.style.display === "none" || d.style.display === "") {
+
             d.style.display = "block";
-            b.textContent = "🙈 ESCONDER DICA";
+            b.textContent = "ESCONDER DICA";
+
         } else {
+
             d.style.display = "none";
-            b.textContent = "💡 VER DICA";
+            b.textContent =  "VER DICA";
+
         }
     }
-    
+
+
     function verificarResposta() {
-        const c = document.getElementById("resposta");
-        const r = document.getElementById("resultado");
-        const b = document.getElementById("responderBtn");
-        const resp = c.value.trim().toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
-        if (resp === "polimero") {
-            r.textContent = "🎉 ACERTOU! O PET é um polímero.";
-            r.className = "acerto";
-            c.disabled = true;
-            b.disabled = true;
-            b.style.opacity = "0.5";
-            b.style.cursor = "default";
+
+        const campo = document.getElementById("resposta");
+        const resultado = document.getElementById("resultado");
+        const botao = document.getElementById("responderBtn");
+
+        const resposta = campo.value
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\\u0300-\\u036f]/g, "");
+
+        if (resposta === "polimero") {
+
+            resultado.textContent =
+                "✓ ACERTOU! O PET é um polímero.";
+
+            resultado.className = "acerto";
+
+            campo.disabled = true;
+            botao.disabled = true;
+
+            botao.style.opacity = "0.5";
+            botao.style.cursor = "default";
+
         } else {
-            r.textContent = "❌ Quase! Tente novamente.";
-            r.className = "erro";
-            c.value = "";
-            c.focus();
+
+            resultado.textContent =
+                "✗ Tente novamente!";
+
+            resultado.className = "erro";
+
+            campo.value = "";
+            campo.focus();
+
         }
     }
+
     </script>
+
     </body>
     </html>
     """
-    
-    components.html(html_polimero, height=650, scrolling=True)
-    
+
+    components.html(
+        html_polimero,
+        height=700,
+        scrolling=True
+    )
+
     # Botão recomeçar
     st.markdown("<br>", unsafe_allow_html=True)
+
     col1, col2, col3 = st.columns([1, 2, 1])
+
     with col2:
-        if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_polimero"):
+        if st.button(
+            "↻ RECOMEÇAR HISTÓRIA",
+            key="reiniciar_polimero"
+        ):
             reiniciar_historia()
-
-
-# ==========================================
-# APLICAR
-# ==========================================
-aplicar_css()
-inicializar_estado()
-
-# ==========================================
-# CONTAINER
-# ==========================================
-st.markdown('<div class="main-container">', unsafe_allow_html=True)
-
-cena_id = st.session_state.cena_atual
-
+```
 # ==========================================
 # DESAFIOS (TELAS SEPARADAS)
 # ==========================================
