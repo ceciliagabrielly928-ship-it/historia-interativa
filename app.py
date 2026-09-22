@@ -806,6 +806,7 @@ def renderizar_desafio_polimero():
     html_polimero = """
     <!DOCTYPE html>
     <html lang="pt-BR">
+
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -825,7 +826,7 @@ def renderizar_desafio_polimero():
             padding: 28px 20px 35px;
         }
 
-        /* ===== CONTAINER PRINCIPAL ===== */
+        /* ===== CONTAINER ===== */
 
         .container {
             width: 100%;
@@ -859,7 +860,7 @@ def renderizar_desafio_polimero():
             margin: 13px auto 28px;
         }
 
-        /* ===== FALA DA KARLA ===== */
+        /* ===== KARLA ===== */
 
         .karla {
             background: #faf7f0;
@@ -893,27 +894,36 @@ def renderizar_desafio_polimero():
             text-align: center;
         }
 
+        /* ===== ÁREA DO DESAFIO ===== */
+
+        .desafio {
+            margin-top: 10px;
+            padding: 27px 30px;
+            border-radius: 17px;
+            background: #faf8f4;
+            border: 1px solid #e8e1d5;
+        }
+
         /* ===== PERGUNTA ===== */
 
         .pergunta {
-            background: #faf8f4;
-            border: 1px solid #e8e1d5;
-            border-radius: 17px;
-            padding: 27px 30px;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .pergunta-texto {
             font-size: 18px;
             line-height: 1.7;
             color: #333;
+            text-align: center;
             margin-bottom: 22px;
         }
 
         .lacuna {
             font-weight: 800;
             color: #d4a843;
+        }
+
+        /* ===== BOTÃO DA DICA ===== */
+
+        .dica-btn {
+            display: block;
+            margin: 0 auto 15px auto;
         }
 
         /* ===== DICA ===== */
@@ -929,28 +939,6 @@ def renderizar_desafio_polimero():
             line-height: 1.6;
             font-size: 15px;
             color: #444;
-        }
-
-        /* ===== BOTÕES ===== */
-
-        button {
-            border: 1px solid #cfc9bd;
-            background: #ffffff;
-            color: #333;
-            border-radius: 9px;
-            padding: 11px 18px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            margin: 5px;
-        }
-
-        button:hover {
-            background: #d4a843;
-            border-color: #d4a843;
-            color: #222;
-            transform: translateY(-2px);
         }
 
         /* ===== INPUT ===== */
@@ -973,13 +961,35 @@ def renderizar_desafio_polimero():
             box-shadow: 0 0 0 2px rgba(212,168,67,0.12);
         }
 
-        /* ===== BOTÃO RESPONDER ===== */
+        /* ===== BOTÕES ===== */
 
-        .responder {
+        button {
+            border: 1px solid #cfc9bd;
+            background: #ffffff;
+            color: #333;
+            border-radius: 9px;
+            padding: 11px 18px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        button:hover {
             background: #d4a843;
             border-color: #d4a843;
             color: #222;
-            margin-top: 15px;
+            transform: translateY(-2px);
+        }
+
+        /* ===== RESPONDER ===== */
+
+        .responder {
+            display: block;
+            margin: 15px auto 0 auto;
+            background: #d4a843;
+            border-color: #d4a843;
+            color: #222;
             padding: 12px 25px;
         }
 
@@ -988,7 +998,7 @@ def renderizar_desafio_polimero():
             border-color: #c39736;
         }
 
-        /* ===== FEEDBACK ===== */
+        /* ===== RESULTADO ===== */
 
         #resultado {
             margin-top: 18px;
@@ -1023,11 +1033,11 @@ def renderizar_desafio_polimero():
                 font-size: 21px;
             }
 
-            .pergunta {
+            .desafio {
                 padding: 22px 16px;
             }
 
-            .pergunta-texto {
+            .pergunta {
                 font-size: 16px;
             }
 
@@ -1051,18 +1061,21 @@ def renderizar_desafio_polimero():
             pela repetição de pequenas unidades que se unem em longas cadeias."
         </div>
 
-        <h2>DESAFIO</h2>
+        <h2>IDENTIFIQUE O MATERIAL</h2>
 
-        <div class="pergunta">
+        <div class="desafio">
 
-            <div class="pergunta-texto">
+            <div class="pergunta">
                 O PET é um <span class="lacuna">__________</span>
                 formado pela repetição de unidades menores,
                 formando uma cadeia de moléculas.
             </div>
 
-            <button onclick="mostrarDica()" id="dicaBtn">
-                 VER DICA
+            <button
+                onclick="mostrarDica()"
+                id="dicaBtn"
+                class="dica-btn">
+                💡 VER DICA
             </button>
 
             <div class="dica" id="dica">
@@ -1084,8 +1097,7 @@ def renderizar_desafio_polimero():
             <button
                 onclick="verificarResposta()"
                 id="responderBtn"
-                class="responder"
-            >
+                class="responder">
                 RESPONDER
             </button>
 
@@ -1094,6 +1106,7 @@ def renderizar_desafio_polimero():
         </div>
 
     </div>
+
 
     <script>
 
@@ -1105,12 +1118,12 @@ def renderizar_desafio_polimero():
         if (d.style.display === "none" || d.style.display === "") {
 
             d.style.display = "block";
-            b.textContent = "ESCONDER DICA";
+            b.textContent = "🙈 ESCONDER DICA";
 
         } else {
 
             d.style.display = "none";
-            b.textContent =  "VER DICA";
+            b.textContent = "💡 VER DICA";
 
         }
     }
@@ -1166,17 +1179,70 @@ def renderizar_desafio_polimero():
         scrolling=True
     )
 
-    # Botão recomeçar
+    # ==========================================
+    # BOTÃO RECOMEÇAR
+    # ==========================================
+
     st.markdown("<br>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
+
         if st.button(
             "↻ RECOMEÇAR HISTÓRIA",
             key="reiniciar_polimero"
         ):
             reiniciar_historia()
+
+
+# ==========================================
+# APLICAR
+# ==========================================
+
+aplicar_css()
+inicializar_estado()
+
+
+# ==========================================
+# CONTAINER PRINCIPAL
+# ==========================================
+
+st.markdown(
+    '<div class="main-container">',
+    unsafe_allow_html=True
+)
+
+
+# ==========================================
+# CENA ATUAL
+# ==========================================
+
+cena_id = st.session_state.cena_atual
+
+
+# ==========================================
+# CHAMADA DAS CENAS
+# ==========================================
+
+if cena_id == "desafio_polimero":
+
+    renderizar_desafio_polimero()
+
+# ------------------------------------------
+# COLOQUE AQUI OS OUTROS elif DO SEU CÓDIGO
+# ------------------------------------------
+
+# Exemplo:
+#
+# elif cena_id == "desafio_quiz_1":
+#     renderizar_desafio_quiz_1()
+#
+# elif cena_id == "desafio_plasticos":
+#     renderizar_desafio_plasticos()
+
+
+st.markdown("</div>", unsafe_allow_html=True)
 # ==========================================
 # DESAFIOS (TELAS SEPARADAS)
 # ==========================================
