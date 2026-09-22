@@ -186,319 +186,185 @@ def aplicar_css():
 
 
 # ==========================================
-# DADOS DO QUIZ (2 perguntas = 2 desafios)
-# ==========================================
-PERGUNTAS_QUIZ = [
-    {
-        "pergunta": "Karla mostra a garrafa de PET encontrada pelos amigos e pergunta: qual decisão ajuda a dar um destino correto ao material e evita que ele permaneça no ambiente causando impactos?",
-        "alternativas": {
-            "A": "Juntá-la com outros resíduos sem separar os materiais",
-            "B": "Colocá-la no lixo comum junto aos demais resíduos",
-            "C": "Deixá-la em um terreno vazio até encontrar uma nova utilidade",
-            "D": "Levá-la a um ponto de coleta ou encaminhá-la para reciclagem"
-        },
-        "correta": "D"
-    },
-    {
-        "pergunta": "Depois de descobrirem o que significa PET, os amigos precisam escolher uma atitude para diminuir o problema antes que novas garrafas sejam produzidas. Qual decisão atende melhor a esse objetivo?",
-        "alternativas": {
-            "A": "Aumentar os pontos de coleta para receber mais garrafas descartáveis",
-            "B": "Guardar as garrafas usadas para evitar que sejam encontradas no ambiente",
-            "C": "Substituir garrafas descartáveis por recipientes que possam ser usados novamente",
-            "D": "Separar as garrafas usadas e enviá-las para uma cooperativa"
-        },
-        "correta": "C"
-    }
-]
-
-
-# ==========================================
-# ESTADO
-# ==========================================
-def inicializar_estado():
-    if "cena_atual" not in st.session_state:
-        st.session_state.cena_atual = "inicio"
-    if "quiz_pontuacao" not in st.session_state:
-        st.session_state.quiz_pontuacao = 0
-    if "quiz_respondeu" not in st.session_state:
-        st.session_state.quiz_respondeu = False
-    if "quiz_resposta_dada" not in st.session_state:
-        st.session_state.quiz_resposta_dada = None
-    if "quiz_finalizado" not in st.session_state:
-        st.session_state.quiz_finalizado = False
-
-
-def ir_para_cena(cena_id):
-    st.session_state.cena_atual = cena_id
-    st.session_state.quiz_respondeu = False
-    st.session_state.quiz_resposta_dada = None
-    st.session_state.quiz_finalizado = False
-    st.rerun()
-
-
-def reiniciar_historia():
-    st.session_state.cena_atual = "inicio"
-    st.session_state.quiz_pontuacao = 0
-    st.session_state.quiz_respondeu = False
-    st.session_state.quiz_resposta_dada = None
-    st.session_state.quiz_finalizado = False
-    st.rerun()
-
-
-# ==========================================
 # DESAFIO: QUIZ
 # ==========================================
 def renderizar_quiz(numero_pergunta):
-    """numero_pergunta: 0 ou 1 (índice da pergunta)"""
+
+    pergunta = PERGUNTAS_QUIZ[numero_pergunta]
 
     # ==========================================
     # ESTILO DO QUIZ
     # ==========================================
     st.markdown("""
-        <style>
-
-        /* ===== CARD DA PERGUNTA ===== */
-
-        .quiz-card {
-            width: min(900px, 100%);
-            box-sizing: border-box;
-
-            background: #ffffff;
-
-            border: 2px solid #d4a843;
-            border-radius: 24px;
-
-            padding: 38px 45px;
-
-            margin: 10px auto 30px auto;
-
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-        }
-
-
-        /* ===== CABEÇALHO ===== */
-
-        .quiz-numero {
-            color: #b58a2a;
-
-            font-family: Arial, sans-serif;
-            font-size: 0.9rem;
-            font-weight: bold;
-
-            letter-spacing: 2px;
-            text-transform: uppercase;
-
-            margin-bottom: 25px;
-
-            display: flex;
-            align-items: center;
-        }
-
-
-        /* ===== KARLA ===== */
-
-        .quiz-karla {
-            display: inline-flex;
-
-            align-items: center;
-            justify-content: center;
-
-            width: 44px;
-            height: 44px;
-
-            margin-right: 14px;
-
-            border-radius: 50%;
-
-            background: #d4a843;
-            color: white;
-
-            font-family: Arial, sans-serif;
-            font-size: 1.15rem;
-            font-weight: bold;
-        }
-
-
-        /* ===== PERGUNTA ===== */
-
-        .quiz-texto {
-            color: #222222;
-
-            font-family: Arial, sans-serif;
-
-            font-size: 1.15rem;
-            line-height: 1.7;
-
-            font-weight: 500;
-        }
-
-
-        /* ===== BOTÕES DAS ALTERNATIVAS ===== */
-
-        div[data-testid="stButton"] {
-            margin-bottom: 12px !important;
-        }
-
-        div[data-testid="stButton"] > button {
-
-            width: 100% !important;
-
-            min-height: 58px !important;
-
-            border-radius: 14px !important;
-
-            border: 1.5px solid #d8d8d8 !important;
-
-            background: #ffffff !important;
-
-            color: #333333 !important;
-
-            font-family: Arial, sans-serif !important;
-
-            font-size: 1rem !important;
-
-            text-align: left !important;
-
-            padding: 12px 20px !important;
-
-            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04) !important;
-
-            transition: all 0.2s ease !important;
-        }
-
-
-        div[data-testid="stButton"] > button:hover {
-
-            border-color: #d4a843 !important;
-
-            background: #fffaf0 !important;
-
-            color: #8f6d1f !important;
-
-            transform: translateY(-1px);
-        }
-
-
-        /* ===== RESPOSTAS DEPOIS DE RESPONDER ===== */
-
-        .quiz-resposta {
-
-            width: 100%;
-            box-sizing: border-box;
-
-            padding: 16px 20px;
-
-            margin-bottom: 12px;
-
-            border-radius: 14px;
-
-            font-family: Arial, sans-serif;
-
-            font-size: 1rem;
-
-            line-height: 1.5;
-        }
-
-
-        .quiz-correta {
-
-            background: #f3faf4;
-
-            border: 2px solid #78a982;
-
-            color: #315f38;
-        }
-
-
-        .quiz-errada {
-
-            background: #fff5f5;
-
-            border: 2px solid #d77b7b;
-
-            color: #8a3535;
-        }
-
-
-        .quiz-neutra {
-
-            background: #f7f7f7;
-
-            border: 1px solid #dddddd;
-
-            color: #999999;
-        }
-
-
-        /* ===== FEEDBACK ===== */
-
-        .quiz-feedback {
-
-            width: 100%;
-            box-sizing: border-box;
-
-            padding: 18px 22px;
-
-            margin-top: 25px;
-
-            border-radius: 14px;
-
-            font-family: Arial, sans-serif;
-
-            font-size: 1rem;
-
-            line-height: 1.55;
-        }
-
-
-        .quiz-feedback-certo {
-
-            background: #f3faf4;
-
-            border-left: 5px solid #78a982;
-
-            color: #315f38;
-        }
-
-
-        .quiz-feedback-erro {
-
-            background: #fff9ef;
-
-            border-left: 5px solid #d4a843;
-
-            color: #70561c;
-        }
-
-        </style>
-    """, unsafe_allow_html=True)
-
-
-    pergunta = PERGUNTAS_QUIZ[numero_pergunta]
+<style>
+
+.quiz-card {
+    width: min(900px, 100%);
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 2px solid #d4a843;
+    border-radius: 24px;
+    padding: 32px 40px;
+    margin: 10px auto 24px auto;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.quiz-numero {
+    display: flex;
+    align-items: center;
+    color: #9a761f;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.quiz-karla {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+    border-radius: 50%;
+    background: #d4a843;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.quiz-texto {
+    color: #222222;
+    font-family: Arial, sans-serif;
+    font-size: 1.12rem;
+    line-height: 1.65;
+    font-weight: 500;
+}
+
+
+/* ==========================================
+   ALTERNATIVAS
+   ========================================== */
+
+div[data-testid="stButton"] {
+    width: min(900px, 100%) !important;
+    margin: 0 auto 10px auto !important;
+}
+
+div[data-testid="stButton"] > button {
+    width: 100% !important;
+    min-height: 54px !important;
+    padding: 12px 20px !important;
+    border: 1.5px solid #dddddd !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    color: #333333 !important;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04) !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 0.98rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    text-align: left !important;
+}
+
+div[data-testid="stButton"] > button:hover {
+    border-color: #d4a843 !important;
+    background: #fffaf0 !important;
+    color: #8f6d1f !important;
+}
+
+
+/* ==========================================
+   RESPOSTAS
+   ========================================== */
+
+.quiz-resposta {
+    width: min(900px, 100%);
+    box-sizing: border-box;
+    padding: 14px 20px;
+    margin: 0 auto 10px auto;
+    border-radius: 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.quiz-correta {
+    background: #f3faf4;
+    border: 2px solid #78a982;
+    color: #315f38;
+}
+
+.quiz-errada {
+    background: #fff5f5;
+    border: 2px solid #d77b7b;
+    color: #8a3535;
+}
+
+.quiz-neutra {
+    background: #f7f7f7;
+    border: 1px solid #dddddd;
+    color: #999999;
+}
+
+
+/* ==========================================
+   FEEDBACK
+   ========================================== */
+
+.quiz-feedback {
+    width: min(900px, 100%);
+    box-sizing: border-box;
+    padding: 16px 20px;
+    margin: 20px auto 0 auto;
+    border-radius: 14px;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.quiz-feedback-certo {
+    background: #f3faf4;
+    border-left: 5px solid #78a982;
+    color: #315f38;
+}
+
+.quiz-feedback-erro {
+    background: #fff9ef;
+    border-left: 5px solid #d4a843;
+    color: #70561c;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 
     # ==========================================
     # CARD DA PERGUNTA
     # ==========================================
 
-    st.markdown(f"""
-        <div class="quiz-card">
+    st.markdown(
+        f"""<div class="quiz-card">
+<div class="quiz-numero">
+<span class="quiz-karla">K</span>
+DESAFIO DE KARLA
+</div>
 
-            <div class="quiz-numero">
-                <span class="quiz-karla">K</span>
-                DESAFIO DE KARLA
-            </div>
-
-            <div class="quiz-texto">
-                {pergunta["pergunta"]}
-            </div>
-
-        </div>
-    """, unsafe_allow_html=True)
+<div class="quiz-texto">
+{pergunta['pergunta']}
+</div>
+</div>""",
+        unsafe_allow_html=True
+    )
 
 
     # ==========================================
-    # NÃO RESPONDEU
+    # AINDA NÃO RESPONDEU
     # ==========================================
 
     if not st.session_state.quiz_respondeu:
@@ -518,13 +384,94 @@ def renderizar_quiz(numero_pergunta):
 
 
     # ==========================================
-    # RESPONDEU
+    # JÁ RESPONDEU
     # ==========================================
 
     else:
 
         resposta_dada = st.session_state.quiz_resposta_dada
         resposta_correta = pergunta["correta"]
+
+
+        # Mostrar todas as alternativas
+        for letra, texto in pergunta["alternativas"].items():
+
+            if letra == resposta_correta:
+
+                st.markdown(
+                    f"""<div class="quiz-resposta quiz-correta">
+<strong>{letra})</strong> {texto} ✅
+</div>""",
+                    unsafe_allow_html=True
+                )
+
+            elif letra == resposta_dada:
+
+                st.markdown(
+                    f"""<div class="quiz-resposta quiz-errada">
+<strong>{letra})</strong> {texto} ❌
+</div>""",
+                    unsafe_allow_html=True
+                )
+
+            else:
+
+                st.markdown(
+                    f"""<div class="quiz-resposta quiz-neutra">
+<strong>{letra})</strong> {texto}
+</div>""",
+                    unsafe_allow_html=True
+                )
+
+
+        # ==========================================
+        # FEEDBACK
+        # ==========================================
+
+        if resposta_dada == resposta_correta:
+
+            st.markdown(
+                """<div class="quiz-feedback quiz-feedback-certo">
+<strong>✅ Resposta correta!</strong><br><br>
+Karla está orgulhosa de vocês!
+</div>""",
+                unsafe_allow_html=True
+            )
+
+        else:
+
+            texto_correto = pergunta["alternativas"][resposta_correta]
+
+            st.markdown(
+                f"""<div class="quiz-feedback quiz-feedback-erro">
+<strong>❌ Resposta incorreta.</strong><br><br>
+💡 A resposta correta é:
+<strong>{resposta_correta}) {texto_correto}</strong>
+</div>""",
+                unsafe_allow_html=True
+            )
+
+
+        # ==========================================
+        # BOTÃO RECOMEÇAR
+        # ==========================================
+
+        st.markdown(
+            "<div style='height:25px;'></div>",
+            unsafe_allow_html=True
+        )
+
+        col1, col2, col3 = st.columns([1, 2, 1])
+
+        with col2:
+
+            if st.button(
+                "↻ RECOMEÇAR HISTÓRIA",
+                key=f"reiniciar_quiz_{numero_pergunta}",
+                use_container_width=True
+            ):
+
+                reiniciar_historia()
 
 # ==========================================
 # DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
