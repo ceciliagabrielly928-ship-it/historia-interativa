@@ -260,149 +260,278 @@ def reiniciar_historia():
 # DESAFIO: QUIZ
 # ==========================================
 
+# ==========================================
+# DESAFIO: QUIZ
+# ==========================================
+
 def renderizar_quiz(numero_pergunta):
 
     pergunta = PERGUNTAS_QUIZ[numero_pergunta]
 
-    # ==========================================
-    # CARTÃO DA PERGUNTA
-    # ==========================================
+    # ------------------------------------------
+    # CSS DO QUIZ
+    # ------------------------------------------
+    st.markdown("""
+    <style>
 
-    st.markdown(
-        f"""
-        <div style="
-            width: 100%;
-            max-width: 900px;
-            margin: 10px auto 25px auto;
-            padding: 32px 40px;
-            background: white;
-            border: 2px solid #d4a843;
-            border-radius: 24px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-            box-sizing: border-box;
-        ">
+    /* Área geral do quiz */
+    .quiz-area {
+        max-width: 900px;
+        margin: 40px auto 60px auto;
+        padding: 0 25px;
+    }
 
-            <div style="
-                display: flex;
-                align-items: center;
-                margin-bottom: 20px;
-                color: #9a761f;
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-                font-weight: bold;
-                letter-spacing: 2px;
-                text-transform: uppercase;
-            ">
+    /* Cartão principal */
+    .quiz-card {
+        background: white;
+        border: 2px solid #d4a843;
+        border-radius: 24px;
+        padding: 38px 45px 42px 45px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
 
-                <span style="
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 42px;
-                    height: 42px;
-                    margin-right: 12px;
-                    border-radius: 50%;
-                    background: #d4a843;
-                    color: white;
-                    font-size: 18px;
-                    letter-spacing: 0;
-                ">K</span>
+    /* Cabeçalho */
+    .quiz-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-                DESAFIO DE KARLA
+    .quiz-k {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        margin-right: 12px;
+        border-radius: 50%;
+        background: #d4a843;
+        color: white;
+        font-size: 19px;
+        font-weight: 700;
+        vertical-align: middle;
+    }
 
-            </div>
+    .quiz-titulo {
+        display: inline-block;
+        color: #222222;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        vertical-align: middle;
+    }
 
-            <div style="
-                color: #222222;
-                font-family: Arial, sans-serif;
-                font-size: 18px;
-                line-height: 1.65;
-                font-weight: 500;
-            ">
+    /* Pergunta */
+    .quiz-pergunta {
+        background: #fafafa;
+        border-radius: 16px;
+        padding: 25px 30px;
+        color: #222222;
+        font-family: Arial, sans-serif;
+        font-size: 19px;
+        line-height: 1.6;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    /* Área das alternativas */
+    .quiz-alternativas {
+        width: 100%;
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    /* Espaçamento entre os botões */
+    .quiz-alternativa {
+        margin-bottom: 16px;
+    }
+
+    /* Rodapé */
+    .quiz-feedback {
+        text-align: center;
+        margin-top: 25px;
+        padding: 18px;
+        border-radius: 14px;
+        font-family: Arial, sans-serif;
+        font-size: 17px;
+        line-height: 1.5;
+    }
+
+    .quiz-correto {
+        background: #edf7ed;
+        border: 1px solid #8abf8a;
+        color: #286b2f;
+    }
+
+    .quiz-erro {
+        background: #fff0f0;
+        border: 1px solid #d88b8b;
+        color: #8a3030;
+    }
+
+    </style>
+    """, unsafe_allow_html=True)
+
+    # ------------------------------------------
+    # ÁREA CENTRAL
+    # ------------------------------------------
+    esquerda, centro, direita = st.columns([1, 7, 1])
+
+    with centro:
+
+        # --------------------------------------
+        # CARTÃO DO QUIZ
+        # --------------------------------------
+        st.markdown("""
+        <div class="quiz-area">
+
+            <div class="quiz-card">
+
+                <div class="quiz-header">
+                    <span class="quiz-k">K</span>
+                    <span class="quiz-titulo">DESAFIO DE KARLA</span>
+                </div>
+
+        """, unsafe_allow_html=True)
+
+        # --------------------------------------
+        # PERGUNTA
+        # --------------------------------------
+        st.markdown(
+            f"""
+            <div class="quiz-pergunta">
                 {pergunta["pergunta"]}
             </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-    # ==========================================
-    # ALTERNATIVAS
-    # ==========================================
-
-    if not st.session_state.quiz_respondeu:
-
+        # --------------------------------------
+        # ALTERNATIVAS
+        # --------------------------------------
         for letra, texto in pergunta["alternativas"].items():
 
-            if st.button(
-                f"{letra})  {texto}",
-                key=f"alt_{numero_pergunta}_{letra}",
-                use_container_width=True
-            ):
-
-                st.session_state.quiz_respondeu = True
-                st.session_state.quiz_resposta_dada = letra
-
-                if letra == pergunta["correta"]:
-                    st.session_state.quiz_pontuacao += 1
-
-                st.rerun()
-
-
-    # ==========================================
-    # RESULTADO
-    # ==========================================
-
-    else:
-
-        resposta_dada = st.session_state.quiz_resposta_dada
-        resposta_correta = pergunta["correta"]
-
-        for letra, texto in pergunta["alternativas"].items():
-
-            if letra == resposta_correta:
+            # Se ainda não respondeu
+            if not st.session_state.quiz_respondeu:
 
                 st.markdown(
-                    f"""
-                    <div style="
-                        width: 100%;
-                        max-width: 900px;
-                        margin: 0 auto 10px auto;
-                        padding: 15px 20px;
-                        box-sizing: border-box;
-                        border-radius: 14px;
-                        background: #f3faf4;
-                        border: 2px solid #78a982;
-                        color: #315f38;
-                        font-family: Arial, sans-serif;
-                        font-size: 16px;
-                    ">
-                        <strong>{letra})</strong> {texto} ✅
-                    </div>
-                    """,
+                    '<div class="quiz-alternativa">',
                     unsafe_allow_html=True
                 )
 
-            elif letra == resposta_dada:
+                if st.button(
+                    f"{letra}  |  {texto}",
+                    key=f"quiz_{numero_pergunta}_{letra}",
+                    use_container_width=True
+                ):
+                    st.session_state.quiz_respondeu = True
+                    st.session_state.quiz_resposta_dada = letra
+
+                    if letra == pergunta["correta"]:
+                        st.session_state.quiz_pontuacao += 1
+
+                    st.rerun()
 
                 st.markdown(
-                    f"""
-                    <div style="
-                        width: 100%;
-                        max-width: 900px;
-                        margin: 0 auto 10px auto;
-                        padding: 15px 20px;
-                        box-sizing: border-box;
-                        border-radius: 14px;
-                        background: #fff5f5;
-                        border: 2px solid #d77b7b;
-                        color: #8a3535;
-                        font-family: Arial, sans-serif;
-                        font-size: 16px;
-                    ">
-                        <strong>{letra})</strong> {texto} ❌
+                    '</div>',
+                    unsafe_allow_html=True
+                )
+
+            else:
+
+                # ----------------------------------
+                # RESPOSTAS DEPOIS DO CLIQUE
+                # ----------------------------------
+                resposta_dada = st.session_state.quiz_resposta_dada
+                correta = pergunta["correta"]
+
+                if letra == correta:
+
+                    st.markdown(
+                        f"""
+                        <div style="
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding: 17px 22px;
+                            margin-bottom: 16px;
+                            border-radius: 12px;
+                            background: #edf7ed;
+                            border: 2px solid #75ad75;
+                            color: #286b2f;
+                            font-family: Arial, sans-serif;
+                            font-size: 16px;
+                            font-weight: 600;
+                            text-align: left;
+                        ">
+                            ✓ &nbsp; {letra} &nbsp;|&nbsp; {texto}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                elif letra == resposta_dada:
+
+                    st.markdown(
+                        f"""
+                        <div style="
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding: 17px 22px;
+                            margin-bottom: 16px;
+                            border-radius: 12px;
+                            background: #fff0f0;
+                            border: 2px solid #d88b8b;
+                            color: #8a3030;
+                            font-family: Arial, sans-serif;
+                            font-size: 16px;
+                            font-weight: 600;
+                            text-align: left;
+                        ">
+                            ✕ &nbsp; {letra} &nbsp;|&nbsp; {texto}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                else:
+
+                    st.markdown(
+                        f"""
+                        <div style="
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding: 17px 22px;
+                            margin-bottom: 16px;
+                            border-radius: 12px;
+                            background: #f5f5f5;
+                            border: 1px solid #dddddd;
+                            color: #555555;
+                            font-family: Arial, sans-serif;
+                            font-size: 16px;
+                            text-align: left;
+                        ">
+                            {letra} &nbsp;|&nbsp; {texto}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+        # --------------------------------------
+        # FEEDBACK
+        # --------------------------------------
+        if st.session_state.quiz_respondeu:
+
+            resposta_dada = st.session_state.quiz_resposta_dada
+            correta = pergunta["correta"]
+
+            if resposta_dada == correta:
+
+                st.markdown(
+                    """
+                    <div class="quiz-feedback quiz-correto">
+                        <strong>Resposta correta! 🎉</strong><br>
+                        Você acertou o desafio de Karla.
                     </div>
                     """,
                     unsafe_allow_html=True
@@ -412,103 +541,37 @@ def renderizar_quiz(numero_pergunta):
 
                 st.markdown(
                     f"""
-                    <div style="
-                        width: 100%;
-                        max-width: 900px;
-                        margin: 0 auto 10px auto;
-                        padding: 15px 20px;
-                        box-sizing: border-box;
-                        border-radius: 14px;
-                        background: #f7f7f7;
-                        border: 1px solid #dddddd;
-                        color: #999999;
-                        font-family: Arial, sans-serif;
-                        font-size: 16px;
-                    ">
-                        <strong>{letra})</strong> {texto}
+                    <div class="quiz-feedback quiz-erro">
+                        <strong>Não foi dessa vez!</strong><br>
+                        A resposta correta é a alternativa
+                        <strong>{correta}</strong>.
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
 
-
-        # ==========================================
-        # FEEDBACK
-        # ==========================================
-
-        if resposta_dada == resposta_correta:
-
-            st.markdown(
-                """
-                <div style="
-                    width: 100%;
-                    max-width: 900px;
-                    margin: 20px auto 0 auto;
-                    padding: 18px 22px;
-                    box-sizing: border-box;
-                    border-radius: 14px;
-                    background: #f3faf4;
-                    border-left: 5px solid #78a982;
-                    color: #315f38;
-                    font-family: Arial, sans-serif;
-                    font-size: 16px;
-                    line-height: 1.5;
-                ">
-                    <strong>✅ Resposta correta!</strong><br><br>
-                    Karla está orgulhosa de vocês!
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        else:
-
-            texto_correto = pergunta["alternativas"][resposta_correta]
-
-            st.markdown(
-                f"""
-                <div style="
-                    width: 100%;
-                    max-width: 900px;
-                    margin: 20px auto 0 auto;
-                    padding: 18px 22px;
-                    box-sizing: border-box;
-                    border-radius: 14px;
-                    background: #fff9ef;
-                    border-left: 5px solid #d4a843;
-                    color: #70561c;
-                    font-family: Arial, sans-serif;
-                    font-size: 16px;
-                    line-height: 1.5;
-                ">
-                    <strong>❌ Resposta incorreta.</strong><br><br>
-                   💡 A resposta correta é:
-                    <strong>{resposta_correta}) {texto_correto}</strong>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-
-        # ==========================================
-        # RECOMEÇAR
-        # ==========================================
-
+        # Fecha o cartão
         st.markdown(
-            "<div style='height:25px;'></div>",
+            """
+            </div>
+            </div>
+            """,
             unsafe_allow_html=True
         )
 
-        col1, col2, col3 = st.columns([1, 2, 1])
+        # --------------------------------------
+        # BOTÃO RECOMEÇAR
+        # --------------------------------------
+        if st.session_state.quiz_respondeu:
 
-        with col2:
+            st.markdown("<div style='height: 10px;'></div>",
+                        unsafe_allow_html=True)
 
             if st.button(
-                "↻ RECOMEÇAR HISTÓRIA",
+                "↻  RECOMEÇAR HISTÓRIA",
                 key=f"reiniciar_quiz_{numero_pergunta}",
                 use_container_width=True
             ):
-
                 reiniciar_historia()
 # ==========================================
 # DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
