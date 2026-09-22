@@ -383,17 +383,46 @@ def renderizar_quiz(numero_pergunta):
         # --------------------------------------
         # CARTÃO DO QUIZ
         # --------------------------------------
-        st.markdown("""
-        <div class="quiz-area">
+        st.markdown(
+    """
+    <div style="
+        background: white;
+        border: 2px solid #d4a843;
+        border-radius: 24px;
+        padding: 35px 40px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+    ">
 
-            <div class="quiz-card">
+        <div style="
+            text-align: center;
+            margin-bottom: 28px;
+        ">
+            <span style="
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 44px;
+                height: 44px;
+                margin-right: 10px;
+                border-radius: 50%;
+                background: #d4a843;
+                color: white;
+                font-size: 18px;
+                font-weight: 700;
+            ">K</span>
 
-                <div class="quiz-header">
-                    <span class="quiz-k">K</span>
-                    <span class="quiz-titulo">DESAFIO DE KARLA</span>
-                </div>
-
-        """, unsafe_allow_html=True)
+            <span style="
+                color: #222222;
+                font-family: Arial, sans-serif;
+                font-size: 18px;
+                font-weight: 700;
+                letter-spacing: 2px;
+            ">DESAFIO DE KARLA</span>
+        </div>
+    """,
+    unsafe_allow_html=True
+)
 
         # --------------------------------------
         # PERGUNTA
@@ -421,7 +450,7 @@ def renderizar_quiz(numero_pergunta):
                 )
 
                 if st.button(
-                    f"{letra}  |  {texto}",
+                    f"{letra})  {texto}",
                     key=f"quiz_{numero_pergunta}_{letra}",
                     use_container_width=True
                 ):
