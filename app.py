@@ -1094,11 +1094,7 @@ def renderizar_desafio_polimero():
                     Imagine um colar: uma grande estrutura
                     construída pela repetição de várias peças
                     menores. Na Química, damos um nome específico
-                    para esse tipo de estrutura.
-
-                    <br><br>
-
-                    A palavra começa com
+                    para esse tipo de estrutura. A palavra começa com
                     <strong>P</strong>.
 
                 </div>
