@@ -1177,7 +1177,6 @@ def renderizar_desafio_polimero():
             key="reiniciar_polimero"
         ):
             reiniciar_historia()
-```
 # ==========================================
 # DESAFIOS (TELAS SEPARADAS)
 # ==========================================
