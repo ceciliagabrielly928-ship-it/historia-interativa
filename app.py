@@ -798,8 +798,6 @@ def renderizar_desafio_plasticos():
         if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_plasticos"):
             reiniciar_historia()
 
-
-```python
 # ==========================================
 # DESAFIO: POLÍMERO
 # ==========================================
