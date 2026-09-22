@@ -1349,9 +1349,11 @@ def renderizar_desafio_polimero():
     )
 
 
-   # ==========================================
-# BOTÃO RECOMEÇAR
 # ==========================================
+# BOTÃO RECOMEÇAR — EMBAIXO E CENTRALIZADO
+# ==========================================
+
+st.markdown("<br><br>", unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -1359,17 +1361,17 @@ st.markdown(
     div[data-testid="stButton"] {
         display: flex;
         justify-content: center;
+        width: 100%;
     }
 
     div[data-testid="stButton"] > button {
-        margin: 0 auto;
+        width: auto !important;
+        min-width: 220px;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
-
-st.markdown("<br>", unsafe_allow_html=True)
 
 if st.button(
     "↻ RECOMEÇAR HISTÓRIA",
