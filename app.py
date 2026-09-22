@@ -328,115 +328,36 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
-# --------------------------------------
-# ALTERNATIVAS
-# --------------------------------------
-        for letra, texto in pergunta["alternativas"].items():
+      /* ALTERNATIVAS */
+div[data-testid="stButton"] {
+    margin: 0 !important;
+    padding: 0 !important;
+}
 
-            # Se ainda não respondeu
-            if not st.session_state.quiz_respondeu:
+div[data-testid="stButton"] > button {
+    min-height: 42px !important;
+    height: 42px !important;
+    margin: 0 0 6px 0 !important;
+    border-radius: 13px !important;
+    background: #ffffff !important;
+    color: #222222 !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+    padding: 8px 20px !important;
+    box-shadow: none !important;
+}
 
-                st.markdown(
-                    '<div class="quiz-alternativa">',
-                    unsafe_allow_html=True
-                )
+div[data-testid="stButton"] > button:hover {
+    background: #fffaf0 !important;
+    border-color: #c7962e !important;
+}
 
-                if st.button(
-                    f"{letra})  {texto}",
-                    key=f"quiz_{numero_pergunta}_{letra}",
-                    use_container_width=True
-                ):
-                    st.session_state.quiz_respondeu = True
-                    st.session_state.quiz_resposta_dada = letra
-
-                    if letra == pergunta["correta"]:
-                        st.session_state.quiz_pontuacao += 1
-
-                    st.rerun()
-
-                st.markdown(
-                    '</div>',
-                    unsafe_allow_html=True
-                )
-
-            else:
-
-                # ----------------------------------
-                # RESPOSTAS DEPOIS DO CLIQUE
-                # ----------------------------------
-                resposta_dada = st.session_state.quiz_resposta_dada
-                correta = pergunta["correta"]
-
-                if letra == correta:
-
-                    st.markdown(
-                        f"""
-                        <div style="
-                            width: 100%;
-                            box-sizing: border-box;
-                            padding: 17px 22px;
-                            margin-bottom: 16px;
-                            border-radius: 12px;
-                            background: #edf7ed;
-                            border: 2px solid #75ad75;
-                            color: #286b2f;
-                            font-family: Arial, sans-serif;
-                            font-size: 16px;
-                            font-weight: 600;
-                            text-align: left;
-                        ">
-                            ✓ &nbsp; {letra} &nbsp;|&nbsp; {texto}
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
-
-                elif letra == resposta_dada:
-
-                    st.markdown(
-                        f"""
-                        <div style="
-                            width: 100%;
-                            box-sizing: border-box;
-                            padding: 17px 22px;
-                            margin-bottom: 16px;
-                            border-radius: 12px;
-                            background: #fff0f0;
-                            border: 2px solid #d88b8b;
-                            color: #8a3030;
-                            font-family: Arial, sans-serif;
-                            font-size: 16px;
-                            font-weight: 600;
-                            text-align: left;
-                        ">
-                            ✕ &nbsp; {letra} &nbsp;|&nbsp; {texto}
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
-
-                else:
-
-                    st.markdown(
-                        f"""
-                        <div style="
-                            width: 100%;
-                            box-sizing: border-box;
-                            padding: 17px 22px;
-                            margin-bottom: 16px;
-                            border-radius: 12px;
-                            background: #f5f5f5;
-                            border: 1px solid #dddddd;
-                            color: #555555;
-                            font-family: Arial, sans-serif;
-                            font-size: 16px;
-                            text-align: left;
-                        ">
-                            {letra} &nbsp;|&nbsp; {texto}
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
+/* TIRA O ESPAÇO ENTRE OS ELEMENTOS */
+div[data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+}
 
 /* FEEDBACK */
 .quiz-feedback {
