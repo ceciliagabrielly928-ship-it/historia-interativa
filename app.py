@@ -1256,7 +1256,7 @@ def renderizar_desafio_polimero():
             dica.style.display = "block";
 
             botao.textContent =
-                "🙈 ESCONDER DICA";
+                "ESCONDER DICA";
 
         } else {
 
@@ -1349,22 +1349,33 @@ def renderizar_desafio_polimero():
     )
 
 
-    # ==========================================
-    # BOTÃO RECOMEÇAR
-    # ==========================================
+   # ==========================================
+# BOTÃO RECOMEÇAR
+# ==========================================
 
-    st.markdown("<br>", unsafe_allow_html=True)
+st.markdown(
+    """
+    <style>
+    div[data-testid="stButton"] {
+        display: flex;
+        justify-content: center;
+    }
 
-    col1, col2, col3 = st.columns([1, 2, 1])
+    div[data-testid="stButton"] > button {
+        margin: 0 auto;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-    with col2:
+st.markdown("<br>", unsafe_allow_html=True)
 
-        if st.button(
-            "↻ RECOMEÇAR HISTÓRIA",
-            key="reiniciar_polimero"
-        ):
-
-            reiniciar_historia()
+if st.button(
+    "↻ RECOMEÇAR HISTÓRIA",
+    key="reiniciar_polimero"
+):
+    reiniciar_historia()
 
 
 # ==========================================
