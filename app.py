@@ -801,6 +801,7 @@ def renderizar_desafio_plasticos():
 # ==========================================
 # DESAFIO: POLÍMERO
 # ==========================================
+
 def renderizar_desafio_polimero():
 
     html_polimero = """
@@ -808,6 +809,7 @@ def renderizar_desafio_polimero():
     <html lang="pt-BR">
 
     <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -820,286 +822,413 @@ def renderizar_desafio_polimero():
         }
 
         body {
+            min-height: 100vh;
             font-family: Arial, sans-serif;
-            background: #ffffff;
-            color: #222;
+            background: white;
             padding: 28px 20px 35px;
         }
-
-        /* ===== CONTAINER ===== */
 
         .container {
             width: 100%;
             max-width: 900px;
-            margin: 0 auto;
-            background: #ffffff;
+            margin: auto;
+
+            background: white;
+
             border-radius: 24px;
+
             padding: 38px 45px 42px;
+
             border: 1px solid #e9e2d6;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.09);
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,0.09);
         }
 
-        /* ===== TÍTULO ===== */
+
+        /* ==================================
+           TÍTULO
+        ================================== */
 
         h1 {
+
             text-align: center;
+
             font-size: 27px;
+
             font-weight: 800;
-            margin-bottom: 12px;
+
+            letter-spacing: .5px;
+
             color: #222;
-            letter-spacing: 0.5px;
+
+            margin-bottom: 13px;
         }
 
         h1::after {
+
             content: "";
+
             display: block;
+
             width: 55px;
+
             height: 3px;
+
             background: #d4a843;
-            border-radius: 10px;
+
             margin: 13px auto 28px;
+
+            border-radius: 5px;
         }
 
-        /* ===== KARLA ===== */
+
+        /* ==================================
+           KARLA
+        ================================== */
 
         .karla {
+
             background: #faf7f0;
+
             border-left: 4px solid #d4a843;
+
             border-radius: 12px;
+
             padding: 18px 22px;
+
             margin-bottom: 30px;
+
             font-size: 16px;
+
             line-height: 1.6;
-            color: #444;
+
+            color: #333;
         }
 
-        .karla strong {
-            display: block;
-            margin-bottom: 5px;
-            color: #222;
-            font-size: 14px;
-            letter-spacing: 1.5px;
-        }
 
-        /* ===== TÍTULO DA SEÇÃO ===== */
+        /* ==================================
+           SUBTÍTULO
+        ================================== */
 
         h2 {
+
             font-size: 15px;
-            font-weight: 800;
+
             letter-spacing: 2px;
+
             text-transform: uppercase;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            color: #555;
+
             text-align: center;
+
+            color: #555;
+
+            margin-bottom: 18px;
         }
 
-        /* ===== ÁREA DO DESAFIO ===== */
+
+        /* ==================================
+           DESAFIO
+        ================================== */
 
         .desafio {
-            margin-top: 10px;
+
             padding: 27px 30px;
+
             border-radius: 17px;
+
             background: #faf8f4;
+
             border: 1px solid #e8e1d5;
+
+            text-align: center;
         }
 
-        /* ===== PERGUNTA ===== */
 
         .pergunta {
-            font-size: 18px;
+
+            font-size: 19px;
+
             line-height: 1.7;
+
             color: #333;
-            text-align: center;
-            margin-bottom: 22px;
+
+            margin-bottom: 20px;
         }
+
 
         .lacuna {
-            font-weight: 800;
-            color: #d4a843;
+
+            color: #b38725;
+
+            font-weight: bold;
         }
 
-        /* ===== BOTÃO DA DICA ===== */
+
+        /* ==================================
+           BOTÃO DICA
+        ================================== */
+
+        button {
+
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            transition: .2s;
+        }
+
 
         .dica-btn {
-            display: block;
-            margin: 0 auto 15px auto;
+
+            background: #333;
+
+            color: white;
+
+            margin-bottom: 15px;
         }
 
-        /* ===== DICA ===== */
+
+        .dica-btn:hover {
+
+            transform: translateY(-2px);
+
+            opacity: .9;
+        }
+
+
+        /* ==================================
+           DICA
+        ================================== */
 
         .dica {
+
             display: none;
-            margin: 20px 0;
-            padding: 18px 20px;
-            background: #faf7f0;
-            border-left: 4px solid #d4a843;
-            border-radius: 10px;
+
             text-align: left;
-            line-height: 1.6;
+
+            background: white;
+
+            border-left: 4px solid #d4a843;
+
+            border-radius: 10px;
+
+            padding: 16px 18px;
+
+            margin: 5px 0 20px;
+
             font-size: 15px;
+
+            line-height: 1.6;
+
             color: #444;
         }
 
-        /* ===== INPUT ===== */
+
+        /* ==================================
+           CAMPO
+        ================================== */
 
         input {
+
             width: 100%;
-            padding: 14px 16px;
-            margin-top: 10px;
-            border: 1px solid #cfc9bd;
-            border-radius: 9px;
+
+            padding: 15px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 10px;
+
             font-size: 16px;
-            font-family: Arial, sans-serif;
+
             outline: none;
-            color: #333;
-            background: #ffffff;
+
+            background: white;
+
+            margin-bottom: 15px;
         }
+
 
         input:focus {
+
             border-color: #d4a843;
-            box-shadow: 0 0 0 2px rgba(212,168,67,0.12);
         }
 
-        /* ===== BOTÕES ===== */
 
-        button {
-            border: 1px solid #cfc9bd;
-            background: #ffffff;
-            color: #333;
-            border-radius: 9px;
-            padding: 11px 18px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.2s ease;
-            font-size: 14px;
-        }
+        /* ==================================
+           BOTÃO RESPONDER
+        ================================== */
 
-        button:hover {
+        .responder {
+
             background: #d4a843;
-            border-color: #d4a843;
-            color: #222;
+
+            color: white;
+
+            width: 100%;
+
+            padding: 14px;
+
+            font-size: 15px;
+        }
+
+
+        .responder:hover {
+
+            background: #bd922f;
+
             transform: translateY(-2px);
         }
 
-        /* ===== RESPONDER ===== */
 
-        .responder {
-            display: block;
-            margin: 15px auto 0 auto;
-            background: #d4a843;
-            border-color: #d4a843;
-            color: #222;
-            padding: 12px 25px;
-        }
-
-        .responder:hover {
-            background: #c39736;
-            border-color: #c39736;
-        }
-
-        /* ===== RESULTADO ===== */
+        /* ==================================
+           RESULTADO
+        ================================== */
 
         #resultado {
+
             margin-top: 18px;
-            min-height: 25px;
-            font-size: 16px;
-            font-weight: 700;
-            text-align: center;
+
+            font-size: 17px;
+
+            font-weight: bold;
         }
 
+
         .acerto {
+
             color: #247a3d;
         }
 
+
         .erro {
+
             color: #b3261e;
         }
 
-        /* ===== CELULAR ===== */
+
+        /* ==================================
+           RESPONSIVO
+        ================================== */
 
         @media (max-width: 650px) {
 
             body {
-                padding: 15px 10px 25px;
+                padding: 18px 12px;
             }
 
             .container {
-                padding: 27px 18px 30px;
-                border-radius: 19px;
+
+                padding: 28px 20px;
+
+                border-radius: 18px;
             }
 
             h1 {
-                font-size: 21px;
+
+                font-size: 23px;
             }
 
             .desafio {
-                padding: 22px 16px;
+
+                padding: 22px 18px;
             }
 
             .pergunta {
-                font-size: 16px;
-            }
 
-            input {
-                font-size: 15px;
+                font-size: 17px;
             }
         }
 
     </style>
+
     </head>
+
 
     <body>
 
     <div class="container">
 
-        <h1>DESAFIO — DESCUBRA O POLÍMERO</h1>
+        <h1>DESAFIO — POLÍMERO</h1>
+
 
         <div class="karla">
-            <strong>KARLA:</strong>
-            "Nem todo plástico é igual. Alguns materiais são formados
-            pela repetição de pequenas unidades que se unem em longas cadeias."
+
+            <strong>Karla:</strong><br>
+
+            "Antes de continuar nossa investigação,
+            quero saber se vocês entenderam o que
+            existe por trás do material da garrafa."
+
         </div>
+
 
         <h2>IDENTIFIQUE O MATERIAL</h2>
 
+
         <div class="desafio">
 
-            <div class="pergunta">
-                O PET é um <span class="lacuna">__________</span>
-                formado pela repetição de unidades menores,
-                formando uma cadeia de moléculas.
-            </div>
+            <p class="pergunta">
+
+                O PET é um
+                <span class="lacuna">__________</span>
+                formado pela repetição de unidades
+                menores, formando uma cadeia de moléculas.
+
+            </p>
+
 
             <button
+                class="dica-btn"
                 onclick="mostrarDica()"
-                id="dicaBtn"
-                class="dica-btn">
+                id="dicaBtn">
+
                 💡 VER DICA
+
             </button>
 
-            <div class="dica" id="dica">
-                <strong>PISTA:</strong><br>
-                Imagine um colar: uma grande estrutura construída
-                pela repetição de várias peças menores.
-                Na Química, damos um nome específico para esse tipo
-                de estrutura. Começa com <strong>P</strong>.
+
+            <div
+                class="dica"
+                id="dica">
+
+                Imagine um colar: uma grande estrutura
+                construída pela repetição de várias peças
+                menores. Na Química, damos um nome específico
+                para esse tipo de estrutura.
+
+                <br><br>
+
+                A palavra começa com <strong>P</strong>.
+
             </div>
+
 
             <input
                 type="text"
                 id="resposta"
                 placeholder="Digite sua resposta..."
                 autocomplete="off"
-                onkeydown="if(event.key === 'Enter') verificarResposta()"
             >
 
+
             <button
+                class="responder"
                 onclick="verificarResposta()"
-                id="responderBtn"
-                class="responder">
+                id="responderBtn">
+
                 RESPONDER
+
             </button>
+
 
             <div id="resultado"></div>
 
@@ -1112,72 +1241,113 @@ def renderizar_desafio_polimero():
 
     function mostrarDica() {
 
-        const d = document.getElementById("dica");
-        const b = document.getElementById("dicaBtn");
+        const dica =
+            document.getElementById("dica");
 
-        if (d.style.display === "none" || d.style.display === "") {
+        const botao =
+            document.getElementById("dicaBtn");
 
-            d.style.display = "block";
-            b.textContent = "🙈 ESCONDER DICA";
+
+        if (
+            dica.style.display === "none" ||
+            dica.style.display === ""
+        ) {
+
+            dica.style.display = "block";
+
+            botao.textContent =
+                "🙈 ESCONDER DICA";
 
         } else {
 
-            d.style.display = "none";
-            b.textContent = "💡 VER DICA";
+            dica.style.display = "none";
 
+            botao.textContent =
+                "💡 VER DICA";
         }
     }
 
 
     function verificarResposta() {
 
-        const campo = document.getElementById("resposta");
-        const resultado = document.getElementById("resultado");
-        const botao = document.getElementById("responderBtn");
+        const campo =
+            document.getElementById("resposta");
 
-        const resposta = campo.value
+        const resultado =
+            document.getElementById("resultado");
+
+        const botao =
+            document.getElementById("responderBtn");
+
+
+        const resposta =
+            campo.value
             .trim()
             .toLowerCase()
             .normalize("NFD")
-            .replace(/[\\u0300-\\u036f]/g, "");
+            .replace(/[\u0300-\u036f]/g, "");
+
 
         if (resposta === "polimero") {
 
             resultado.textContent =
                 "✓ ACERTOU! O PET é um polímero.";
 
-            resultado.className = "acerto";
+            resultado.className =
+                "acerto";
 
             campo.disabled = true;
+
             botao.disabled = true;
 
             botao.style.opacity = "0.5";
+
             botao.style.cursor = "default";
+
 
         } else {
 
             resultado.textContent =
                 "✗ Tente novamente!";
 
-            resultado.className = "erro";
+            resultado.className =
+                "erro";
 
             campo.value = "";
-            campo.focus();
 
+            campo.focus();
         }
     }
+
+
+    /* Permitir ENTER para responder */
+
+    document
+        .getElementById("resposta")
+        .addEventListener("keydown", function(event) {
+
+            if (event.key === "Enter") {
+
+                verificarResposta();
+
+            }
+
+        });
 
     </script>
 
     </body>
+
     </html>
     """
+
 
     components.html(
         html_polimero,
         height=700,
         scrolling=True
     )
+
 
     # ==========================================
     # BOTÃO RECOMEÇAR
@@ -1193,14 +1363,16 @@ def renderizar_desafio_polimero():
             "↻ RECOMEÇAR HISTÓRIA",
             key="reiniciar_polimero"
         ):
+
             reiniciar_historia()
 
 
 # ==========================================
-# APLICAR
+# APLICAR CONFIGURAÇÕES
 # ==========================================
 
 aplicar_css()
+
 inicializar_estado()
 
 
@@ -1222,27 +1394,90 @@ cena_id = st.session_state.cena_atual
 
 
 # ==========================================
-# CHAMADA DAS CENAS
+# DESAFIOS
+# ==========================================
+# IMPORTANTE:
+# Cada desafio aparece SOMENTE UMA VEZ.
+# O st.stop() impede que o restante da
+# história seja executado novamente.
 # ==========================================
 
-if cena_id == "desafio_polimero":
+
+if cena_id == "desafio_quiz_1":
+
+    renderizar_quiz(0)
+
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+elif cena_id == "desafio_quiz_2":
+
+    renderizar_quiz(1)
+
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+elif cena_id == "desafio_plasticos":
+
+    renderizar_desafio_plasticos()
+
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+elif cena_id == "desafio_polimero":
 
     renderizar_desafio_polimero()
 
-# ------------------------------------------
-# COLOQUE AQUI OS OUTROS elif DO SEU CÓDIGO
-# ------------------------------------------
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+# ==========================================
+# CENAS NORMAIS DA HISTÓRIA
+# ==========================================
+
+# ↓↓↓ AQUI CONTINUA O RESTANTE DO SEU CÓDIGO ↓↓↓
+
 
 # Exemplo:
 #
-# elif cena_id == "desafio_quiz_1":
-#     renderizar_desafio_quiz_1()
+# if cena_id == "inicio":
+#     renderizar_inicio()
 #
-# elif cena_id == "desafio_plasticos":
-#     renderizar_desafio_plasticos()
+# elif cena_id == "cena_1":
+#     renderizar_cena_1()
+#
+# elif cena_id == "cena_2":
+#     renderizar_cena_2()
 
 
-st.markdown("</div>", unsafe_allow_html=True)
+# ==========================================
+# FECHAR CONTAINER
+# ==========================================
+
+st.markdown(
+    "</div>",
+    unsafe_allow_html=True
+)
 # ==========================================
 # DESAFIOS (TELAS SEPARADAS)
 # ==========================================
