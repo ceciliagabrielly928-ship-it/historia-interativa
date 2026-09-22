@@ -570,7 +570,7 @@ def renderizar_desafio_plasticos():
             <div class="feedback" id="feedback"></div>
         </div>
         <div id="final" class="final">
-            🎉 Parabéns! Você decodificou todos os tipos de plástico!
+            Parabéns! Você decodificou todos os tipos de plástico!
         </div>
     </div>
     <script>
@@ -1093,11 +1093,7 @@ def renderizar_desafio_polimero():
 
                     Imagine um colar: uma grande estrutura
                     construída pela repetição de várias peças
-                    menores.
-
-                    <br><br>
-
-                    Na Química, damos um nome específico
+                    menores. Na Química, damos um nome específico
                     para esse tipo de estrutura.
 
                     <br><br>
@@ -1272,9 +1268,9 @@ def renderizar_desafio_polimero():
     """
 
 
-    # =========================================
-    # MOSTRAR QUADRINHO
-    # =========================================
+# =========================================
+# MOSTRAR QUADRINHO
+# =========================================
 
     components.html(
         html_polimero,
@@ -1564,22 +1560,22 @@ if cena:
         with col2:
             # Final 1 → Quiz Pergunta 1
             if cena_id == "feedback_01b":
-                if st.button("🎯 FAZER O DESAFIO", key="ir_desafio_1", use_container_width=True):
+                if st.button("FAZER O DESAFIO", key="ir_desafio_1", use_container_width=True):
                     ir_para_cena("desafio_quiz_1")
             
             # Final 2 → Quiz Pergunta 2
             elif cena_id == "feedback_02a":
-                if st.button("🎯 FAZER O DESAFIO", key="ir_desafio_2", use_container_width=True):
+                if st.button("FAZER O DESAFIO", key="ir_desafio_2", use_container_width=True):
                     ir_para_cena("desafio_quiz_2")
             
             # Final 3 → Decodificar Plásticos
             elif cena_id == "feedback_03a":
-                if st.button("🎯 FAZER O DESAFIO", key="ir_desafio_3", use_container_width=True):
+                if st.button("FAZER O DESAFIO", key="ir_desafio_3", use_container_width=True):
                     ir_para_cena("desafio_plasticos")
             
             # Final 4 (vitória) → Polímero
             elif cena_id == "pagina_12b":
-                if st.button("🎯 FAZER O DESAFIO FINAL", key="ir_desafio_4", use_container_width=True):
+                if st.button("FAZER O DESAFIO FINAL", key="ir_desafio_4", use_container_width=True):
                     ir_para_cena("desafio_polimero")
 
 st.markdown('</div>', unsafe_allow_html=True)
