@@ -328,40 +328,47 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
-        /* ALTERNATIVAS */
-        div[data-testid="stButton"] {
-            margin-bottom: 8px;
-        }
+      /* ALTERNATIVAS */
+div[data-testid="stButton"] {
+    margin: 0 !important;
+    padding: 0 !important;
+}
 
-        div[data-testid="stButton"] > button {
-            min-height: 42px !important;
-            height: 42px !important;
-            border-radius: 13px !important;
-            background: #ffffff !important;
-            color: #222222 !important;
-            font-family: Arial, sans-serif !important;
-            font-size: 15px !important;
-            font-weight: 500 !important;
-            text-align: left !important;
-            padding: 12px 20px !important;
-            box-shadow: none !important;
-        }
+div[data-testid="stButton"] > button {
+    min-height: 42px !important;
+    height: 42px !important;
+    margin: 0 0 6px 0 !important;
+    border-radius: 13px !important;
+    background: #ffffff !important;
+    color: #222222 !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    text-align: left !important;
+    padding: 8px 20px !important;
+    box-shadow: none !important;
+}
 
-        div[data-testid="stButton"] > button:hover {
-            background: #fffaf0 !important;
-            border-color: #c7962e !important;
-        }
+div[data-testid="stButton"] > button:hover {
+    background: #fffaf0 !important;
+    border-color: #c7962e !important;
+}
 
-        /* FEEDBACK */
-        .quiz-feedback {
-            margin-top: 12px;
-            padding: 14px 18px;
-            border-radius: 12px;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            font-size: 15px;
-            line-height: 1.5;
-        }
+/* TIRA O ESPAÇO ENTRE OS ELEMENTOS */
+div[data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+}
+
+/* FEEDBACK */
+.quiz-feedback {
+    margin-top: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
 
         </style>
         """,
