@@ -246,41 +246,21 @@ def reiniciar_historia():
 
 
 # ==========================================
-# DESAFIO: QUIZ (usado para pergunta 1 e pergunta 2)
+# DESAFIO: QUIZ
 # ==========================================
 def renderizar_quiz(numero_pergunta):
     """numero_pergunta: 0 ou 1 (índice da pergunta)"""
 
     # ==========================================
-    # ESTILO
+    # ESTILO DO QUIZ
     # ==========================================
     st.markdown("""
         <style>
 
-        /* =====================================
-           FUNDO DO QUIZ
-        ===================================== */
-
-        .quiz-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            padding: 10px 20px 30px 20px;
-            background: #ffffff;
-        }
-
-        .quiz-box {
-            width: min(900px, 100%);
-            margin: 0 auto;
-        }
-
-
-        /* =====================================
-           CARD PRINCIPAL
-        ===================================== */
+        /* ===== CARD DA PERGUNTA ===== */
 
         .quiz-card {
-            width: 100%;
+            width: min(900px, 100%);
             box-sizing: border-box;
 
             background: #ffffff;
@@ -288,23 +268,17 @@ def renderizar_quiz(numero_pergunta):
             border: 2px solid #d4a843;
             border-radius: 24px;
 
-            padding: 38px 45px 42px 45px;
+            padding: 38px 45px;
 
-            margin: 0 auto 28px auto;
+            margin: 10px auto 30px auto;
 
-            box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
 
-        /* =====================================
-           CABEÇALHO
-        ===================================== */
+        /* ===== CABEÇALHO ===== */
 
         .quiz-numero {
-            display: flex;
-            align-items: center;
-
             color: #b58a2a;
 
             font-family: Arial, sans-serif;
@@ -314,13 +288,14 @@ def renderizar_quiz(numero_pergunta):
             letter-spacing: 2px;
             text-transform: uppercase;
 
-            margin-bottom: 22px;
+            margin-bottom: 25px;
+
+            display: flex;
+            align-items: center;
         }
 
 
-        /* =====================================
-           CÍRCULO DA KARLA
-        ===================================== */
+        /* ===== KARLA ===== */
 
         .quiz-karla {
             display: inline-flex;
@@ -331,24 +306,20 @@ def renderizar_quiz(numero_pergunta):
             width: 44px;
             height: 44px;
 
-            margin-right: 13px;
+            margin-right: 14px;
 
             border-radius: 50%;
 
             background: #d4a843;
-            color: #ffffff;
+            color: white;
 
             font-family: Arial, sans-serif;
             font-size: 1.15rem;
             font-weight: bold;
-
-            flex-shrink: 0;
         }
 
 
-        /* =====================================
-           TEXTO DA PERGUNTA
-        ===================================== */
+        /* ===== PERGUNTA ===== */
 
         .quiz-texto {
             color: #222222;
@@ -356,96 +327,68 @@ def renderizar_quiz(numero_pergunta):
             font-family: Arial, sans-serif;
 
             font-size: 1.15rem;
-            line-height: 1.65;
+            line-height: 1.7;
 
             font-weight: 500;
         }
 
 
-        /* =====================================
-           ALTERNATIVAS
-        ===================================== */
+        /* ===== BOTÕES DAS ALTERNATIVAS ===== */
 
-        .quiz-alternativas {
-            width: min(900px, 100%);
-            margin: 0 auto;
+        div[data-testid="stButton"] {
+            margin-bottom: 12px !important;
+        }
+
+        div[data-testid="stButton"] > button {
+
+            width: 100% !important;
+
+            min-height: 58px !important;
+
+            border-radius: 14px !important;
+
+            border: 1.5px solid #d8d8d8 !important;
+
+            background: #ffffff !important;
+
+            color: #333333 !important;
+
+            font-family: Arial, sans-serif !important;
+
+            font-size: 1rem !important;
+
+            text-align: left !important;
+
+            padding: 12px 20px !important;
+
+            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04) !important;
+
+            transition: all 0.2s ease !important;
         }
 
 
-        /* =====================================
-           BOTÕES DO STREAMLIT
-        ===================================== */
+        div[data-testid="stButton"] > button:hover {
 
-        .quiz-wrapper div.stButton > button {
+            border-color: #d4a843 !important;
 
-            width: 100%;
+            background: #fffaf0 !important;
 
-            min-height: 58px;
-
-            padding: 13px 20px;
-
-            margin-bottom: 10px;
-
-            border-radius: 14px;
-
-            border: 1.5px solid #d9d9d9;
-
-            background: #ffffff;
-
-            color: #333333;
-
-            font-family: Arial, sans-serif;
-            font-size: 1rem;
-
-            text-align: left;
-
-            box-shadow:
-                0 2px 7px rgba(0, 0, 0, 0.04);
-
-            transition:
-                border-color 0.2s ease,
-                background 0.2s ease,
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-
-        .quiz-wrapper div.stButton > button:hover {
-
-            border-color: #d4a843;
-
-            background: #fffaf0;
-
-            color: #8f6d1f;
+            color: #8f6d1f !important;
 
             transform: translateY(-1px);
-
-            box-shadow:
-                0 5px 14px rgba(212, 168, 67, 0.15);
         }
 
 
-        .quiz-wrapper div.stButton > button:focus {
-
-            border-color: #d4a843;
-
-            box-shadow:
-                0 0 0 2px rgba(212, 168, 67, 0.15);
-        }
-
-
-        /* =====================================
-           RESPOSTAS APÓS RESPONDER
-        ===================================== */
+        /* ===== RESPOSTAS DEPOIS DE RESPONDER ===== */
 
         .quiz-resposta {
 
             width: 100%;
             box-sizing: border-box;
 
-            padding: 15px 20px;
+            padding: 16px 20px;
 
-            margin-bottom: 10px;
+            margin-bottom: 12px;
 
             border-radius: 14px;
 
@@ -457,31 +400,25 @@ def renderizar_quiz(numero_pergunta):
         }
 
 
-        /* RESPOSTA CORRETA */
-
         .quiz-correta {
 
-            background: #f4faf5;
+            background: #f3faf4;
 
-            border: 2px solid #79a982;
+            border: 2px solid #78a982;
 
             color: #315f38;
         }
 
 
-        /* RESPOSTA ERRADA */
-
         .quiz-errada {
 
             background: #fff5f5;
 
-            border: 2px solid #d98282;
+            border: 2px solid #d77b7b;
 
             color: #8a3535;
         }
 
-
-        /* OUTRAS ALTERNATIVAS */
 
         .quiz-neutra {
 
@@ -493,9 +430,7 @@ def renderizar_quiz(numero_pergunta):
         }
 
 
-        /* =====================================
-           FEEDBACK
-        ===================================== */
+        /* ===== FEEDBACK ===== */
 
         .quiz-feedback {
 
@@ -504,7 +439,7 @@ def renderizar_quiz(numero_pergunta):
 
             padding: 18px 22px;
 
-            margin-top: 22px;
+            margin-top: 25px;
 
             border-radius: 14px;
 
@@ -512,23 +447,19 @@ def renderizar_quiz(numero_pergunta):
 
             font-size: 1rem;
 
-            line-height: 1.5;
+            line-height: 1.55;
         }
 
 
-        /* FEEDBACK CORRETO */
-
         .quiz-feedback-certo {
 
-            background: #f4faf5;
+            background: #f3faf4;
 
-            border-left: 5px solid #79a982;
+            border-left: 5px solid #78a982;
 
             color: #315f38;
         }
 
-
-        /* FEEDBACK ERRADO */
 
         .quiz-feedback-erro {
 
@@ -539,47 +470,8 @@ def renderizar_quiz(numero_pergunta):
             color: #70561c;
         }
 
-
-        /* =====================================
-           RESPONSIVO
-        ===================================== */
-
-        @media (max-width: 700px) {
-
-            .quiz-card {
-
-                padding: 28px 24px 32px 24px;
-
-                border-radius: 20px;
-            }
-
-            .quiz-texto {
-
-                font-size: 1rem;
-
-                line-height: 1.55;
-            }
-
-            .quiz-karla {
-
-                width: 40px;
-                height: 40px;
-            }
-
-        }
-
         </style>
     """, unsafe_allow_html=True)
-
-
-    # ==========================================
-    # INÍCIO DO CONTAINER
-    # ==========================================
-
-    st.markdown(
-        '<div class="quiz-wrapper"><div class="quiz-box">',
-        unsafe_allow_html=True
-    )
 
 
     pergunta = PERGUNTAS_QUIZ[numero_pergunta]
@@ -593,17 +485,12 @@ def renderizar_quiz(numero_pergunta):
         <div class="quiz-card">
 
             <div class="quiz-numero">
-
                 <span class="quiz-karla">K</span>
-
                 DESAFIO DE KARLA
-
             </div>
 
             <div class="quiz-texto">
-
                 {pergunta["pergunta"]}
-
             </div>
 
         </div>
@@ -611,7 +498,7 @@ def renderizar_quiz(numero_pergunta):
 
 
     # ==========================================
-    # ALTERNATIVAS — AINDA NÃO RESPONDEU
+    # NÃO RESPONDEU
     # ==========================================
 
     if not st.session_state.quiz_respondeu:
@@ -631,99 +518,13 @@ def renderizar_quiz(numero_pergunta):
 
 
     # ==========================================
-    # DEPOIS QUE RESPONDEU
+    # RESPONDEU
     # ==========================================
 
     else:
 
         resposta_dada = st.session_state.quiz_resposta_dada
         resposta_correta = pergunta["correta"]
-
-
-        # ======================================
-        # MOSTRAR ALTERNATIVAS
-        # ======================================
-
-        for letra, texto in pergunta["alternativas"].items():
-
-            if letra == resposta_correta:
-
-                st.markdown(f"""
-                    <div class="quiz-resposta quiz-correta">
-
-                        <strong>{letra})</strong>
-                        {texto}
-                        ✅
-
-                    </div>
-                """, unsafe_allow_html=True)
-
-
-            elif letra == resposta_dada:
-
-                st.markdown(f"""
-                    <div class="quiz-resposta quiz-errada">
-
-                        <strong>{letra})</strong>
-                        {texto}
-                        ❌
-
-                    </div>
-                """, unsafe_allow_html=True)
-
-
-            else:
-
-                st.markdown(f"""
-                    <div class="quiz-resposta quiz-neutra">
-
-                        <strong>{letra})</strong>
-                        {texto}
-
-                    </div>
-                """, unsafe_allow_html=True)
-
-
-        # ======================================
-        # FEEDBACK
-        # ======================================
-
-        if resposta_dada == resposta_correta:
-
-            st.markdown("""
-                <div class="quiz-feedback quiz-feedback-certo">
-
-                    <strong>✅ Resposta correta!</strong><br>
-
-                    Karla está orgulhosa de vocês!
-
-                </div>
-            """, unsafe_allow_html=True)
-
-        else:
-
-            texto_correto = pergunta["alternativas"][resposta_correta]
-
-            st.markdown(f"""
-                <div class="quiz-feedback quiz-feedback-erro">
-
-                    <strong>❌ Resposta incorreta.</strong><br>
-
-                    💡 A resposta correta é:
-                    <strong>{resposta_correta}) {texto_correto}</strong>
-
-                </div>
-            """, unsafe_allow_html=True)
-
-
-    # ==========================================
-    # FECHA O CONTAINER
-    # ==========================================
-
-    st.markdown(
-        '</div></div>',
-        unsafe_allow_html=True
-    )
 
 # ==========================================
 # DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
