@@ -389,14 +389,20 @@ def renderizar_quiz(numero_pergunta):
 # ==========================================
 # DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
 # ==========================================
+
 def renderizar_desafio_plasticos():
+
     html_desafio = """
     <!DOCTYPE html>
     <html lang="pt-BR">
+
     <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <style>
+
+    <style>
+
     * {
         box-sizing: border-box;
         margin: 0;
@@ -405,7 +411,7 @@ def renderizar_desafio_plasticos():
 
     body {
         font-family: Arial, sans-serif;
-        background:  #ffffff;
+        background: #ffffff;
         color: #222;
         padding: 28px 20px 35px;
     }
@@ -563,6 +569,7 @@ def renderizar_desafio_plasticos():
     }
 
     @keyframes aparecer {
+
         from {
             opacity: 0;
             transform: translateY(8px);
@@ -572,6 +579,7 @@ def renderizar_desafio_plasticos():
             opacity: 1;
             transform: translateY(0);
         }
+
     }
 
     .pista-titulo {
@@ -684,18 +692,31 @@ def renderizar_desafio_plasticos():
         .desafio {
             padding: 22px 16px;
         }
+
     }
+
     </style>
+
     </head>
+
     <body>
+
     <div class="container">
+
         <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
+
         <div class="karla">
+
             <strong>KARLA:</strong>
+
             "Esses números não estão aqui por acaso. Cada um representa um tipo de plástico. Use as pistas para descobrir qual é qual!"
+
         </div>
+
         <h2>BANCO DE PALAVRAS</h2>
+
         <div class="banco">
+
             <span class="palavra">PP</span>
             <span class="palavra">PET</span>
             <span class="palavra">PVC</span>
@@ -703,9 +724,13 @@ def renderizar_desafio_plasticos():
             <span class="palavra">LDPE</span>
             <span class="palavra">OTHER</span>
             <span class="palavra">HDPE</span>
+
         </div>
+
         <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
+
         <div class="numeros">
+
             <button class="numero" onclick="abrirDesafio(1)">1</button>
             <button class="numero" onclick="abrirDesafio(2)">2</button>
             <button class="numero" onclick="abrirDesafio(3)">3</button>
@@ -713,110 +738,205 @@ def renderizar_desafio_plasticos():
             <button class="numero" onclick="abrirDesafio(5)">5</button>
             <button class="numero" onclick="abrirDesafio(6)">6</button>
             <button class="numero" onclick="abrirDesafio(7)">7</button>
+
         </div>
+
         <div id="desafio" class="desafio">
-            <div class="pista-titulo" id="pistaTitulo"></div>
-            <div class="pista" id="pista"></div>
-            <div class="opcoes" id="opcoes"></div>
-            <div class="feedback" id="feedback"></div>
+
+            <div
+                class="pista-titulo"
+                id="pistaTitulo">
+            </div>
+
+            <div
+                class="pista"
+                id="pista">
+            </div>
+
+            <div
+                class="opcoes"
+                id="opcoes">
+            </div>
+
+            <div
+                class="feedback"
+                id="feedback">
+            </div>
+
         </div>
+
         <div id="final" class="final">
+
             Parabéns! Você decodificou todos os tipos de plástico!
+
         </div>
+
     </div>
+
     <script>
+
     const desafios = {
-        1: { pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.", resposta: "PET" },
-        2: { pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.", resposta: "HDPE" },
-        3: { pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.", resposta: "PVC" },
-        4: { pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.", resposta: "LDPE" },
-        5: { pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.", resposta: "PP" },
-        6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens.", resposta: "PS" },
-        7: { pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.", resposta: "OTHER" }
-    };
-    const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
-    let numeroAtual = null;
-    let resolvidos = [];
-    
-    function abrirDesafio(numero) {
-        numeroAtual = numero;
-        const d = desafios[numero];
-        document.getElementById("desafio").classList.add("ativo");
-        document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
-        document.getElementById("pista").textContent = '"' + d.pista + '"';
-        document.getElementById("feedback").textContent = "";
-        criarOpcoes();
-        document.querySelectorAll(".numero").forEach((b, i) => {
-            b.classList.remove("selecionado");
-            if (i + 1 === numero) b.classList.add("selecionado");
-        });
-    }
-    
-    function criarOpcoes() {
-        const area = document.getElementById("opcoes");
-        area.innerHTML = "";
-        palavras.forEach(p => {
-            const b = document.createElement("button");
-            b.className = "opcao";
-            b.textContent = p;
-            b.onclick = () => verificarResposta(p);
-            area.appendChild(b);
-        });
-    }
-    
-    function verificarResposta(resposta) {
-        const correta = desafios[numeroAtual].resposta;
-        const fb = document.getElementById("feedback");
-        if (resposta === correta) {
-            fb.textContent = "✓ Acertou!";
-            fb.style.color = "#247a3d";
-            if (!resolvidos.includes(numeroAtual)) resolvidos.push(numeroAtual);
-            document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
-            document.querySelectorAll(".opcao").forEach(b => b.disabled = true);
-            if (resolvidos.length === 7) {
-                setTimeout(() => {
-                    document.getElementById("final").style.display = "block";
-                    document.getElementById("desafio").classList.remove("ativo");
-                }, 600);
-            }
-        } else {
-            fb.textContent = "✗ Tente novamente!";
-            fb.style.color = "#b3261e";
+
+        1: {
+            pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
+            resposta: "PET"
+        },
+
+        2: {
+            pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
+            resposta: "HDPE"
+        },
+
+        3: {
+            pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
+            resposta: "PVC"
+        },
+
+        4: {
+            pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
+            resposta: "LDPE"
+        },
+
+        5: {
+            pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
+            resposta: "PP"
+        },
+
+        6: {
+            pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens.",
+            resposta: "PS"
+        },
+
+        7: {
+            pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
+            resposta: "OTHER"
         }
+
+    };
+
+    const palavras = [
+        "PP",
+        "PET",
+        "PVC",
+        "PS",
+        "LDPE",
+        "OTHER",
+        "HDPE"
+    ];
+
+    let numeroAtual = null;
+
+    let resolvidos = [];
+
+
+    function abrirDesafio(numero) {
+
+        numeroAtual = numero;
+
+        const d = desafios[numero];
+
+        document
+            .getElementById("desafio")
+            .classList
+            .add("ativo");
+
+        document
+            .getElementById("pistaTitulo")
+            .textContent = "PISTA " + numero;
+
+        document
+            .getElementById("pista")
+            .textContent = '"' + d.pista + '"';
+
+        document
+            .getElementById("feedback")
+            .textContent = "";
+
+        criarOpcoes();
+
+        document
+            .querySelectorAll(".numero")
+            .forEach((b, i) => {
+
+                b.classList.remove("selecionado");
+
+                if (i + 1 === numero) {
+                    b.classList.add("selecionado");
+                }
+
+            });
+
     }
-    </script>
-    </body>
-    </html>
-    """
-    
-    components.html(html_desafio, height=850, scrolling=True)
-    
-    # Botão recomeçar
-    st.markdown("<br>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_plasticos"):
-            reiniciar_historia()
-
-import streamlit as st
-import streamlit.components.v1 as components
 
 
-# =========================================================
-# CONFIGURAÇÃO / FUNÇÕES DO SEU APP
-# =========================================================
+    function criarOpcoes() {
 
-# Mantenha aqui as suas funções originais:
-#
-# aplicar_css()
-# inicializar_estado()
-# reiniciar_historia()
-# renderizar_quiz()
-# renderizar_desafio_plasticos()
-# etc.
-#
-# =========================================================
+        const area =
+            document.getElementById("opcoes");
 
+        area.innerHTML = "";
+
+        palavras.forEach(p => {
+
+            const b =
+                document.createElement("button");
+
+            b.className = "opcao";
+
+            b.textContent = p;
+
+            b.onclick = () =>
+                verificarResposta(p);
+
+            area.appendChild(b);
+
+        });
+
+    }
+
+
+    function verificarResposta(resposta) {
+
+        const correta =
+            desafios[numeroAtual].resposta;
+
+        const fb =
+            document.getElementById("feedback");
+
+
+        if (resposta === correta) {
+
+            fb.textContent = "✓ Acertou!";
+
+            fb.style.color = "#247a3d";
+
+
+            if (!resolvidos.includes(numeroAtual)) {
+
+                resolvidos.push(numeroAtual);
+
+            }
+
+
+            document
+                .querySelectorAll(".numero")
+                [numeroAtual - 1]
+                .classList
+                .add("concluido");
+
+
+            document
+                .querySelectorAll(".opcao")
+                .forEach(b => {
+
+                    b.disabled = true;
+
+                });
+
+
+            if (resolvidos.length === 7) {
+
+                setTimeout(() => {
 
 # =========================================================
 # DESAFIO — POLÍMERO
@@ -1344,7 +1464,7 @@ def renderizar_desafio_polimero():
                     dica.style.display = "block";
 
                     botao.textContent =
-                        "🙈 ESCONDER DICA";
+                        "ESCONDER DICA";
 
                 }
 
