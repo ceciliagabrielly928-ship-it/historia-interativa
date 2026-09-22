@@ -55,134 +55,131 @@ def renderizar_imagem(caminho, alt='Imagem da história'):
     return True
 
 
-# ==========================================
-# CSS GLOBAL
-# ==========================================
-def aplicar_css():
-    st.markdown("""
-        <style>
-        .stApp { background: #ffffff !important; }
-        .main > div { padding: 0 !important; max-width: 100% !important; }
-        .block-container { padding: 0 !important; max-width: 100% !important; padding-top: 0 !important; }
-        .stApp > div:first-child { margin-top: 0 !important; }
-        #MainMenu {display: none !important;}
-        footer {display: none !important;}
-        header {display: none !important;}
-        .stDeployButton {display: none !important;}
-        
-        .main-container {
-            background: #ffffff;
-            min-height: 0vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 18px 18px 40px 18px;
-        }
-        
-        .titulo {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #222222;
-            font-family: Georgia, serif;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-        
-        .subtitulo {
-            font-size: 0.9rem;
-            color: #666;
-            text-align: center;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-        
-        .linha {
-            width: 60px;
-            height: 2px;
-            background: #d4a843;
-            margin: 10px auto 25px auto;
-        }
-        
-        .imagem-container {
-            width: min(1000px, 100%);
-            margin: 0 auto 22px auto;
-            background: #ffffff;
-            border: 1px solid #e5e5e5;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.10);
-        }
-        
-        .imagem-container img {
-            width: 100%;
-            max-height: 85vh;
-            height: auto;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-        }
-        
-        .stButton button {
-            width: 100% !important;
-            padding: 16px 40px !important;
-            font-size: 1rem !important;
-            font-weight: 700 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 4px !important;
-            border-radius: 4px !important;
-            border: 2px solid #d4a843 !important;
-            background: transparent !important;
-            color: #d4a843 !important;
-            transition: all 0.3s ease !important;
-            font-family: Arial, sans-serif !important;
-        }
-        
-        .stButton button:hover {
-            background: #d4a843 !important;
-            color: #0a0a0a !important;
-            box-shadow: 0 10px 40px rgba(212,168,67,0.3) !important;
-        }
-        
-        .btn-comecar button {
-            background: #d4a843 !important;
-            color: #0a0a0a !important;
-            border: none !important;
-        }
-        
-        .btn-comecar button:hover {
-            background: #e8c86a !important;
-            transform: scale(1.02) !important;
-        }
-        
-        .pergunta {
-            color: #ffffff;
-            font-size: 1.4rem;
-            font-weight: 300;
-            text-align: center;
-            margin: 30px 0 20px 0;
-            font-family: Georgia, serif;
-        }
-        
-        .mensagem {
-            color: #d4a843;
-            font-size: 1.3rem;
-            text-align: center;
-            margin: 30px 0;
-            font-family: Georgia, serif;
-        }
-        
-        @media (max-width: 768px) {
-            .main-container { padding: 10px 10px 30px 10px; }
-            .titulo { font-size: 2.2rem; }
-            .imagem-container { border-radius: 16px; margin-bottom: 16px; }
-            .imagem-container img { max-height: 70vh; }
-            .stButton button { font-size: 0.8rem !important; padding: 14px 20px !important; }
-        }
-        </style>
-    """, unsafe_allow_html=True)
+st.markdown("""
+<style>
+.quiz-card {
+    width: min(900px, 100%);
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 2px solid #d4a843;
+    border-radius: 24px;
+    padding: 32px 40px;
+    margin: 10px auto 22px auto;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.quiz-numero {
+    display: flex;
+    align-items: center;
+    color: #9a761f;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.quiz-karla {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+    border-radius: 50%;
+    background: #d4a843;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.quiz-texto {
+    color: #222222;
+    font-family: Arial, sans-serif;
+    font-size: 1.12rem;
+    line-height: 1.65;
+    font-weight: 500;
+}
+
+div[data-testid="stButton"] {
+    width: min(900px, 100%) !important;
+    margin: 0 auto 10px auto !important;
+}
+
+div[data-testid="stButton"] > button {
+    width: 100% !important;
+    min-height: 54px !important;
+    padding: 12px 20px !important;
+    border: 1.5px solid #dddddd !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    color: #333333 !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 0.98rem !important;
+    text-align: left !important;
+}
+
+div[data-testid="stButton"] > button:hover {
+    border-color: #d4a843 !important;
+    background: #fffaf0 !important;
+    color: #8f6d1f !important;
+}
+
+.quiz-resposta {
+    width: min(900px, 100%);
+    box-sizing: border-box;
+    padding: 14px 20px;
+    margin: 0 auto 10px auto;
+    border-radius: 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.quiz-correta {
+    background: #f3faf4;
+    border: 2px solid #78a982;
+    color: #315f38;
+}
+
+.quiz-errada {
+    background: #fff5f5;
+    border: 2px solid #d77b7b;
+    color: #8a3535;
+}
+
+.quiz-neutra {
+    background: #f7f7f7;
+    border: 1px solid #dddddd;
+    color: #999999;
+}
+
+.quiz-feedback {
+    width: min(900px, 100%);
+    box-sizing: border-box;
+    padding: 16px 20px;
+    margin: 20px auto 0 auto;
+    border-radius: 14px;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.quiz-feedback-certo {
+    background: #f3faf4;
+    border-left: 5px solid #78a982;
+    color: #315f38;
+}
+
+.quiz-feedback-erro {
+    background: #fff9ef;
+    border-left: 5px solid #d4a843;
+    color: #70561c;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # ==========================================
