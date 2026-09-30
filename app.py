@@ -279,14 +279,14 @@ def renderizar_quiz(numero_pergunta):
             gap: 0px !important;
         }
 
-        /* CARD BRANCO ELEVADO (ESTILO DO SEGUNDO PRINT) */
+        /* CARD BRANCO PRINCIPAL (Engloba todo o quiz) */
         .quiz-card {
             background-color: #ffffff;
             border-radius: 24px;
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07);
             border: 1px solid #f2f2f2;
             padding: 45px 40px;
-            margin: 20px auto 35px auto;
+            margin: 20px auto 30px auto;
             width: 100%;
         }
 
@@ -341,17 +341,11 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
-        /* BOTÕES DAS ALTERNATIVAS */
-        div[data-testid="stButton"] {
-            width: 100% !important;
-            margin: 0 auto !important;
-            padding: 0 !important;
-        }
-
+        /* ESTILO DOS BOTÕES (Formatação original do primeiro print) */
         div[data-testid="stButton"] > button {
             width: 100% !important;
             min-height: 48px !important;
-            margin-bottom: 12px !important;
+            margin-bottom: 14px !important;
             border-radius: 25px !important;
             border: 1.5px solid #d4a843 !important;
             background: #ffffff !important;
@@ -370,9 +364,9 @@ def renderizar_quiz(numero_pergunta):
             border-color: #b88e30 !important;
         }
 
-        /* CAIXA DE FEEDBACK (DENTRO DO CARD) */
+        /* FEEDBACK */
         .quiz-feedback {
-            margin-top: 10px;
+            margin-top: 15px;
             padding: 14px 18px;
             border-radius: 25px;
             text-align: center;
@@ -381,9 +375,9 @@ def renderizar_quiz(numero_pergunta):
             line-height: 1.5;
         }
 
-        /* ESPAÇAMENTO PARA O BOTÃO DE RECOMEÇAR FORA DO CARD */
+        /* RECOMEÇAR FORA DO CARD */
         .recomecar-container {
-            margin-top: 25px;
+            margin-top: 30px;
         }
         </style>
         """,
@@ -391,38 +385,30 @@ def renderizar_quiz(numero_pergunta):
     )
 
     # ==========================================
-    # CENTRALIZAÇÃO GERAL COM COLUNAS
+    # CENTRALIZAÇÃO GERAL
     # ==========================================
-    col1, col2, col3 = st.columns([1, 4, 1])
+    col1, col2, col3 = st.columns([1, 6, 1])
 
     with col2:
-        # 1. INÍCIO DO CARD BRANCO
-        st.markdown('<div class="quiz-card">', unsafe_allow_html=True)
+        # ANTES DE RESPONDER: Renderiza tudo perfeitamente dentro do card
+        if not st.session_state.quiz_respondeu:
+            # Abre o card, injeta o cabeçalho e a pergunta
+            st.markdown(
+                f"""
+                <div class="quiz-card">
+                    <div class="quiz-header">
+                        <div class="quiz-linha"></div>
+                        <div class="quiz-k">K</div>
+                        <div class="quiz-titulo">DESAFIO DE KARLA</div>
+                        <div class="quiz-linha"></div>
+                    </div>
+                    <div class="quiz-pergunta">{pergunta["pergunta"]}</div>
+                """,
+                unsafe_allow_html=True,
+            )
 
-        # Cabeçalho
-        st.markdown(
-            """
-            <div class="quiz-header">
-                <div class="quiz-linha"></div>
-                <div class="quiz-k">K</div>
-                <div class="quiz-titulo">DESAFIO DE KARLA</div>
-                <div class="quiz-linha"></div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        # Pergunta
-        st.markdown(
-            f'<div class="quiz-pergunta">{pergunta["pergunta"]}</div>',
-            unsafe_allow_html=True,
-        )
-
-        # Alternativas
-        for letra, texto in pergunta["alternativas"].items():
-
-            # Antes de responder (Botões)
-            if not st.session_state.quiz_respondeu:
+            # Botões das alternativas
+            for letra, texto in pergunta["alternativas"].items():
                 if st.button(
                     f"{letra})  {texto}",
                     key=f"quiz_{numero_pergunta}_{letra}",
@@ -436,18 +422,37 @@ def renderizar_quiz(numero_pergunta):
 
                     st.rerun()
 
-            # Depois de responder (Resultado visual)
-            else:
-                resposta_dada = st.session_state.quiz_resposta_dada
-                correta = pergunta["correta"]
+            # Fecha o card
+            st.markdown("</div>", unsafe_allow_html=True)
 
-                # Resposta Correta
+        # DEPOIS DE RESPONDER: Mostra os resultados com as bordas e cores exatas
+        else:
+            resposta_dada = st.session_state.quiz_resposta_dada
+            correta = pergunta["correta"]
+
+            # Início do card
+            st.markdown(
+                f"""
+                <div class="quiz-card">
+                    <div class="quiz-header">
+                        <div class="quiz-linha"></div>
+                        <div class="quiz-k">K</div>
+                        <div class="quiz-titulo">DESAFIO DE KARLA</div>
+                        <div class="quiz-linha"></div>
+                    </div>
+                    <div class="quiz-pergunta">{pergunta["pergunta"]}</div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            # Renderiza os estados de cada alternativa mantendo o formato do primeiro print
+            for letra, texto in pergunta["alternativas"].items():
                 if letra == correta:
                     st.markdown(
                         f"""
                         <div style="
                             padding: 14px 20px;
-                            margin-bottom: 12px;
+                            margin-bottom: 14px;
                             border-radius: 25px;
                             background: #edf7ed;
                             border: 1.5px solid #75ad75;
@@ -462,14 +467,12 @@ def renderizar_quiz(numero_pergunta):
                         """,
                         unsafe_allow_html=True,
                     )
-
-                # Resposta Errada Escolhida
                 elif letra == resposta_dada:
                     st.markdown(
                         f"""
                         <div style="
                             padding: 14px 20px;
-                            margin-bottom: 12px;
+                            margin-bottom: 14px;
                             border-radius: 25px;
                             background: #fff0f0;
                             border: 1.5px solid #d88b8b;
@@ -484,18 +487,16 @@ def renderizar_quiz(numero_pergunta):
                         """,
                         unsafe_allow_html=True,
                     )
-
-                # Outras Alternativas Neutras
                 else:
                     st.markdown(
                         f"""
                         <div style="
                             padding: 14px 20px;
-                            margin-bottom: 12px;
+                            margin-bottom: 14px;
                             border-radius: 25px;
                             background: #ffffff;
-                            border: 1px solid #e0e0e0;
-                            color: #888888;
+                            border: 1.5px solid #d4a843;
+                            color: #333333;
                             font-family: Arial, sans-serif;
                             font-size: 14px;
                             font-weight: 500;
@@ -507,11 +508,7 @@ def renderizar_quiz(numero_pergunta):
                         unsafe_allow_html=True,
                     )
 
-        # Feedback dentro do Card
-        if st.session_state.quiz_respondeu:
-            resposta_dada = st.session_state.quiz_resposta_dada
-            correta = pergunta["correta"]
-
+            # Feedback no final do card
             if resposta_dada == correta:
                 st.markdown(
                     """
@@ -542,11 +539,10 @@ def renderizar_quiz(numero_pergunta):
                     unsafe_allow_html=True,
                 )
 
-        # FECHA O CARD BRANCO
-        st.markdown("</div>", unsafe_allow_html=True)
+            # Fecha o card
+            st.markdown("</div>", unsafe_allow_html=True)
 
-        # 2. BOTÃO RECOMEÇAR HISTÓRIA (FORA DO CARD E ESPAÇADO)
-        if st.session_state.quiz_respondeu:
+            # Botão Recomeçar História (Fora e separado do card)
             st.markdown(
                 '<div class="recomecar-container">', unsafe_allow_html=True
             )
