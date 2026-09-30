@@ -1196,7 +1196,7 @@ def renderizar_desafio_polimero():
 
 
             <h1>
-                DESAFIO - POLÍMERO
+                DESAFIO
             </h1>
 
 
