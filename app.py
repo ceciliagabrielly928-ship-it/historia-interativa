@@ -328,17 +328,18 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
-      /* ALTERNATIVAS */
+ /* ALTERNATIVAS */
 div[data-testid="stButton"] {
     width: 96% !important;
-    margin: 0 auto 12px auto !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
 }
 
 div[data-testid="stButton"] > button {
-    width: 96% !important;
+    width: 100% !important;
     min-height: 42px !important;
     height: 42px !important;
-    margin: 0 auto 10px auto !important;
+    margin: 0 0 12px 0 !important;
     border-radius: 13px !important;
     background: #ffffff !important;
     color: #222222 !important;
