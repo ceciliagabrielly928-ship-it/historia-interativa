@@ -242,7 +242,7 @@ def reiniciar_historia():
 
 
 # ==========================================
-# RENDERIZAR QUIZ (ESTÉICA BONITA E FIEL)
+# RENDERIZAR QUIZ
 # ==========================================
 
 
@@ -255,14 +255,14 @@ def renderizar_quiz(numero_pergunta):
         /* CARD BRANCO PRINCIPAL */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
             background-color: #ffffff !important;
-            border-radius: 16px !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
             border: 1px solid #eaeaea !important;
-            padding: 35px 30px !important;
+            padding: 40px 35px !important;
             margin-top: 10px !important;
         }
 
-        /* CABEÇALHO DOURADO (PRINTS ORIGINAIS) */
+        /* CABEÇALHO DOURADO */
         .quiz-header {
             display: flex;
             align-items: center;
@@ -299,7 +299,7 @@ def renderizar_quiz(numero_pergunta):
             letter-spacing: 2.5px;
         }
 
-        /* PERGUNTA CENTRALIZADA E LIMPA */
+        /* PERGUNTA CENTRALIZADA */
         .quiz-pergunta {
             color: #333333;
             font-family: Arial, sans-serif;
@@ -310,33 +310,33 @@ def renderizar_quiz(numero_pergunta):
             padding: 0 10px;
         }
 
-        /* BOTÕES VAZADOS COM BORDA DOURADA (SEGUNDO PRINT) */
+        /* BOTÕES RETANGULARES IGUAIS AO MODELO SOLICITADO */
         div[data-testid="stButton"] > button {
             width: 100% !important;
-            min-height: 48px !important;
-            border-radius: 50px !important; /* Arredondado suave como o print 1 */
-            border: 1.8px solid #cb9b39 !important; /* Borda Dourada */
+            min-height: 50px !important;
+            border-radius: 0px !important; /* Retângulo com cantos retos idêntico ao modelo */
+            border: 1.5px solid #cb9b39 !important; /* Borda dourada fina */
             background: #ffffff !important;
             color: #222222 !important;
             font-family: Arial, sans-serif !important;
             font-size: 14px !important;
             font-weight: 600 !important;
             text-align: center !important;
-            padding: 10px 20px !important;
+            padding: 12px 20px !important;
             box-shadow: none !important;
             transition: all 0.2s ease !important;
         }
 
         div[data-testid="stButton"] > button:hover {
-            background: #fdfbf7 !important;
+            background: #fffdf9 !important;
             border-color: #b08328 !important;
         }
 
-        /* CAIXAS DE RESPOSTA (CORRETA / ERRADA) */
+        /* CAIXAS RETANGULARES DE RESPOSTA */
         .box-resposta {
-            padding: 12px 20px;
+            padding: 14px 20px;
             margin-bottom: 14px;
-            border-radius: 50px;
+            border-radius: 0px; /* Mantém formato retangular pós-resposta */
             font-family: Arial, sans-serif;
             font-size: 14px;
             font-weight: 600;
@@ -357,27 +357,27 @@ def renderizar_quiz(numero_pergunta):
 
         .box-neutra {
             background-color: #ffffff;
-            border: 1.8px solid #cb9b39;
+            border: 1.5px solid #cb9b39;
             color: #555555;
         }
 
         .quiz-feedback {
             margin-top: 15px;
-            padding: 12px;
-            border-radius: 50px;
+            padding: 14px;
+            border-radius: 0px;
             text-align: center;
             font-family: Arial, sans-serif;
             font-size: 15px;
             font-weight: bold;
         }
 
-        /* BOTÃO RECOMEÇAR VAZADO NO RODAPÉ */
+        /* BOTÃO RECOMEÇAR RETANGULAR VAZADO NO RODAPÉ */
         .area-recomecar {
             margin-top: 25px;
         }
 
         .area-recomecar div[data-testid="stButton"] > button {
-            border-radius: 50px !important;
+            border-radius: 0px !important;
             border: 1.5px solid #cb9b39 !important;
             background: transparent !important;
             color: #cb9b39 !important;
@@ -406,7 +406,7 @@ def renderizar_quiz(numero_pergunta):
                 unsafe_allow_html=True,
             )
 
-            # Cabeçalho elegante
+            # Cabeçalho
             st.markdown(
                 """
                 <div class="quiz-header">
@@ -429,7 +429,7 @@ def renderizar_quiz(numero_pergunta):
             for letra, texto in pergunta["alternativas"].items():
                 if not st.session_state.quiz_respondeu:
                     if st.button(
-                        f"<strong>{letra})</strong> &nbsp; {texto}",
+                        f"{letra}) {texto}",
                         key=f"quiz_{numero_pergunta}_{letra}",
                         use_container_width=True,
                     ):
@@ -458,7 +458,7 @@ def renderizar_quiz(numero_pergunta):
                             unsafe_allow_html=True,
                         )
 
-            # Mensagem de Feedback
+            # Feedback
             if st.session_state.quiz_respondeu:
                 resposta_dada = st.session_state.quiz_resposta_dada
                 correta = pergunta["correta"]
@@ -474,7 +474,7 @@ def renderizar_quiz(numero_pergunta):
                         unsafe_allow_html=True,
                     )
 
-        # Botão Recomeçar História (Fora do card principal, vazado e elegante)
+        # Botão Recomeçar História
         if st.session_state.quiz_respondeu:
             st.markdown(
                 '<div class="area-recomecar">', unsafe_allow_html=True
