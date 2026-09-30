@@ -1612,24 +1612,27 @@ if cena:
         # A CAPA APARECE IMEDIATAMENTE AO ABRIR O SITE.
         renderizar_imagem(cena["imagem"], "Capa da história")
 
-        st.markdown(f"""
+        st.markdown(
+            f"""
             <h1 class="titulo">{cena.get("titulo", "História")}</h1>
             <div class="linha"></div>
             <p class="subtitulo">{cena.get("descricao", "")}</p>
-        """, unsafe_allow_html=True)
-        
-col1, col2, col3 = st.columns([1, 2, 1])
+        """,
+            unsafe_allow_html=True,
+        )
+
+        col1, col2, col3 = st.columns([1, 2, 1])
 
         with col2:
-
             st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
 
-            if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
-
+            if st.button(
+                "▶ COMEÇAR", key="comecar", use_container_width=True
+            ):
                 ir_para_cena("pagina_01")
 
-            st.markdown('</div>', unsafe_allow_html=True) 
-    
+            st.markdown("</div>", unsafe_allow_html=True)
+            
     # ===== ESCOLHA =====
     elif cena["tipo"] == "escolha":
         renderizar_imagem(cena["imagem"])
