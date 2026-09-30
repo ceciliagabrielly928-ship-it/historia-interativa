@@ -1629,10 +1629,11 @@ if cena:
             if st.button(
                 "▶ COMEÇAR", key="comecar", use_container_width=True
             ):
-                ir_para_cena("pagina_01")
+                st.session_state.cena_atual = "pagina_01"
+                st.rerun()
 
             st.markdown("</div>", unsafe_allow_html=True)
-            
+
     # ===== ESCOLHA =====
     elif cena["tipo"] == "escolha":
         renderizar_imagem(cena["imagem"])
