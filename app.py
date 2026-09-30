@@ -330,14 +330,15 @@ def renderizar_quiz(numero_pergunta):
 
       /* ALTERNATIVAS */
 div[data-testid="stButton"] {
-    margin: 0 !important;
-    padding: 0 !important;
+    width: 96% !important;
+    margin: 0 auto 12px auto !important;
 }
 
 div[data-testid="stButton"] > button {
+    width: 96% !important;
     min-height: 42px !important;
     height: 42px !important;
-    margin: 0 0 6px 0 !important;
+    margin: 0 auto 10px auto !important;
     border-radius: 13px !important;
     background: #ffffff !important;
     color: #222222 !important;
