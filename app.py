@@ -1196,15 +1196,15 @@ def renderizar_desafio_polimero():
 
 
             <h1>
-                DESAFIO — POLÍMERO
+                DESAFIO - POLÍMERO
             </h1>
 
 
-            <!-- KARLA -->
+            <!-- CAMILA -->
 
-            <div class="karla">
+            <div class="camila">
 
-                <strong>Karla:</strong><br>
+                <strong>Camila:</strong><br>
 
                 "Antes de continuar nossa investigação,
                 quero saber se vocês entenderam o que
