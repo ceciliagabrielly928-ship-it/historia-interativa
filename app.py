@@ -269,6 +269,8 @@ def renderizar_quiz(numero_pergunta):
     # ==========================================
     st.markdown(
     """
+ st.markdown(
+    """
     <style>
 
     /* CARD PRINCIPAL (Engloba todo o desafio) */
@@ -383,7 +385,6 @@ def renderizar_quiz(numero_pergunta):
     unsafe_allow_html=True
 )
     
-
     # ==========================================
     # TÍTULO
     # ==========================================
