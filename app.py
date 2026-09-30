@@ -1618,12 +1618,13 @@ if cena:
             <p class="subtitulo">{cena.get("descricao", "")}</p>
         """, unsafe_allow_html=True)
         
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
-            if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
-                ir_para_cena("pagina_01")
-            st.markdown('</div>', unsafe_allow_html=True)
+     col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
+    if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
+        st.session_state.cena_atual = "pagina_01"
+        st.rerun()
+    st.markdown("</div>", unsafe_allow_html=True)
     
     # ===== CENA =====
     elif cena["tipo"] == "cena":
