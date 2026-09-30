@@ -252,70 +252,67 @@ def renderizar_quiz(numero_pergunta):
     st.markdown(
         """
         <style>
-        /* CARD BRANCO PRINCIPAL */
+        /* CARD BRANCO PRINCIPAL COM SOMBRA E BORDA ARREDONDADA */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
             background-color: #ffffff !important;
-            border-radius: 12px !important;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
-            border: 1px solid #eaeaea !important;
+            border-radius: 24px !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+            border: 1px solid #f0f0f0 !important;
             padding: 40px 35px !important;
             margin-top: 10px !important;
         }
 
-        /* CABEÇALHO DOURADO */
-        .quiz-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
+        /* CABEÇALHO "DESAFIO" COM TRACINHO DOURADO ABAIXO */
+        .quiz-header-container {
+            text-align: center;
             margin-bottom: 25px;
         }
 
-        .quiz-linha {
-            width: 70px;
-            height: 2px;
-            background: #cb9b39;
-        }
-
-        .quiz-k {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #cb9b39;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .quiz-titulo {
+        .quiz-titulo-principal {
             color: #1a1a1a;
             font-family: Arial, sans-serif;
-            font-size: 17px;
+            font-size: 24px;
             font-weight: 800;
-            letter-spacing: 2.5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
         }
 
-        /* PERGUNTA CENTRALIZADA */
-        .quiz-pergunta {
-            color: #333333;
+        .quiz-linha-sub {
+            width: 50px;
+            height: 3px;
+            background: #d4a843;
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        /* SUBCONTAINER BEGE / CREME PARA A PERGUNTA */
+        .subcard-pergunta {
+            background-color: #fbf8f3;
+            border: 1px solid #f0e8db;
+            border-radius: 16px;
+            padding: 22px 25px;
+            margin-bottom: 25px;
+        }
+
+        .quiz-pergunta-texto {
+            color: #222222;
             font-family: Arial, sans-serif;
             font-size: 15px;
             line-height: 1.6;
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 0 10px;
+            text-align: left;
         }
 
-        /* BOTÕES RETANGULARES IGUAIS AO MODELO SOLICITADO */
+        /* BOTÕES RETANGULARES VAZADOS COM BORDA DOURADA */
+        div[data-testid="stButton"] {
+            margin-bottom: 12px !important;
+        }
+
         div[data-testid="stButton"] > button {
             width: 100% !important;
             min-height: 50px !important;
-            border-radius: 0px !important; /* Retângulo com cantos retos idêntico ao modelo */
-            border: 1.5px solid #cb9b39 !important; /* Borda dourada fina */
+            border-radius: 0px !important; /* Formato retangular do modelo */
+            border: 1.5px solid #cb9b39 !important;
             background: #ffffff !important;
             color: #222222 !important;
             font-family: Arial, sans-serif !important;
@@ -335,8 +332,8 @@ def renderizar_quiz(numero_pergunta):
         /* CAIXAS RETANGULARES DE RESPOSTA */
         .box-resposta {
             padding: 14px 20px;
-            margin-bottom: 14px;
-            border-radius: 0px; /* Mantém formato retangular pós-resposta */
+            margin-bottom: 12px;
+            border-radius: 0px;
             font-family: Arial, sans-serif;
             font-size: 14px;
             font-weight: 600;
@@ -361,8 +358,9 @@ def renderizar_quiz(numero_pergunta):
             color: #555555;
         }
 
+        /* FEEDBACK COM AFASTAÇÃO DO CARD MAIOR */
         .quiz-feedback {
-            margin-top: 15px;
+            margin-top: 20px;
             padding: 14px;
             border-radius: 0px;
             text-align: center;
@@ -371,15 +369,15 @@ def renderizar_quiz(numero_pergunta):
             font-weight: bold;
         }
 
-        /* BOTÃO RECOMEÇAR RETANGULAR VAZADO NO RODAPÉ */
+        /* BOTÃO RECOMEÇAR FORA DO CARD PRINCIPAL */
         .area-recomecar {
-            margin-top: 25px;
+            margin-top: 30px;
         }
 
         .area-recomecar div[data-testid="stButton"] > button {
             border-radius: 0px !important;
             border: 1.5px solid #cb9b39 !important;
-            background: transparent !important;
+            background: #ffffff !important;
             color: #cb9b39 !important;
             font-size: 13px !important;
             letter-spacing: 2px !important;
@@ -400,32 +398,35 @@ def renderizar_quiz(numero_pergunta):
     col1, col2, col3 = st.columns([1, 8, 1])
 
     with col2:
+        # CARD PRINCIPAL COM SOMBRA
         with st.container(border=True):
             st.markdown(
                 '<div class="meu-quiz-container"></div>',
                 unsafe_allow_html=True,
             )
 
-            # Cabeçalho
+            # Cabeçalho "DESAFIO"
             st.markdown(
                 """
-                <div class="quiz-header">
-                    <div class="quiz-linha"></div>
-                    <div class="quiz-k">K</div>
-                    <div class="quiz-titulo">DESAFIO DE KARLA</div>
-                    <div class="quiz-linha"></div>
+                <div class="quiz-header-container">
+                    <div class="quiz-titulo-principal">DESAFIO</div>
+                    <div class="quiz-linha-sub"></div>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
-            # Pergunta
+            # SUBCONTAINER BEGE ENGLOBANDO A PERGUNTA
             st.markdown(
-                f'<div class="quiz-pergunta">{pergunta["pergunta"]}</div>',
+                f"""
+                <div class="subcard-pergunta">
+                    <div class="quiz-pergunta-texto">{pergunta["pergunta"]}</div>
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
 
-            # Alternativas
+            # ALTERNATIVAS DE RESPOSTA
             for letra, texto in pergunta["alternativas"].items():
                 if not st.session_state.quiz_respondeu:
                     if st.button(
@@ -458,7 +459,7 @@ def renderizar_quiz(numero_pergunta):
                             unsafe_allow_html=True,
                         )
 
-            # Feedback
+            # RETÂNGULO DE FEEDBACK (AFASTADO)
             if st.session_state.quiz_respondeu:
                 resposta_dada = st.session_state.quiz_resposta_dada
                 correta = pergunta["correta"]
@@ -474,7 +475,7 @@ def renderizar_quiz(numero_pergunta):
                         unsafe_allow_html=True,
                     )
 
-        # Botão Recomeçar História
+        # BOTÃO RECOMEÇAR HISTÓRIA (FORA DO CARD)
         if st.session_state.quiz_respondeu:
             st.markdown(
                 '<div class="area-recomecar">', unsafe_allow_html=True
