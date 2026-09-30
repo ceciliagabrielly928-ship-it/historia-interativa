@@ -268,19 +268,21 @@ def renderizar_quiz(numero_pergunta):
     # ESTILO
     # ==========================================
     
- st.markdown(
+ import streamlit as st
+
+# 1. CSS Corrigido (Sem caracteres inválidos e mirando o container correto)
+st.markdown(
     """
     <style>
-
-    /* CARD PRINCIPAL (Engloba todo o desafio) */
-    .quiz-wrapper {
-        max-width: 750px;
-        margin: 40px auto;
-        padding: 40px 35px;
-        background-color: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        border: 1px solid #f0f0f0;
+    /* Estiliza o container nativo do Streamlit para ser o card central */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        max-width: 800px !important;
+        margin: 30px auto !important;
+        padding: 40px 35px !important;
+        background-color: #ffffff !important;
+        border-radius: 24px !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07) !important;
+        border: 1px solid #f0f0f0 !important;
     }
 
     /* TÍTULO */
@@ -322,7 +324,7 @@ def renderizar_quiz(numero_pergunta):
         white-space: nowrap;
     }
 
-    /* PERGUNTA (Agora sem fundo cinza escuro/separado) */
+    /* PERGUNTA */
     .quiz-pergunta {
         background: transparent;
         padding: 0 10px;
@@ -334,7 +336,7 @@ def renderizar_quiz(numero_pergunta):
         text-align: center;
     }
 
-    /* ALTERNATIVAS */
+    /* ALTERNATIVAS (BOTÕES) */
     div[data-testid="stButton"] {
         width: 100% !important;
         margin: 0 auto !important;
@@ -345,7 +347,7 @@ def renderizar_quiz(numero_pergunta):
         width: 100% !important;
         min-height: 48px !important;
         margin-bottom: 12px !important;
-        border-radius: 14px !important;
+        border-radius: 25px !important;
         border: 1.5px solid #d4a843 !important;
         background: #ffffff !important;
         color: #222222 !important;
@@ -355,34 +357,45 @@ def renderizar_quiz(numero_pergunta):
         text-align: center !important;
         padding: 10px 20px !important;
         box-shadow: none !important;
-        transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out !important;
     }
 
     div[data-testid="stButton"] > button:hover {
         background: #fffaf0 !important;
         border-color: #b88e30 !important;
     }
-
-    /* TIRA O ESPAÇO ENTRE OS ELEMENTOS DO STREAMLIT */
-    div[data-testid="stVerticalBlock"] {
-        gap: 0 !important;
-    }
-
-    /* FEEDBACK */
-    .quiz-feedback {
-        margin-top: 16px;
-        padding: 14px 18px;
-        border-radius: 12px;
-        text-align: center;
-        font-family: Arial, sans-serif;
-        font-size: 15px;
-        line-height: 1.5;
-    }
-
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
+
+# 2. Estrutura dos elementos agrupados DENTRO do mesmo container
+with st.container(border=True):
+    st.markdown(
+        """
+        <div class="quiz-header">
+            <div class="quiz-linha"></div>
+            <div class="quiz-k">K</div>
+            <div class="quiz-titulo">DESAFIO DE KARLA</div>
+            <div class="quiz-linha"></div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+        <div class="quiz-pergunta">
+            Karla mostra a garrafa de PET encontrada pelos amigos e pergunta: qual decisão ajuda a dar um destino correto ao material e evita que ele permaneça no ambiente causando impactos?
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.button("A) JUNTÁ-LA COM OUTROS RESÍDUOS SEM SEPARAR OS MATERIAIS")
+    st.button("B) COLOCÁ-LA NO LIXO COMUM JUNTO AOS DEMAIS RESÍDUOS")
+    st.button("C) DEIXÁ-LA EM UM TERRENO VAZIO ATÉ ENCONTRAR UMA NOVA UTILIDADE")
+    st.button("D) LEVÁ-LA A UM PONTO DE COLETA OU ENCAMINHÁ-LA PARA RECICLAGEM")
     
     # ==========================================
     # TÍTULO
