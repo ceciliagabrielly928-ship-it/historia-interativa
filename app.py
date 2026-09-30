@@ -1,8 +1,9 @@
-import base64
-from pathlib import Path
+# app.py
 import streamlit as st
 import streamlit.components.v1 as components
 from story import HISTORY, get_cena
+from pathlib import Path
+import base64
 
 # ==========================================
 # CONFIGURAÇÃO
@@ -11,9 +12,8 @@ st.set_page_config(
     page_title="A Garrafa do Futuro",
     page_icon="♻️",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed"
 )
-
 
 # ==========================================
 # IMAGENS
@@ -21,13 +21,10 @@ st.set_page_config(
 def caminho_imagem(caminho):
     if not caminho:
         return None
-    caminho = str(caminho).replace("\\", "/")
-    candidatos = [
-        Path(caminho),
-        Path(__file__).resolve().parent / caminho.lstrip("/"),
-    ]
-    if "/assets/" in caminho:
-        rel = "assets/" + caminho.split("/assets/", 1)[1]
+    caminho = str(caminho).replace('\\', '/')
+    candidatos = [Path(caminho), Path(__file__).resolve().parent / caminho.lstrip('/')]
+    if '/assets/' in caminho:
+        rel = 'assets/' + caminho.split('/assets/', 1)[1]
         candidatos.append(Path(__file__).resolve().parent / rel)
     for arquivo in candidatos:
         try:
@@ -37,35 +34,24 @@ def caminho_imagem(caminho):
             pass
     return None
 
-
 def imagem_data_uri(caminho):
     arquivo = caminho_imagem(caminho)
     if arquivo is None:
         return None
-    mime = {
-        ".png": "image/png",
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".webp": "image/webp",
-        ".gif": "image/gif",
-    }.get(arquivo.suffix.lower(), "application/octet-stream")
-    dados = base64.b64encode(arquivo.read_bytes()).decode("ascii")
-    return f"data:{mime};base64,{dados}"
+    mime = {'.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.gif':'image/gif'}.get(arquivo.suffix.lower(), 'application/octet-stream')
+    dados = base64.b64encode(arquivo.read_bytes()).decode('ascii')
+    return f'data:{mime};base64,{dados}'
 
-
-def renderizar_imagem(caminho, alt="Imagem da história"):
+def renderizar_imagem(caminho, alt='Imagem da história'):
     uri = imagem_data_uri(caminho)
     if uri is None:
-        st.error(f"Imagem não encontrada: {caminho}")
+        st.error(f'Imagem não encontrada: {caminho}')
         return False
-    st.markdown(
-        f"""
+    st.markdown(f'''
         <div class="imagem-container">
             <img src="{uri}" alt="{alt}">
         </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    ''', unsafe_allow_html=True)
     return True
 
 
@@ -73,8 +59,7 @@ def renderizar_imagem(caminho, alt="Imagem da história"):
 # CSS GLOBAL
 # ==========================================
 def aplicar_css():
-    st.markdown(
-        """
+    st.markdown("""
         <style>
         .stApp { background: #ffffff !important; }
         .main > div { padding: 0 !important; max-width: 100% !important; }
@@ -197,14 +182,17 @@ def aplicar_css():
             .stButton button { font-size: 0.8rem !important; padding: 14px 20px !important; }
         }
         </style>
-    """,
-        unsafe_allow_html=True,
-    )
+    """, unsafe_allow_html=True)
 
+
+# ==========================================
+# DADOS DO QUIZ (2 perguntas = 2 desafios)
+# ==========================================
 
 # ==========================================
 # DADOS DO QUIZ
 # ==========================================
+
 PERGUNTAS_QUIZ = [
     {
         "pergunta": "Karla mostra a garrafa de PET encontrada pelos amigos e pergunta: qual decisão ajuda a dar um destino correto ao material e evita que ele permaneça no ambiente causando impactos?",
@@ -230,8 +218,10 @@ PERGUNTAS_QUIZ = [
 
 
 # ==========================================
-# ESTADO E NAVEGAÇÃO
+# ESTADO DO QUIZ
 # ==========================================
+
+
 def inicializar_estado():
     if "cena_atual" not in st.session_state:
         st.session_state.cena_atual = "inicio"
@@ -241,13 +231,6 @@ def inicializar_estado():
         st.session_state.quiz_respondeu = False
     if "quiz_resposta_dada" not in st.session_state:
         st.session_state.quiz_resposta_dada = None
-
-
-def ir_para_cena(nome_cena):
-    st.session_state.cena_atual = nome_cena
-    st.session_state.quiz_respondeu = False
-    st.session_state.quiz_resposta_dada = None
-    st.rerun()
 
 
 def reiniciar_historia():
@@ -261,12 +244,15 @@ def reiniciar_historia():
 # ==========================================
 # RENDERIZAR QUIZ
 # ==========================================
+
+
 def renderizar_quiz(numero_pergunta):
     pergunta = PERGUNTAS_QUIZ[numero_pergunta]
 
     st.markdown(
         """
         <style>
+        /* CARD BRANCO PRINCIPAL (CONTAINER COM SOMBRA DESTACADA E CENTRALIZADO) */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
             background-color: white;
             border-radius: 24px;
@@ -276,7 +262,12 @@ def renderizar_quiz(numero_pergunta):
             margin: 0 auto;
         }
 
-        .quiz-header-container { text-align: center; margin-bottom: 25px; }
+        /* CABEÇALHO "DESAFIO" */
+        .quiz-header-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
         .quiz-titulo-principal {
             color: #1a1a1a;
             font-family: Arial, sans-serif;
@@ -286,6 +277,7 @@ def renderizar_quiz(numero_pergunta):
             text-transform: uppercase;
             margin-bottom: 8px;
         }
+
         .quiz-linha-sub {
             width: 45px;
             height: 3px;
@@ -294,6 +286,7 @@ def renderizar_quiz(numero_pergunta):
             border-radius: 2px;
         }
 
+        /* CAIXA AMARELADA/BEGE ENGLOBANDO A PERGUNTA */
         .subcard-pergunta {
             background-color: #fbf8f3;
             border: 1px solid #f2e9dc;
@@ -301,6 +294,7 @@ def renderizar_quiz(numero_pergunta):
             padding: 22px 25px;
             margin-bottom: 25px;
         }
+
         .quiz-pergunta-texto {
             color: #2a2a2a;
             font-family: Arial, sans-serif;
@@ -309,7 +303,11 @@ def renderizar_quiz(numero_pergunta):
             text-align: left;
         }
 
-        div[data-testid="stButton"] { margin-bottom: 10px !important; }
+        /* BOTÕES DAS ALTERNATIVAS */
+        div[data-testid="stButton"] {
+            margin-bottom: 10px !important;
+        }
+
         div[data-testid="stButton"] > button {
             width: 100% !important;
             min-height: 48px !important;
@@ -325,11 +323,13 @@ def renderizar_quiz(numero_pergunta):
             box-shadow: none !important;
             transition: all 0.2s ease !important;
         }
+
         div[data-testid="stButton"] > button:hover {
             background: #fffdf9 !important;
             border-color: #b08328 !important;
         }
 
+        /* CAIXAS RETANGULARES DE RESPOSTA REVELADA */
         .box-resposta {
             padding: 14px 20px;
             margin-bottom: 10px;
@@ -339,11 +339,31 @@ def renderizar_quiz(numero_pergunta):
             font-weight: 600;
             text-align: center;
         }
-        .box-correta { background-color: #edf7ed; border: 1.5px solid #75ad75; color: #1e5e23; }
-        .box-errada { background-color: #fdf2f2; border: 1.5px solid #e58b8b; color: #8c2424; }
-        .box-neutra { background-color: #ffffff; border: 1.5px solid #cb9b39; color: #555555; }
 
-        .area-feedback { margin-top: 25px; margin-bottom: 15px; }
+        .box-correta {
+            background-color: #edf7ed;
+            border: 1.5px solid #75ad75;
+            color: #1e5e23;
+        }
+
+        .box-errada {
+            background-color: #fdf2f2;
+            border: 1.5px solid #e58b8b;
+            color: #8c2424;
+        }
+
+        .box-neutra {
+            background-color: #ffffff;
+            border: 1.5px solid #cb9b39;
+            color: #555555;
+        }
+
+        /* RETÂNGULO DE FEEDBACK ("RESPOSTA CORRETA!") FORA DO CARD MAIOR */
+        .area-feedback {
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
         .quiz-feedback {
             padding: 16px;
             border-radius: 0px;
@@ -353,7 +373,11 @@ def renderizar_quiz(numero_pergunta):
             font-weight: bold;
         }
 
-        .area-recomecar { margin-top: 15px; }
+        /* BOTÃO RECOMEÇAR NO RODAPÉ */
+        .area-recomecar {
+            margin-top: 15px;
+        }
+
         .area-recomecar div[data-testid="stButton"] > button {
             border-radius: 0px !important;
             border: 1.5px solid #cb9b39 !important;
@@ -364,43 +388,49 @@ def renderizar_quiz(numero_pergunta):
             font-weight: 700 !important;
             text-transform: uppercase !important;
         }
+
         .area-recomecar div[data-testid="stButton"] > button:hover {
             background: #fffdf9 !important;
             border-color: #b08328 !important;
             color: #b08328 !important;
         }
         </style>
-    """,
+        """,
         unsafe_allow_html=True,
     )
 
     col1, col2, col3 = st.columns([1, 8, 1])
 
     with col2:
+        # 1. CARD BRANCO PRINCIPAL (Contém Título, Pergunta Amarelada e Alternativas)
         with st.container(border=True):
             st.markdown(
-                '<div class="meu-quiz-container"></div>', unsafe_allow_html=True
+                '<div class="meu-quiz-container"></div>',
+                unsafe_allow_html=True,
             )
 
+            # Cabeçalho "DESAFIO"
             st.markdown(
                 """
                 <div class="quiz-header-container">
                     <div class="quiz-titulo-principal">DESAFIO</div>
                     <div class="quiz-linha-sub"></div>
                 </div>
-            """,
+                """,
                 unsafe_allow_html=True,
             )
 
+            # Caixa Amarelada / Bege com a pergunta
             st.markdown(
                 f"""
                 <div class="subcard-pergunta">
                     <div class="quiz-pergunta-texto">{pergunta["pergunta"]}</div>
                 </div>
-            """,
+                """,
                 unsafe_allow_html=True,
             )
 
+            # Lista de Alternativas
             for letra, texto in pergunta["alternativas"].items():
                 if not st.session_state.quiz_respondeu:
                     if st.button(
@@ -433,6 +463,7 @@ def renderizar_quiz(numero_pergunta):
                             unsafe_allow_html=True,
                         )
 
+        # 2. RETÂNGULO DE FEEDBACK ("Resposta correta!") AFASTADO FORA DO CARD PRINCIPAL
         if st.session_state.quiz_respondeu:
             resposta_dada = st.session_state.quiz_resposta_dada
             correta = pergunta["correta"]
@@ -450,20 +481,18 @@ def renderizar_quiz(numero_pergunta):
                 )
             st.markdown("</div>", unsafe_allow_html=True)
 
-            # Botão de Avançar após responder
-            proxima_cena = (
-                "pagina_02" if numero_pergunta == 0 else "pagina_final"
+        # 3. BOTÃO RECOMEÇAR HISTÓRIA (Também fora do Card Principal)
+        if st.session_state.quiz_respondeu:
+            st.markdown(
+                '<div class="area-recomecar">', unsafe_allow_html=True
             )
-            if st.button("AVANÇAR ▶", key=f"avancar_quiz_{numero_pergunta}"):
-                ir_para_cena(proxima_cena)
-
-            st.markdown('<div class="area-recomecar">', unsafe_allow_html=True)
             if st.button(
-                "↺ RECOMEÇAR HISTÓRIA", key=f"reiniciar_{numero_pergunta}"
+                "↺ RECOMEÇAR HISTÓRIA",
+                key=f"reiniciar_{numero_pergunta}",
+                use_container_width=True,
             ):
                 reiniciar_historia()
             st.markdown("</div>", unsafe_allow_html=True)
-
 
 # ==========================================
 # DESAFIO: DECODIFICAR PLÁSTICOS (7 números)
@@ -477,29 +506,142 @@ def renderizar_desafio_plasticos():
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; background: #f5f1e8; color: #222; padding: 20px; min-height: 100vh; }
-        .container { width: 100%; max-width: 950px; margin: 0 auto; background: white; border-radius: 20px; padding: 35px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
-        h1 { text-align: center; font-size: 28px; margin-bottom: 25px; color: #222; }
-        .karla { background: #f0f0f0; border-radius: 12px; padding: 18px; margin-bottom: 25px; font-size: 16px; line-height: 1.5; color: #222; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f1e8;
+            color: #222;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #222;
+        }
+        .karla {
+            background: #f0f0f0;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #222;
+        }
         .karla strong { display: block; margin-bottom: 5px; }
-        h2 { font-size: 18px; margin-top: 25px; margin-bottom: 12px; color: #222; }
-        .banco { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 30px; }
-        .palavra { background: #eeeeee; border-radius: 8px; padding: 9px 13px; font-weight: bold; font-size: 14px; color: #222; }
-        .numeros { display: flex; justify-content: space-between; gap: 10px; margin: 30px 0; }
-        .numero { flex: 1; min-height: 70px; border: none; border-bottom: 3px solid #222; background: transparent; font-size: 30px; font-weight: bold; cursor: pointer; transition: 0.2s; color: #222; }
+        h2 {
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #222;
+        }
+        .banco {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .palavra {
+            background: #eeeeee;
+            border-radius: 8px;
+            padding: 9px 13px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #222;
+        }
+        .numeros {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        .numero {
+            flex: 1;
+            min-height: 70px;
+            border: none;
+            border-bottom: 3px solid #222;
+            background: transparent;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #222;
+        }
         .numero:hover { background: #f0f0f0; }
         .numero.selecionado { background: #e6e6e6; }
         .numero.concluido { border-bottom: 4px solid #333; background: #dcdcdc; }
-        .desafio { display: none; margin-top: 20px; padding: 25px; border-radius: 15px; background: #f7f7f7; }
+        .desafio {
+            display: none;
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            background: #f7f7f7;
+        }
         .desafio.ativo { display: block; }
-        .pista-titulo { font-weight: bold; font-size: 19px; margin-bottom: 10px; color: #222; }
-        .pista { font-size: 17px; line-height: 1.5; margin-bottom: 20px; color: #333; }
-        .opcoes { display: flex; flex-wrap: wrap; gap: 10px; }
-        .opcao { border: 2px solid #333; background: white; border-radius: 9px; padding: 11px 16px; cursor: pointer; font-weight: bold; transition: 0.2s; font-size: 14px; color: #222; }
+        .pista-titulo {
+            font-weight: bold;
+            font-size: 19px;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        .pista {
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .opcoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .opcao {
+            border: 2px solid #333;
+            background: white;
+            border-radius: 9px;
+            padding: 11px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            font-size: 14px;
+            color: #222;
+        }
         .opcao:hover { background: #eeeeee; }
         .opcao:disabled { cursor: default; }
-        .feedback { margin-top: 18px; font-weight: bold; font-size: 17px; min-height: 25px; }
-        .final { display: none; margin-top: 25px; padding: 22px; background: #eeeeee; border-radius: 12px; text-align: center; font-size: 20px; font-weight: bold; color: #222; }
+        .feedback {
+            margin-top: 18px;
+            font-weight: bold;
+            font-size: 17px;
+            min-height: 25px;
+        }
+        .final {
+            display: none;
+            margin-top: 25px;
+            padding: 22px;
+            background: #eeeeee;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+        }
+        @media (max-width: 650px) {
+            .container { padding: 20px; }
+            h1 { font-size: 22px; }
+            .numeros { gap: 4px; }
+            .numero { font-size: 22px; min-height: 55px; }
+            .pista { font-size: 15px; }
+        }
     </style>
     </head>
     <body>
@@ -603,94 +745,876 @@ def renderizar_desafio_plasticos():
     </body>
     </html>
     """
+    
     components.html(html_desafio, height=900, scrolling=True)
-
 
 # =========================================================
 # DESAFIO — POLÍMERO
 # =========================================================
+
 def renderizar_desafio_polimero():
+
     html_polimero = """
     <!DOCTYPE html>
+
     <html lang="pt-BR">
+
     <head>
+
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        >
+
         <style>
-            * { box-sizing: border-box; margin: 0; padding: 0; }
-            body { min-height: 100vh; font-family: Arial, sans-serif; background: white; padding: 28px 20px 35px; }
-            .container { width: 100%; max-width: 900px; margin: 0 auto; background: white; border-radius: 24px; padding: 38px 45px 42px; border: 1px solid #e9e2d6; box-shadow: 0 12px 35px rgba(0, 0, 0, 0.09); }
-            h1 { text-align: center; font-size: 27px; font-weight: 800; letter-spacing: .5px; color: #222; margin-bottom: 13px; }
-            h1::after { content: ""; display: block; width: 55px; height: 3px; background: #d4a843; margin: 13px auto 28px; border-radius: 5px; }
-            .karla { background: #faf7f0; border-left: 4px solid #d4a843; border-radius: 12px; padding: 18px 22px; margin-bottom: 30px; font-size: 16px; line-height: 1.6; color: #333; }
-            .desafio { padding: 27px 30px; border-radius: 17px; background: #faf8f4; border: 1px solid #e8e1d5; text-align: center; }
-            .pergunta { font-size: 19px; line-height: 1.7; color: #333; margin-bottom: 20px; }
-            input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; outline: none; background: white; margin-bottom: 15px; }
-            button { border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; transition: .2s; background: #d4a843; color: white; width: 100%; }
-            button:hover { background: #bd922f; }
-            #resultado { margin-top: 18px; font-size: 17px; font-weight: bold; }
-            .acerto { color: #247a3d; }
-            .erro { color: #b3261e; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>DESAFIO — A ESTRUTURA DOS PLÁSTICOS</h1>
-            <div class="karla">
-                <strong>KARLA:</strong>
-                "Para entender os plásticos, precisamos saber como eles são formados!"
-            </div>
-            <div class="desafio">
-                <div class="pergunta">Qual é o termo químico para a grande molécula formada por várias partes menores unidas?</div>
-                <input type="text" id="respostaInput" placeholder="Digite sua resposta aqui...">
-                <button onclick="verificar()">RESPONDER</button>
-                <div id="resultado"></div>
-            </div>
-        </div>
-        <script>
-            function verificar() {
-                const resp = document.getElementById("respostaInput").value.trim().toLowerCase();
-                const resDiv = document.getElementById("resultado");
-                if (resp === "polímero" || resp === "polimero") {
-                    resDiv.className = "acerto";
-                    resDiv.textContent = "✓ Excelente! Plásticos são polímeros!";
-                } else {
-                    resDiv.className = "erro";
-                    resDiv.textContent = "✕ Tente novamente!";
-                }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
             }
+
+
+            body {
+
+                min-height: 100vh;
+
+                font-family: Arial, sans-serif;
+
+                background: white;
+
+                padding: 28px 20px 35px;
+            }
+
+
+            /* =========================================
+               QUADRINHO PRINCIPAL
+            ========================================= */
+
+            .container {
+
+                width: 100%;
+
+                max-width: 900px;
+
+                margin: 0 auto;
+
+                background: white;
+
+                border-radius: 24px;
+
+                padding: 38px 45px 42px;
+
+                border: 1px solid #e9e2d6;
+
+                box-shadow:
+                    0 12px 35px rgba(0, 0, 0, 0.09);
+            }
+
+
+            /* =========================================
+               TÍTULO
+            ========================================= */
+
+            h1 {
+
+                text-align: center;
+
+                font-size: 27px;
+
+                font-weight: 800;
+
+                letter-spacing: .5px;
+
+                color: #222;
+
+                margin-bottom: 13px;
+            }
+
+
+            h1::after {
+
+                content: "";
+
+                display: block;
+
+                width: 55px;
+
+                height: 3px;
+
+                background: #d4a843;
+
+                margin: 13px auto 28px;
+
+                border-radius: 5px;
+            }
+
+
+            /* =========================================
+               KARLA
+            ========================================= */
+
+            .karla {
+
+                background: #faf7f0;
+
+                border-left: 4px solid #d4a843;
+
+                border-radius: 12px;
+
+                padding: 18px 22px;
+
+                margin-bottom: 30px;
+
+                font-size: 16px;
+
+                line-height: 1.6;
+
+                color: #333;
+            }
+
+
+            /* =========================================
+               SUBTÍTULO
+            ========================================= */
+
+            h2 {
+
+                font-size: 15px;
+
+                letter-spacing: 2px;
+
+                text-transform: uppercase;
+
+                text-align: center;
+
+                color: #555;
+
+                margin-bottom: 18px;
+            }
+
+
+            /* =========================================
+               ÁREA DO DESAFIO
+            ========================================= */
+
+            .desafio {
+
+                padding: 27px 30px;
+
+                border-radius: 17px;
+
+                background: #faf8f4;
+
+                border: 1px solid #e8e1d5;
+
+                text-align: center;
+            }
+
+
+            .pergunta {
+
+                font-size: 19px;
+
+                line-height: 1.7;
+
+                color: #333;
+
+                margin-bottom: 20px;
+            }
+
+
+            .lacuna {
+
+                color: #b38725;
+
+                font-weight: bold;
+            }
+
+
+            /* =========================================
+               BOTÕES
+            ========================================= */
+
+            button {
+
+                border: none;
+
+                padding: 12px 20px;
+
+                border-radius: 10px;
+
+                cursor: pointer;
+
+                font-weight: bold;
+
+                font-size: 14px;
+
+                transition: .2s;
+            }
+
+
+            .dica-btn {
+
+                background: #333;
+
+                color: white;
+
+                margin-bottom: 15px;
+            }
+
+
+            .dica-btn:hover {
+
+                transform: translateY(-2px);
+
+                opacity: .9;
+            }
+
+
+            /* =========================================
+               DICA
+            ========================================= */
+
+            .dica {
+
+                display: none;
+
+                text-align: left;
+
+                background: white;
+
+                border-left: 4px solid #d4a843;
+
+                border-radius: 10px;
+
+                padding: 16px 18px;
+
+                margin: 5px 0 20px;
+
+                font-size: 15px;
+
+                line-height: 1.6;
+
+                color: #444;
+            }
+
+
+            /* =========================================
+               INPUT
+            ========================================= */
+
+            input {
+
+                width: 100%;
+
+                padding: 15px;
+
+                border: 1px solid #ddd;
+
+                border-radius: 10px;
+
+                font-size: 16px;
+
+                outline: none;
+
+                background: white;
+
+                margin-bottom: 15px;
+            }
+
+
+            input:focus {
+
+                border-color: #d4a843;
+            }
+
+
+            /* =========================================
+               RESPONDER
+            ========================================= */
+
+            .responder {
+
+                background: #d4a843;
+
+                color: white;
+
+                width: 100%;
+
+                padding: 14px;
+
+                font-size: 15px;
+            }
+
+
+            .responder:hover {
+
+                background: #bd922f;
+
+                transform: translateY(-2px);
+            }
+
+
+            /* =========================================
+               RESULTADO
+            ========================================= */
+
+            #resultado {
+
+                margin-top: 18px;
+
+                font-size: 17px;
+
+                font-weight: bold;
+            }
+
+
+            .acerto {
+
+                color: #247a3d;
+            }
+
+
+            .erro {
+
+                color: #b3261e;
+            }
+
+
+            /* =========================================
+               RESPONSIVO
+            ========================================= */
+
+            @media (max-width: 650px) {
+
+                body {
+
+                    padding: 18px 12px;
+                }
+
+
+                .container {
+
+                    padding: 28px 20px;
+
+                    border-radius: 18px;
+                }
+
+
+                h1 {
+
+                    font-size: 23px;
+                }
+
+
+                .desafio {
+
+                    padding: 22px 18px;
+                }
+
+
+                .pergunta {
+
+                    font-size: 17px;
+                }
+
+            }
+
+        </style>
+
+    </head>
+
+
+    <body>
+
+
+        <!-- =========================================
+             QUADRINHO
+        ========================================== -->
+
+        <div class="container">
+
+
+            <h1>
+                DESAFIO
+            </h1>
+
+
+            <!-- CAMILA -->
+
+            <div class="camila">
+
+                <strong>Camila:</strong><br>
+
+                "Antes de continuar nossa investigação,
+                quero saber se vocês entenderam o que
+                existe por trás do material da garrafa."
+
+            </div>
+
+
+            <!-- SUBTÍTULO -->
+
+            <h2>
+                IDENTIFIQUE O MATERIAL
+            </h2>
+
+
+            <!-- DESAFIO -->
+
+            <div class="desafio">
+
+
+                <p class="pergunta">
+
+                    O PET é um
+                    <span class="lacuna">
+                        __________
+                    </span>
+
+                    formado pela repetição de unidades
+                    menores, formando uma cadeia de moléculas.
+
+                </p>
+
+
+                <!-- DICA -->
+
+                <button
+                    class="dica-btn"
+                    onclick="mostrarDica()"
+                    id="dicaBtn"
+                >
+
+                    💡 VER DICA
+
+                </button>
+
+
+                <div
+                    class="dica"
+                    id="dica"
+                >
+
+                    Imagine um colar: uma grande estrutura
+                    construída pela repetição de várias peças
+                    menores. Na Química, damos um nome específico
+                    para esse tipo de estrutura. A palavra começa com
+                    <strong>P</strong>.
+
+                </div>
+
+
+                <!-- CAMPO -->
+
+                <input
+                    type="text"
+                    id="resposta"
+                    placeholder="Digite sua resposta..."
+                    autocomplete="off"
+                >
+
+
+                <!-- RESPONDER -->
+
+                <button
+                    class="responder"
+                    onclick="verificarResposta()"
+                    id="responderBtn"
+                >
+
+                    RESPONDER
+
+                </button>
+
+
+                <!-- RESULTADO -->
+
+                <div id="resultado"></div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <script>
+
+
+            // =========================================
+            // MOSTRAR / ESCONDER DICA
+            // =========================================
+
+            function mostrarDica() {
+
+                const dica =
+                    document.getElementById("dica");
+
+                const botao =
+                    document.getElementById("dicaBtn");
+
+
+                if (
+                    dica.style.display === "none" ||
+                    dica.style.display === ""
+                ) {
+
+                    dica.style.display = "block";
+
+                    botao.textContent =
+                        "ESCONDER DICA";
+
+                }
+
+                else {
+
+                    dica.style.display = "none";
+
+                    botao.textContent =
+                        "💡 VER DICA";
+
+                }
+
+            }
+
+
+            // =========================================
+            // VERIFICAR RESPOSTA
+            // =========================================
+
+            function verificarResposta() {
+
+                const campo =
+                    document.getElementById("resposta");
+
+                const resultado =
+                    document.getElementById("resultado");
+
+                const botao =
+                    document.getElementById("responderBtn");
+
+
+                const resposta =
+                    campo.value
+                    .trim()
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\\u0300-\\u036f]/g, "");
+
+
+                if (resposta === "polimero") {
+
+                    resultado.textContent =
+                        "✓ ACERTOU! O PET é um polímero.";
+
+                    resultado.className =
+                        "acerto";
+
+
+                    campo.disabled = true;
+
+                    botao.disabled = true;
+
+                    botao.style.opacity = "0.5";
+
+                    botao.style.cursor = "default";
+
+                }
+
+
+                else {
+
+                    resultado.textContent =
+                        "✗ Tente novamente!";
+
+                    resultado.className =
+                        "erro";
+
+                    campo.value = "";
+
+                    campo.focus();
+
+                }
+
+            }
+
+
+            // =========================================
+            // ENTER PARA RESPONDER
+            // =========================================
+
+            document
+                .getElementById("resposta")
+                .addEventListener(
+                    "keydown",
+                    function(event) {
+
+                        if (event.key === "Enter") {
+
+                            verificarResposta();
+
+                        }
+
+                    }
+                );
+
+
         </script>
+
+
     </body>
+
     </html>
     """
-    components.html(html_polimero, height=600, scrolling=True)
 
 
-# ==========================================
-# EXECUÇÃO E RENDERIZADOR PRINCIPAL
-# ==========================================
-def main():
-    aplicar_css()
-    inicializar_estado()
+# =========================================
+# MOSTRAR QUADRINHO
+# =========================================
 
-    # Busca a cena atual através da função do story.py ou do estado
-    chave_cena = st.session_state.cena_atual
-    cena = get_cena(chave_cena) if "get_cena" in globals() else HISTORY.get(chave_cena)
+    components.html(
+        html_polimero,
+        height=700,
+        scrolling=True
+    )
 
-    if not cena:
-        st.error(f"A cena '{chave_cena}' não foi encontrada.")
-        if st.button("Voltar ao Início"):
+
+# =========================================================
+# INÍCIO DO APP
+# =========================================================
+
+aplicar_css()
+
+inicializar_estado()
+
+
+# =========================================================
+# CONTAINER PRINCIPAL
+# =========================================================
+
+st.markdown(
+    '<div class="main-container">',
+    unsafe_allow_html=True
+)
+
+
+# =========================================================
+# CENA ATUAL
+# =========================================================
+
+cena_id = st.session_state.cena_atual
+
+
+# =========================================================
+# DESAFIOS
+#
+# CADA CENA É CHAMADA UMA ÚNICA VEZ.
+# O st.stop() impede que ela seja executada novamente.
+# =========================================================
+
+
+if cena_id == "desafio_quiz_1":
+
+    renderizar_quiz(0)
+
+    st.markdown(
+        "</div>",
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+elif cena_id == "desafio_quiz_2":
+
+    renderizar_quiz(1)
+
+    st.markdown(
+        "</div>",
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+elif cena_id == "desafio_plasticos":
+
+    renderizar_desafio_plasticos()
+
+    st.markdown(
+        "</div>",
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+elif cena_id == "desafio_polimero":
+
+    # =========================================
+    # 1. QUADRINHO
+    # =========================================
+
+    renderizar_desafio_polimero()
+
+
+    # =========================================
+    # 2. ESPAÇO ABAIXO DO QUADRINHO
+    # =========================================
+
+    st.markdown(
+        "<div style='height: 25px;'></div>",
+        unsafe_allow_html=True
+    )
+
+
+    # =========================================
+    # 3. BOTÃO RECOMEÇAR
+    #
+    # FORA DO QUADRINHO
+    # ABAIXO DO QUADRINHO
+    # CENTRALIZADO
+    # =========================================
+
+    col_esquerda, col_botao, col_direita = st.columns(
+        [1, 2, 1]
+    )
+
+
+    with col_botao:
+
+        if st.button(
+            "↻ RECOMEÇAR HISTÓRIA",
+            key="reiniciar_polimero",
+            use_container_width=True
+        ):
+
             reiniciar_historia()
-        return
 
-    # Renderiza o conteúdo conforme o tipo da cena
-    tipo = cena.get("tipo", "cena")
 
-    if tipo == "inicio":
-        renderizar_imagem(cena.get("imagem"), "Capa da história")
+    # =========================================
+    # 4. FECHAR CONTAINER
+    # =========================================
+
+    st.markdown(
+        "</div>",
+        unsafe_allow_html=True
+    )
+
+    st.stop()
+
+
+# =========================================================
+# CENAS NORMAIS DA HISTÓRIA
+# =========================================================
+#
+# A PARTIR DAQUI, COLE AS SUAS CENAS ORIGINAIS.
+#
+# NÃO COLOQUE NOVAMENTE:
+#
+# if cena_id == "desafio_polimero":
+#
+# porque ele já foi tratado acima.
+# =========================================================
+
+
+# ---------------------------------------------------------
+# SUAS CENAS ORIGINAIS COMEÇAM AQUI
+# ---------------------------------------------------------
+
+# Exemplo da estrutura:
+#
+# if cena_id == "inicio":
+#     ...
+#
+# elif cena_id == "cena_1":
+#     ...
+#
+# elif cena_id == "cena_2":
+#     ...
+#
+# elif cena_id == "cena_3":
+#     ...
+#
+# etc.
+
+
+# =========================================================
+# FECHAR CONTAINER
+# =========================================================
+
+st.markdown(
+    "</div>",
+    unsafe_allow_html=True
+)
+# ==========================================
+# CENAS NORMAIS DA HISTÓRIA
+# ==========================================
+
+# ↓↓↓ AQUI CONTINUA O RESTANTE DO SEU CÓDIGO ↓↓↓
+
+
+# Exemplo:
+#
+# if cena_id == "inicio":
+#     renderizar_inicio()
+#
+# elif cena_id == "cena_1":
+#     renderizar_cena_1()
+#
+# elif cena_id == "cena_2":
+#     renderizar_cena_2()
+
+
+# ==========================================
+# FECHAR CONTAINER
+# ==========================================
+
+st.markdown(
+    "</div>",
+    unsafe_allow_html=True
+)
+# ==========================================
+# DESAFIOS (TELAS SEPARADAS)
+# ==========================================
+if cena_id == "desafio_quiz_1":
+    renderizar_quiz(0)
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.stop()
+
+if cena_id == "desafio_quiz_2":
+    renderizar_quiz(1)
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.stop()
+
+if cena_id == "desafio_plasticos":
+    renderizar_desafio_plasticos()
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.stop()
+
+if cena_id == "desafio_polimero":
+    renderizar_desafio_polimero()
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.stop()
+
+# ==========================================
+# CENAS DA HISTÓRIA
+# ==========================================
+cena = get_cena(cena_id)
+
+if cena:
+    # ===== INÍCIO =====
+    if cena["tipo"] == "inicio":
+        # A CAPA APARECE IMEDIATAMENTE AO ABRIR O SITE.
+        renderizar_imagem(cena["imagem"], "Capa da história")
+
         st.markdown(
             f"""
-            <h1 class="titulo">{cena.get("titulo", "A Garrafa do Futuro")}</h1>
+            <h1 class="titulo">{cena.get("titulo", "História")}</h1>
             <div class="linha"></div>
             <p class="subtitulo">{cena.get("descricao", "")}</p>
         """,
@@ -698,37 +1622,63 @@ def main():
         )
 
         col1, col2, col3 = st.columns([1, 2, 1])
+
         with col2:
             st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
+
             if st.button(
                 "▶ COMEÇAR", key="comecar", use_container_width=True
             ):
-                ir_para_cena("pagina_01")
+                st.session_state.cena_atual = "pagina_01"
+                st.rerun()
+
             st.markdown("</div>", unsafe_allow_html=True)
 
-    elif tipo == "cena":
-        if "imagem" in cena:
-            renderizar_imagem(cena["imagem"])
-        if "texto" in cena:
-            st.write(cena["texto"])
-
+    # ===== ESCOLHA =====
+    elif cena["tipo"] == "escolha":
+        renderizar_imagem(cena["imagem"])
+        
+        st.markdown(f'<p class="pergunta">{cena.get("pergunta", "O que fazer?")}</p>', unsafe_allow_html=True)
+        
+        opcoes = list(cena["opcoes"].items())
+        if len(opcoes) >= 2:
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button(opcoes[0][0], key="escolha_1", use_container_width=True):
+                    ir_para_cena(opcoes[0][1])
+            with col2:
+                if st.button(opcoes[1][0], key="escolha_2", use_container_width=True):
+                    ir_para_cena(opcoes[1][1])
+    
+    # ===== FINAL =====
+    elif cena["tipo"] == "final":
+        renderizar_imagem(cena["imagem"])
+        
+        if "mensagem" in cena:
+            st.markdown(f'<p class="mensagem">✦ {cena["mensagem"]} ✦</p>', unsafe_allow_html=True)
+        
+        # Botão de desafio específico para cada final
+        st.markdown("<br>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if "proxima" in cena and cena["proxima"]:
-                if st.button(
-                    "AVANÇAR ▶", key=f"btn_{chave_cena}", use_container_width=True
-                ):
-                    ir_para_cena(cena["proxima"])
+            # Final 1 → Quiz Pergunta 1
+            if cena_id == "feedback_01b":
+                if st.button("FAZER O DESAFIO", key="ir_desafio_1", use_container_width=True):
+                    ir_para_cena("desafio_quiz_1")
+            
+            # Final 2 → Quiz Pergunta 2
+            elif cena_id == "feedback_02a":
+                if st.button("FAZER O DESAFIO", key="ir_desafio_2", use_container_width=True):
+                    ir_para_cena("desafio_quiz_2")
+            
+            # Final 3 → Decodificar Plásticos
+            elif cena_id == "feedback_03a":
+                if st.button("FAZER O DESAFIO", key="ir_desafio_3", use_container_width=True):
+                    ir_para_cena("desafio_plasticos")
+            
+            # Final 4 (vitória) → Polímero
+            elif cena_id == "pagina_12b":
+                if st.button("FAZER O DESAFIO FINAL", key="ir_desafio_4", use_container_width=True):
+                    ir_para_cena("desafio_polimero")
 
-    elif tipo == "quiz":
-        renderizar_quiz(cena.get("numero_pergunta", 0))
-
-    elif tipo == "desafio_plasticos":
-        renderizar_desafio_plasticos()
-
-    elif tipo == "desafio_polimero":
-        renderizar_desafio_polimero()
-
-
-if __name__ == "__main__":
-    main()
+st.markdown('</div>', unsafe_allow_html=True)
