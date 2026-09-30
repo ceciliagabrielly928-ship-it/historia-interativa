@@ -268,114 +268,121 @@ def renderizar_quiz(numero_pergunta):
     # ESTILO
     # ==========================================
     st.markdown(
-        """
-        <style>
+    """
+    <style>
 
-        .quiz-wrapper {
-            max-width: 900px;
-            margin: 20px auto 35px auto;
-        }
+    /* CARD PRINCIPAL (Engloba todo o desafio) */
+    .quiz-wrapper {
+        max-width: 750px;
+        margin: 40px auto;
+        padding: 40px 35px;
+        background-color: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f0f0f0;
+    }
 
-        /* TÍTULO */
-        .quiz-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin: 5px 0 22px 0;
-        }
+    /* TÍTULO */
+    .quiz-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 28px;
+    }
 
-        .quiz-linha {
-            width: 110px;
-            height: 2px;
-            background: #d4a843;
-        }
+    .quiz-linha {
+        width: 100px;
+        height: 2px;
+        background: #d4a843;
+    }
 
-        .quiz-k {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #d4a843;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Arial, sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
+    .quiz-k {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #d4a843;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
 
-        .quiz-titulo {
-            color: #222222;
-            font-family: Arial, sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            white-space: nowrap;
-        }
+    .quiz-titulo {
+        color: #222222;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        white-space: nowrap;
+    }
 
-        /* PERGUNTA */
-        .quiz-pergunta {
-            background: #f8f8f8;
-            border-radius: 16px;
-            padding: 20px 28px;
-            margin-bottom: 20px;
-            color: #222222;
-            font-family: Arial, sans-serif;
-            font-size: 17px;
-            line-height: 1.5;
-            text-align: center;
-        }
+    /* PERGUNTA (Agora sem fundo cinza escuro/separado) */
+    .quiz-pergunta {
+        background: transparent;
+        padding: 0 10px;
+        margin-bottom: 30px;
+        color: #222222;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        text-align: center;
+    }
 
- /* ALTERNATIVAS */
-div[data-testid="stButton"] {
-    width: 96% !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
-}
+    /* ALTERNATIVAS */
+    div[data-testid="stButton"] {
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+    }
 
-div[data-testid="stButton"] > button {
-    width: 100% !important;
-    min-height: 42px !important;
-    height: 42px !important;
-    margin: 0 0 12px 0 !important;
-    border-radius: 13px !important;
-    background: #ffffff !important;
-    color: #222222 !important;
-    font-family: Arial, sans-serif !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    text-align: left !important;
-    padding: 8px 20px !important;
-    box-shadow: none !important;
-}
+    div[data-testid="stButton"] > button {
+        width: 100% !important;
+        min-height: 48px !important;
+        margin-bottom: 12px !important;
+        border-radius: 14px !important;
+        border: 1.5px solid #d4a843 !important;
+        background: #ffffff !important;
+        color: #222222 !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        text-align: center !important;
+        padding: 10px 20px !important;
+        box-shadow: none !important;
+        transition: all 0.2s ease-in-out;
+    }
 
-div[data-testid="stButton"] > button:hover {
-    background: #fffaf0 !important;
-    border-color: #c7962e !important;
-}
+    div[data-testid="stButton"] > button:hover {
+        background: #fffaf0 !important;
+        border-color: #b88e30 !important;
+    }
 
-/* TIRA O ESPAÇO ENTRE OS ELEMENTOS */
-div[data-testid="stVerticalBlock"] {
-    gap: 0 !important;
-}
+    /* TIRA O ESPAÇO ENTRE OS ELEMENTOS DO STREAMLIT */
+    div[data-testid="stVerticalBlock"] {
+        gap: 0 !important;
+    }
 
-/* FEEDBACK */
-.quiz-feedback {
-    margin-top: 12px;
-    padding: 14px 18px;
-    border-radius: 12px;
-    text-align: center;
-    font-family: Arial, sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-}
+    /* FEEDBACK */
+    .quiz-feedback {
+        margin-top: 16px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+    }
 
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+    
 
     # ==========================================
     # TÍTULO
