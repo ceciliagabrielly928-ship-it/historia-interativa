@@ -1618,27 +1618,17 @@ if cena:
             <p class="subtitulo">{cena.get("descricao", "")}</p>
         """, unsafe_allow_html=True)
         
-# Certifique-se de ter esta função no topo do script para não dar NameError
-def ir_para_cena(nome_cena):
-    st.session_state.cena_atual = nome_cena
-    st.rerun()
-
-# Bloco do botão com alinhamento corrigido
 col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
-    if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
-        ir_para_cena("pagina_01")
-    st.markdown("</div>", unsafe_allow_html=True)
-    # ===== CENA =====
-    elif cena["tipo"] == "cena":
-        renderizar_imagem(cena["imagem"])
-        
-        col1, col2, col3 = st.columns([1, 2, 1])
+
         with col2:
-            if st.button("▶ CONTINUAR", key="continuar", use_container_width=True):
-                if "proxima" in cena:
-                    ir_para_cena(cena["proxima"])
+
+            st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
+
+            if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
+
+                ir_para_cena("pagina_01")
+
+            st.markdown('</div>', unsafe_allow_html=True) 
     
     # ===== ESCOLHA =====
     elif cena["tipo"] == "escolha":
