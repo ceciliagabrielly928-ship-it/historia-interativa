@@ -270,11 +270,11 @@ def renderizar_quiz(numero_pergunta):
     
  import streamlit as st
 
-# 1. CSS Corrigido (Sem caracteres inválidos e mirando o container correto)
+# 1. CSS DO DESAFIO (Card unificado e harmonioso)
 st.markdown(
     """
     <style>
-    /* Estiliza o container nativo do Streamlit para ser o card central */
+    /* Card principal em volta de todo o conteúdo */
     [data-testid="stVerticalBlockBorderWrapper"] {
         max-width: 800px !important;
         margin: 30px auto !important;
@@ -285,7 +285,7 @@ st.markdown(
         border: 1px solid #f0f0f0 !important;
     }
 
-    /* TÍTULO */
+    /* Cabeçalho */
     .quiz-header {
         display: flex;
         align-items: center;
@@ -324,7 +324,7 @@ st.markdown(
         white-space: nowrap;
     }
 
-    /* PERGUNTA */
+    /* Pergunta */
     .quiz-pergunta {
         background: transparent;
         padding: 0 10px;
@@ -336,7 +336,7 @@ st.markdown(
         text-align: center;
     }
 
-    /* ALTERNATIVAS (BOTÕES) */
+    /* Botões / Alternativas */
     div[data-testid="stButton"] {
         width: 100% !important;
         margin: 0 auto !important;
@@ -369,7 +369,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 2. Estrutura dos elementos agrupados DENTRO do mesmo container
+# 2. RENDERIZAÇÃO DO BLOCO DENTRO DO CARD
 with st.container(border=True):
     st.markdown(
         """
