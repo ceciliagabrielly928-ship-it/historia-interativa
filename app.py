@@ -254,12 +254,12 @@ def renderizar_quiz(numero_pergunta):
         <style>
         /* CARD BRANCO PRINCIPAL (CONTAINER COM SOMBRA DESTACADA E CENTRALIZADO) */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
-            background-color: #ffffff !important;
-            border-radius: 20px !important;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
-            border: 1px solid #ebebeb !important;
-            padding: 40px 35px 30px 35px !important;
-            margin: 20px auto !important;
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.09);
+            border: 1px solid #e9e2d6;
+            padding: 38px 45px 42px;
+            margin: 0 auto;
         }
 
         /* CABEÇALHO "DESAFIO" */
