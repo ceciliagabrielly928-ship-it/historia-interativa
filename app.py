@@ -267,15 +267,15 @@ def renderizar_quiz(numero_pergunta):
     pergunta = PERGUNTAS_QUIZ[numero_pergunta]
 
     # ==========================================
-    # ESTILO CSS (ALVO ESPECÍFICO)
+    # ESTILO CSS
     # ==========================================
     st.markdown(
         """
         <style>
-        /* APLICA O CARD BRANCO APENAS AO CONTAINER DO QUIZ */
+        /* CARD BRANCO APENAS NO CONTAINER DO QUIZ */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
             background-color: #ffffff !important;
-            border-radius: 24px !important;
+            border-radius: 20px !important;
             box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08) !important;
             border: 1px solid #f2f2f2 !important;
             padding: 40px 35px !important;
@@ -333,23 +333,25 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
-        /* BOTÕES DAS ALTERNATIVAS */
+        /* BOTÕES RETANGULARES (MODELO DO SEGUNDO PRINT) */
         div[data-testid="stButton"] {
             margin-bottom: 14px !important;
         }
 
         div[data-testid="stButton"] > button {
             width: 100% !important;
-            min-height: 48px !important;
-            border-radius: 25px !important;
-            border: 1.5px solid #d4a843 !important;
+            min-height: 52px !important;
+            border-radius: 4px !important; /* Retangular como na imagem */
+            border: 2px solid #d4a843 !important; /* Borda dourada marcante */
             background: #ffffff !important;
-            color: #333333 !important;
+            color: #d4a843 !important; /* Texto na cor dourada */
             font-family: Arial, sans-serif !important;
             font-size: 14px !important;
-            font-weight: 500 !important;
+            font-weight: 700 !important;
+            letter-spacing: 2px !important; /* Espaçamento entre letras */
+            text-transform: uppercase !important;
             text-align: center !important;
-            padding: 10px 20px !important;
+            padding: 12px 20px !important;
             box-shadow: none !important;
             transition: all 0.2s ease-in-out !important;
         }
@@ -357,6 +359,19 @@ def renderizar_quiz(numero_pergunta):
         div[data-testid="stButton"] > button:hover {
             background: #fffaf0 !important;
             border-color: #b88e30 !important;
+            color: #b88e30 !important;
+        }
+
+        /* ESTILO RETANGULAR DAS ALTERNATIVAS APÓS RESPONDER */
+        .box-resposta {
+            padding: 14px 20px;
+            margin-bottom: 14px;
+            border-radius: 4px; /* Retangular */
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-align: center;
         }
 
         /* FEEDBACK DENTRO DO CARD */
@@ -364,14 +379,13 @@ def renderizar_quiz(numero_pergunta):
             margin-top: 10px;
             margin-bottom: 10px;
             padding: 14px 18px;
-            border-radius: 25px;
+            border-radius: 4px;
             text-align: center;
             font-family: Arial, sans-serif;
             font-size: 15px;
             line-height: 1.5;
         }
 
-        /* ESPAÇAMENTO DO BOTÃO DE RECOMEÇAR FORA DO CARD */
         .area-recomecar {
             margin-top: 25px;
         }
@@ -388,7 +402,6 @@ def renderizar_quiz(numero_pergunta):
     with col2:
         # CONTAINER EXCLUSIVO DO CARD BRANCO
         with st.container(border=True):
-            # Marcador invisível para o CSS identificar ESTE container
             st.markdown(
                 '<div class="meu-quiz-container"></div>',
                 unsafe_allow_html=True,
@@ -417,7 +430,7 @@ def renderizar_quiz(numero_pergunta):
             for letra, texto in pergunta["alternativas"].items():
                 if not st.session_state.quiz_respondeu:
                     if st.button(
-                        f"{letra})  {texto}",
+                        f"▶  {letra}) {texto}",
                         key=f"quiz_{numero_pergunta}_{letra}",
                         use_container_width=True,
                     ):
@@ -435,19 +448,12 @@ def renderizar_quiz(numero_pergunta):
                     if letra == correta:
                         st.markdown(
                             f"""
-                            <div style="
-                                padding: 14px 20px;
-                                margin-bottom: 14px;
-                                border-radius: 25px;
+                            <div class="box-resposta" style="
                                 background: #edf7ed;
-                                border: 1.5px solid #75ad75;
+                                border: 2px solid #75ad75;
                                 color: #286b2f;
-                                font-family: Arial, sans-serif;
-                                font-size: 14px;
-                                font-weight: 500;
-                                text-align: center;
                             ">
-                                ✓ &nbsp; <strong>{letra})</strong>&nbsp; {texto}
+                                ✓ &nbsp; {letra}) &nbsp; {texto}
                             </div>
                             """,
                             unsafe_allow_html=True,
@@ -455,19 +461,12 @@ def renderizar_quiz(numero_pergunta):
                     elif letra == resposta_dada:
                         st.markdown(
                             f"""
-                            <div style="
-                                padding: 14px 20px;
-                                margin-bottom: 14px;
-                                border-radius: 25px;
+                            <div class="box-resposta" style="
                                 background: #fff0f0;
-                                border: 1.5px solid #d88b8b;
+                                border: 2px solid #d88b8b;
                                 color: #8a3030;
-                                font-family: Arial, sans-serif;
-                                font-size: 14px;
-                                font-weight: 500;
-                                text-align: center;
                             ">
-                                ✕ &nbsp; <strong>{letra})</strong>&nbsp; {texto}
+                                ✕ &nbsp; {letra}) &nbsp; {texto}
                             </div>
                             """,
                             unsafe_allow_html=True,
@@ -475,19 +474,12 @@ def renderizar_quiz(numero_pergunta):
                     else:
                         st.markdown(
                             f"""
-                            <div style="
-                                padding: 14px 20px;
-                                margin-bottom: 14px;
-                                border-radius: 25px;
+                            <div class="box-resposta" style="
                                 background: #ffffff;
-                                border: 1.5px solid #d4a843;
-                                color: #333333;
-                                font-family: Arial, sans-serif;
-                                font-size: 14px;
-                                font-weight: 500;
-                                text-align: center;
+                                border: 2px solid #d4a843;
+                                color: #d4a843;
                             ">
-                                <strong>{letra})</strong>&nbsp; {texto}
+                                {letra}) &nbsp; {texto}
                             </div>
                             """,
                             unsafe_allow_html=True,
@@ -504,7 +496,7 @@ def renderizar_quiz(numero_pergunta):
                         <div class="quiz-feedback"
                              style="
                                 background:#edf7ed;
-                                border:1px solid #75ad75;
+                                border:1.5px solid #75ad75;
                                 color:#286b2f;
                              ">
                             <strong>Resposta correta!</strong> 🎉
@@ -518,7 +510,7 @@ def renderizar_quiz(numero_pergunta):
                         <div class="quiz-feedback"
                              style="
                                 background:#fff0f0;
-                                border:1px solid #d88b8b;
+                                border:1.5px solid #d88b8b;
                                 color:#8a3030;
                              ">
                             <strong>Não foi dessa vez!</strong><br>
@@ -528,7 +520,7 @@ def renderizar_quiz(numero_pergunta):
                         unsafe_allow_html=True,
                     )
 
-        # BOTÃO RECOMEÇAR HISTÓRIA (FORA DO CONTAINER/CARD)
+        # BOTÃO RECOMEÇAR FORA DO CARD
         if st.session_state.quiz_respondeu:
             st.markdown(
                 '<div class="area-recomecar">', unsafe_allow_html=True
