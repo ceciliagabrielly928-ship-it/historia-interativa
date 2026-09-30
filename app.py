@@ -267,8 +267,7 @@ def renderizar_quiz(numero_pergunta):
     # ==========================================
     # ESTILO
     # ==========================================
-    st.markdown(
-    """
+    
  st.markdown(
     """
     <style>
