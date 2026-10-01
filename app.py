@@ -1,5 +1,7 @@
+```python
 # =========================================================
-# APP — A GARRAFA DO FUTURO
+# A GARRAFA DO FUTURO
+# app.py
 # =========================================================
 
 import streamlit as st
@@ -164,8 +166,6 @@ def aplicar_css():
 
             background: #ffffff;
 
-            min-height: 0vh;
-
             width: 100%;
 
             display: flex;
@@ -229,7 +229,7 @@ def aplicar_css():
 
 
         /* =========================================
-           IMAGENS
+           IMAGEM
         ========================================= */
 
         .imagem-container {
@@ -329,12 +329,12 @@ def aplicar_css():
 
 
         /* =========================================
-           TEXTO DA HISTÓRIA
+           TEXTOS
         ========================================= */
 
         .pergunta {
 
-            color: #ffffff;
+            color: #333333;
 
             font-size: 1.4rem;
 
@@ -359,6 +359,74 @@ def aplicar_css():
             margin: 30px 0;
 
             font-family: Georgia, serif;
+        }
+
+
+        /* =========================================
+           CENAS NORMAIS
+        ========================================= */
+
+        .texto-cena {
+
+            width: min(1000px, 100%);
+
+            margin: 0 auto 25px auto;
+
+            color: #333333;
+
+            font-family: Georgia, serif;
+
+            font-size: 1.25rem;
+
+            line-height: 1.7;
+
+            text-align: center;
+        }
+
+
+        .personagem {
+
+            color: #d4a843;
+
+            font-family: Arial, sans-serif;
+
+            font-weight: 700;
+
+            font-size: 1rem;
+
+            text-align: center;
+
+            margin-bottom: 8px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+        }
+
+
+        .dialogo {
+
+            width: min(900px, 100%);
+
+            margin: 0 auto 25px auto;
+
+            padding: 20px 25px;
+
+            background: #faf8f4;
+
+            border-left: 4px solid #d4a843;
+
+            border-radius: 10px;
+
+            color: #333;
+
+            font-family: Georgia, serif;
+
+            font-size: 1.15rem;
+
+            line-height: 1.6;
+
+            text-align: center;
         }
 
 
@@ -402,17 +470,14 @@ def aplicar_css():
 
 
 # =========================================================
-# DADOS DO QUIZ
+# QUIZ
 # =========================================================
 
 PERGUNTAS_QUIZ = [
 
     {
         "pergunta":
-            "Karla mostra a garrafa de PET encontrada pelos "
-            "amigos e pergunta: qual decisão ajuda a dar um "
-            "destino correto ao material e evita que ele "
-            "permaneça no ambiente causando impactos?",
+            "Karla mostra a garrafa de PET encontrada pelos amigos e pergunta: qual decisão ajuda a dar um destino correto ao material e evita que ele permaneça no ambiente causando impactos?",
 
         "alternativas": {
 
@@ -435,10 +500,7 @@ PERGUNTAS_QUIZ = [
 
     {
         "pergunta":
-            "Depois de descobrirem o que significa PET, os amigos "
-            "precisam escolher uma atitude para diminuir o problema "
-            "antes que novas garrafas sejam produzidas. Qual decisão "
-            "atende melhor a esse objetivo?",
+            "Depois de descobrirem o que significa PET, os amigos precisam escolher uma atitude para diminuir o problema antes que novas garrafas sejam produzidas. Qual decisão atende melhor a esse objetivo?",
 
         "alternativas": {
 
@@ -462,39 +524,26 @@ PERGUNTAS_QUIZ = [
 
 
 # =========================================================
-# ESTADO DO QUIZ
+# ESTADO
 # =========================================================
 
 def inicializar_estado():
 
     if "cena_atual" not in st.session_state:
-
         st.session_state.cena_atual = "inicio"
 
-
     if "quiz_pontuacao" not in st.session_state:
-
         st.session_state.quiz_pontuacao = 0
 
-
     if "quiz_respondeu" not in st.session_state:
-
         st.session_state.quiz_respondeu = False
 
-
     if "quiz_resposta_dada" not in st.session_state:
-
         st.session_state.quiz_resposta_dada = None
 
-
     if "quiz_finalizado" not in st.session_state:
-
         st.session_state.quiz_finalizado = False
 
-
-# =========================================================
-# IR PARA UMA CENA
-# =========================================================
 
 def ir_para_cena(cena_id):
 
@@ -508,10 +557,6 @@ def ir_para_cena(cena_id):
 
     st.rerun()
 
-
-# =========================================================
-# REINICIAR HISTÓRIA
-# =========================================================
 
 def reiniciar_historia():
 
@@ -529,7 +574,7 @@ def reiniciar_historia():
 
 
 # =========================================================
-# DESAFIO — QUIZ
+# QUIZ — RENDERIZAÇÃO
 # =========================================================
 
 def renderizar_quiz(numero_pergunta):
@@ -537,15 +582,9 @@ def renderizar_quiz(numero_pergunta):
     pergunta = PERGUNTAS_QUIZ[numero_pergunta]
 
 
-    # =====================================================
-    # CSS DO QUIZ
-    # =====================================================
-
     st.markdown(
         """
         <style>
-
-        /* CARD DO QUIZ */
 
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
 
@@ -563,8 +602,6 @@ def renderizar_quiz(numero_pergunta):
             margin-top: 20px !important;
         }
 
-
-        /* CABEÇALHO */
 
         .quiz-header {
 
@@ -634,8 +671,6 @@ def renderizar_quiz(numero_pergunta):
         }
 
 
-        /* PERGUNTA */
-
         .quiz-pergunta {
 
             background: transparent;
@@ -655,8 +690,6 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
-
-        /* ALTERNATIVAS */
 
         div[data-testid="stButton"] {
 
@@ -708,8 +741,6 @@ def renderizar_quiz(numero_pergunta):
         }
 
 
-        /* RESPOSTAS APÓS RESPONDER */
-
         .box-resposta {
 
             padding: 14px 20px;
@@ -729,8 +760,6 @@ def renderizar_quiz(numero_pergunta):
             text-align: center;
         }
 
-
-        /* FEEDBACK */
 
         .quiz-feedback {
 
@@ -763,10 +792,6 @@ def renderizar_quiz(numero_pergunta):
     )
 
 
-    # =====================================================
-    # LAYOUT DO QUIZ
-    # =====================================================
-
     col1, col2, col3 = st.columns([1, 6, 1])
 
 
@@ -780,17 +805,13 @@ def renderizar_quiz(numero_pergunta):
             )
 
 
-            # CABEÇALHO
-
             st.markdown(
                 """
                 <div class="quiz-header">
 
                     <div class="quiz-linha"></div>
 
-                    <div class="quiz-k">
-                        K
-                    </div>
+                    <div class="quiz-k">K</div>
 
                     <div class="quiz-titulo">
                         DESAFIO DE KARLA
@@ -804,8 +825,6 @@ def renderizar_quiz(numero_pergunta):
             )
 
 
-            # PERGUNTA
-
             st.markdown(
                 f"""
                 <div class="quiz-pergunta">
@@ -815,10 +834,6 @@ def renderizar_quiz(numero_pergunta):
                 unsafe_allow_html=True
             )
 
-
-            # =================================================
-            # ALTERNATIVAS
-            # =================================================
 
             for letra, texto in pergunta["alternativas"].items():
 
@@ -836,12 +851,10 @@ def renderizar_quiz(numero_pergunta):
 
 
                         if letra == pergunta["correta"]:
-
                             st.session_state.quiz_pontuacao += 1
 
 
                         st.rerun()
-
 
                 else:
 
@@ -909,10 +922,6 @@ def renderizar_quiz(numero_pergunta):
                         )
 
 
-            # =================================================
-            # FEEDBACK
-            # =================================================
-
             if st.session_state.quiz_respondeu:
 
                 resposta_dada = (
@@ -967,10 +976,6 @@ def renderizar_quiz(numero_pergunta):
                     )
 
 
-        # =====================================================
-        # BOTÃO RECOMEÇAR
-        # =====================================================
-
         if st.session_state.quiz_respondeu:
 
             st.markdown(
@@ -995,13 +1000,12 @@ def renderizar_quiz(numero_pergunta):
 
 
 # =========================================================
-# DESAFIO — DECODIFICAR PLÁSTICOS
+# DESAFIO — PLÁSTICOS
 # =========================================================
 
 def renderizar_desafio_plasticos():
 
     html_desafio = """
-
     <!DOCTYPE html>
 
     <html lang="pt-BR">
@@ -1023,7 +1027,6 @@ def renderizar_desafio_plasticos():
             padding: 0;
         }
 
-
         body {
 
             font-family: Arial, sans-serif;
@@ -1036,7 +1039,6 @@ def renderizar_desafio_plasticos():
 
             min-height: 100vh;
         }
-
 
         .container {
 
@@ -1056,7 +1058,6 @@ def renderizar_desafio_plasticos():
                 0 5px 20px rgba(0,0,0,0.08);
         }
 
-
         h1 {
 
             text-align: center;
@@ -1067,7 +1068,6 @@ def renderizar_desafio_plasticos():
 
             color: #222;
         }
-
 
         .karla {
 
@@ -1086,14 +1086,12 @@ def renderizar_desafio_plasticos():
             color: #222;
         }
 
-
         .karla strong {
 
             display: block;
 
             margin-bottom: 5px;
         }
-
 
         h2 {
 
@@ -1105,7 +1103,6 @@ def renderizar_desafio_plasticos():
 
             color: #222;
         }
-
 
         .banco {
 
@@ -1119,7 +1116,6 @@ def renderizar_desafio_plasticos():
 
             margin-bottom: 30px;
         }
-
 
         .palavra {
 
@@ -1136,7 +1132,6 @@ def renderizar_desafio_plasticos():
             color: #222;
         }
 
-
         .numeros {
 
             display: flex;
@@ -1147,7 +1142,6 @@ def renderizar_desafio_plasticos():
 
             margin: 30px 0;
         }
-
 
         .numero {
 
@@ -1172,18 +1166,15 @@ def renderizar_desafio_plasticos():
             color: #222;
         }
 
-
         .numero:hover {
 
             background: #f0f0f0;
         }
 
-
         .numero.selecionado {
 
             background: #e6e6e6;
         }
-
 
         .numero.concluido {
 
@@ -1191,7 +1182,6 @@ def renderizar_desafio_plasticos():
 
             background: #dcdcdc;
         }
-
 
         .desafio {
 
@@ -1206,12 +1196,10 @@ def renderizar_desafio_plasticos():
             background: #f7f7f7;
         }
 
-
         .desafio.ativo {
 
             display: block;
         }
-
 
         .pista-titulo {
 
@@ -1224,7 +1212,6 @@ def renderizar_desafio_plasticos():
             color: #222;
         }
 
-
         .pista {
 
             font-size: 17px;
@@ -1236,7 +1223,6 @@ def renderizar_desafio_plasticos():
             color: #333;
         }
 
-
         .opcoes {
 
             display: flex;
@@ -1245,7 +1231,6 @@ def renderizar_desafio_plasticos():
 
             gap: 10px;
         }
-
 
         .opcao {
 
@@ -1268,18 +1253,15 @@ def renderizar_desafio_plasticos():
             color: #222;
         }
 
-
         .opcao:hover {
 
             background: #eeeeee;
         }
 
-
         .opcao:disabled {
 
             cursor: default;
         }
-
 
         .feedback {
 
@@ -1291,7 +1273,6 @@ def renderizar_desafio_plasticos():
 
             min-height: 25px;
         }
-
 
         .final {
 
@@ -1314,57 +1295,17 @@ def renderizar_desafio_plasticos():
             color: #222;
         }
 
-
-        @media (max-width: 650px) {
-
-            .container {
-
-                padding: 20px;
-            }
-
-
-            h1 {
-
-                font-size: 22px;
-            }
-
-
-            .numeros {
-
-                gap: 4px;
-            }
-
-
-            .numero {
-
-                font-size: 22px;
-
-                min-height: 55px;
-            }
-
-
-            .pista {
-
-                font-size: 15px;
-            }
-
-        }
-
     </style>
 
     </head>
 
-
     <body>
 
-
     <div class="container">
-
 
         <h1>
             DESAFIO — DECODIFIQUE OS PLÁSTICOS
         </h1>
-
 
         <div class="karla">
 
@@ -1376,112 +1317,54 @@ def renderizar_desafio_plasticos():
 
         </div>
 
-
         <h2>
             BANCO DE PALAVRAS
         </h2>
 
-
         <div class="banco">
 
             <span class="palavra">PP</span>
-
             <span class="palavra">PET</span>
-
             <span class="palavra">PVC</span>
-
             <span class="palavra">PS</span>
-
             <span class="palavra">LDPE</span>
-
             <span class="palavra">OTHER</span>
-
             <span class="palavra">HDPE</span>
 
         </div>
-
 
         <h2>
             IDENTIFIQUE CADA PLÁSTICO
         </h2>
 
-
         <div class="numeros">
 
-            <button
-                class="numero"
-                onclick="abrirDesafio(1)"
-            >
-                ①
-            </button>
-
-            <button
-                class="numero"
-                onclick="abrirDesafio(2)"
-            >
-                ②
-            </button>
-
-            <button
-                class="numero"
-                onclick="abrirDesafio(3)"
-            >
-                ③
-            </button>
-
-            <button
-                class="numero"
-                onclick="abrirDesafio(4)"
-            >
-                ④
-            </button>
-
-            <button
-                class="numero"
-                onclick="abrirDesafio(5)"
-            >
-                ⑤
-            </button>
-
-            <button
-                class="numero"
-                onclick="abrirDesafio(6)"
-            >
-                ⑥
-            </button>
-
-            <button
-                class="numero"
-                onclick="abrirDesafio(7)"
-            >
-                ⑦
-            </button>
+            <button class="numero" onclick="abrirDesafio(1)">①</button>
+            <button class="numero" onclick="abrirDesafio(2)">②</button>
+            <button class="numero" onclick="abrirDesafio(3)">③</button>
+            <button class="numero" onclick="abrirDesafio(4)">④</button>
+            <button class="numero" onclick="abrirDesafio(5)">⑤</button>
+            <button class="numero" onclick="abrirDesafio(6)">⑥</button>
+            <button class="numero" onclick="abrirDesafio(7)">⑦</button>
 
         </div>
 
-
-        <div
-            id="desafio"
-            class="desafio"
-        >
+        <div id="desafio" class="desafio">
 
             <div
                 class="pista-titulo"
                 id="pistaTitulo"
             ></div>
 
-
             <div
                 class="pista"
                 id="pista"
             ></div>
 
-
             <div
                 class="opcoes"
                 id="opcoes"
             ></div>
-
 
             <div
                 class="feedback"
@@ -1490,17 +1373,11 @@ def renderizar_desafio_plasticos():
 
         </div>
 
+        <div id="final" class="final">
 
-        <div
-            id="final"
-            class="final"
-        >
-
-            Parabéns! Você decodificou todos
-            os tipos de plástico!
+            Parabéns! Você decodificou todos os tipos de plástico!
 
         </div>
-
 
     </div>
 
@@ -1607,16 +1484,11 @@ def renderizar_desafio_plasticos():
             .querySelectorAll(".numero")
             .forEach((b, i) => {
 
-                b.classList.remove(
-                    "selecionado"
-                );
-
+                b.classList.remove("selecionado");
 
                 if (i + 1 === numero) {
 
-                    b.classList.add(
-                        "selecionado"
-                    );
+                    b.classList.add("selecionado");
 
                 }
 
@@ -1628,10 +1500,7 @@ def renderizar_desafio_plasticos():
     function criarOpcoes() {
 
         const area =
-            document.getElementById(
-                "opcoes"
-            );
-
+            document.getElementById("opcoes");
 
         area.innerHTML = "";
 
@@ -1639,19 +1508,14 @@ def renderizar_desafio_plasticos():
         palavras.forEach(p => {
 
             const b =
-                document.createElement(
-                    "button"
-                );
-
+                document.createElement("button");
 
             b.className = "opcao";
 
             b.textContent = p;
 
-
             b.onclick = () =>
                 verificarResposta(p);
-
 
             area.appendChild(b);
 
@@ -1665,47 +1529,33 @@ def renderizar_desafio_plasticos():
         const correta =
             desafios[numeroAtual].resposta;
 
-
         const fb =
-            document.getElementById(
-                "feedback"
-            );
+            document.getElementById("feedback");
 
 
         if (resposta === correta) {
 
-            fb.textContent =
-                "✓ Acertou!";
+            fb.textContent = "✓ Acertou!";
 
-            fb.style.color =
-                "#247a3d";
+            fb.style.color = "#247a3d";
 
 
-            if (
-                !resolvidos.includes(
-                    numeroAtual
-                )
-            ) {
+            if (!resolvidos.includes(numeroAtual)) {
 
-                resolvidos.push(
-                    numeroAtual
-                );
+                resolvidos.push(numeroAtual);
 
             }
 
 
             document
-                .querySelectorAll(
-                    ".numero"
-                )[numeroAtual - 1]
+                .querySelectorAll(".numero")
+                [numeroAtual - 1]
                 .classList
                 .add("concluido");
 
 
             document
-                .querySelectorAll(
-                    ".opcao"
-                )
+                .querySelectorAll(".opcao")
                 .forEach(
                     b => b.disabled = true
                 );
@@ -1716,17 +1566,12 @@ def renderizar_desafio_plasticos():
                 setTimeout(() => {
 
                     document
-                        .getElementById(
-                            "final"
-                        )
-                        .style.display =
-                            "block";
+                        .getElementById("final")
+                        .style.display = "block";
 
 
                     document
-                        .getElementById(
-                            "desafio"
-                        )
+                        .getElementById("desafio")
                         .classList
                         .remove("ativo");
 
@@ -1750,11 +1595,9 @@ def renderizar_desafio_plasticos():
 
     </script>
 
-
     </body>
 
     </html>
-
     """
 
 
@@ -1794,7 +1637,6 @@ def renderizar_desafio_polimero():
                 padding: 0;
             }
 
-
             body {
 
                 min-height: 100vh;
@@ -1805,7 +1647,6 @@ def renderizar_desafio_polimero():
 
                 padding: 28px 20px 35px;
             }
-
 
             .container {
 
@@ -1827,7 +1668,6 @@ def renderizar_desafio_polimero():
                     0 12px 35px rgba(0, 0, 0, 0.09);
             }
 
-
             h1 {
 
                 text-align: center;
@@ -1842,7 +1682,6 @@ def renderizar_desafio_polimero():
 
                 margin-bottom: 13px;
             }
-
 
             h1::after {
 
@@ -1860,7 +1699,6 @@ def renderizar_desafio_polimero():
 
                 border-radius: 5px;
             }
-
 
             .camila {
 
@@ -1881,7 +1719,6 @@ def renderizar_desafio_polimero():
                 color: #333;
             }
 
-
             h2 {
 
                 font-size: 15px;
@@ -1897,7 +1734,6 @@ def renderizar_desafio_polimero():
                 margin-bottom: 18px;
             }
 
-
             .desafio {
 
                 padding: 27px 30px;
@@ -1911,7 +1747,6 @@ def renderizar_desafio_polimero():
                 text-align: center;
             }
 
-
             .pergunta {
 
                 font-size: 19px;
@@ -1923,14 +1758,12 @@ def renderizar_desafio_polimero():
                 margin-bottom: 20px;
             }
 
-
             .lacuna {
 
                 color: #b38725;
 
                 font-weight: bold;
             }
-
 
             button {
 
@@ -1949,7 +1782,6 @@ def renderizar_desafio_polimero():
                 transition: .2s;
             }
 
-
             .dica-btn {
 
                 background: #333;
@@ -1959,14 +1791,12 @@ def renderizar_desafio_polimero():
                 margin-bottom: 15px;
             }
 
-
             .dica-btn:hover {
 
                 transform: translateY(-2px);
 
                 opacity: .9;
             }
-
 
             .dica {
 
@@ -1991,7 +1821,6 @@ def renderizar_desafio_polimero():
                 color: #444;
             }
 
-
             input {
 
                 width: 100%;
@@ -2011,12 +1840,10 @@ def renderizar_desafio_polimero():
                 margin-bottom: 15px;
             }
 
-
             input:focus {
 
                 border-color: #d4a843;
             }
-
 
             .responder {
 
@@ -2031,14 +1858,12 @@ def renderizar_desafio_polimero():
                 font-size: 15px;
             }
 
-
             .responder:hover {
 
                 background: #bd922f;
 
                 transform: translateY(-2px);
             }
-
 
             #resultado {
 
@@ -2049,69 +1874,27 @@ def renderizar_desafio_polimero():
                 font-weight: bold;
             }
 
-
             .acerto {
 
                 color: #247a3d;
             }
-
 
             .erro {
 
                 color: #b3261e;
             }
 
-
-            @media (max-width: 650px) {
-
-                body {
-
-                    padding: 18px 12px;
-                }
-
-
-                .container {
-
-                    padding: 28px 20px;
-
-                    border-radius: 18px;
-                }
-
-
-                h1 {
-
-                    font-size: 23px;
-                }
-
-
-                .desafio {
-
-                    padding: 22px 18px;
-                }
-
-
-                .pergunta {
-
-                    font-size: 17px;
-                }
-
-            }
-
         </style>
 
     </head>
 
-
     <body>
 
-
         <div class="container">
-
 
             <h1>
                 DESAFIO
             </h1>
-
 
             <div class="camila">
 
@@ -2123,14 +1906,11 @@ def renderizar_desafio_polimero():
 
             </div>
 
-
             <h2>
                 IDENTIFIQUE O MATERIAL
             </h2>
 
-
             <div class="desafio">
-
 
                 <p class="pergunta">
 
@@ -2145,7 +1925,6 @@ def renderizar_desafio_polimero():
 
                 </p>
 
-
                 <button
                     class="dica-btn"
                     onclick="mostrarDica()"
@@ -2155,7 +1934,6 @@ def renderizar_desafio_polimero():
                     💡 VER DICA
 
                 </button>
-
 
                 <div
                     class="dica"
@@ -2170,14 +1948,12 @@ def renderizar_desafio_polimero():
 
                 </div>
 
-
                 <input
                     type="text"
                     id="resposta"
                     placeholder="Digite sua resposta..."
                     autocomplete="off"
                 >
-
 
                 <button
                     class="responder"
@@ -2189,18 +1965,14 @@ def renderizar_desafio_polimero():
 
                 </button>
 
-
                 <div id="resultado"></div>
 
-
             </div>
-
 
         </div>
 
 
         <script>
-
 
             function mostrarDica() {
 
@@ -2274,7 +2046,6 @@ def renderizar_desafio_polimero():
 
                 }
 
-
                 else {
 
                     resultado.textContent =
@@ -2309,11 +2080,9 @@ def renderizar_desafio_polimero():
 
         </script>
 
-
     </body>
 
     </html>
-
     """
 
 
@@ -2322,6 +2091,120 @@ def renderizar_desafio_polimero():
         height=700,
         scrolling=True
     )
+
+
+# =========================================================
+# FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
+# =========================================================
+
+def renderizar_cena_normal(cena):
+
+    # -----------------------------------------------------
+    # IMAGEM
+    # -----------------------------------------------------
+
+    if cena.get("imagem"):
+
+        renderizar_imagem(
+            cena["imagem"],
+            "Imagem da história"
+        )
+
+
+    # -----------------------------------------------------
+    # PERSONAGEM
+    # -----------------------------------------------------
+
+    personagem = (
+        cena.get("personagem")
+        or cena.get("personagem_nome")
+        or cena.get("nome")
+    )
+
+
+    # -----------------------------------------------------
+    # TEXTO / DIÁLOGO
+    # -----------------------------------------------------
+
+    texto = (
+        cena.get("texto")
+        or cena.get("dialogo")
+        or cena.get("fala")
+        or cena.get("descricao")
+    )
+
+
+    if personagem and texto:
+
+        st.markdown(
+            f"""
+            <div class="personagem">
+                {personagem}
+            </div>
+
+            <div class="dialogo">
+                {texto}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    elif texto:
+
+        st.markdown(
+            f"""
+            <div class="texto-cena">
+                {texto}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+
+    # -----------------------------------------------------
+    # TÍTULO
+    # -----------------------------------------------------
+
+    if cena.get("titulo"):
+
+        st.markdown(
+            f"""
+            <h1 class="titulo">
+                {cena["titulo"]}
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
+
+
+    # -----------------------------------------------------
+    # BOTÃO / PRÓXIMA CENA
+    # -----------------------------------------------------
+
+    proxima = (
+        cena.get("proxima")
+        or cena.get("proxima_cena")
+        or cena.get("proximo")
+        or cena.get("next")
+    )
+
+
+    if proxima:
+
+        col1, col2, col3 = st.columns(
+            [1, 2, 1]
+        )
+
+
+        with col2:
+
+            if st.button(
+                "CONTINUAR",
+                key=f"continuar_{st.session_state.cena_atual}",
+                use_container_width=True
+            ):
+
+                ir_para_cena(proxima)
 
 
 # =========================================================
@@ -2438,28 +2321,21 @@ elif cena_id == "desafio_polimero":
 
 
 # =========================================================
-# CENAS NORMAIS DA HISTÓRIA
+# CENAS NORMAIS
 # =========================================================
 
 cena = get_cena(cena_id)
 
 
 # =========================================================
-# VERIFICAÇÃO DE CENA
+# SE NÃO ENCONTROU A CENA
 # =========================================================
 
 if cena is None:
 
     st.error(
         f"""
-        ⚠️ **Cena não encontrada**
-
-        O programa tentou abrir:
-
-        `{cena_id}`
-
-        Verifique se esse ID existe no arquivo
-        `story.py`.
+        Cena não encontrada: `{cena_id}`
         """
     )
 
@@ -2472,31 +2348,47 @@ if cena is None:
 
 
 # =========================================================
-# CENA — INÍCIO
+# TIPO: INÍCIO
 # =========================================================
 
-if cena["tipo"] == "inicio":
+if cena.get("tipo") == "inicio":
 
-    renderizar_imagem(
-        cena["imagem"],
-        "Capa da história"
-    )
+    if cena.get("imagem"):
+
+        renderizar_imagem(
+            cena["imagem"],
+            "Capa da história"
+        )
+
+
+    if cena.get("titulo"):
+
+        st.markdown(
+            f"""
+            <h1 class="titulo">
+                {cena["titulo"]}
+            </h1>
+            """,
+            unsafe_allow_html=True
+        )
 
 
     st.markdown(
-        f"""
-        <h1 class="titulo">
-            {cena.get("titulo", "História")}
-        </h1>
-
-        <div class="linha"></div>
-
-        <p class="subtitulo">
-            {cena.get("descricao", "")}
-        </p>
-        """,
+        '<div class="linha"></div>',
         unsafe_allow_html=True
     )
+
+
+    if cena.get("descricao"):
+
+        st.markdown(
+            f"""
+            <p class="subtitulo">
+                {cena["descricao"]}
+            </p>
+            """,
+            unsafe_allow_html=True
+        )
 
 
     col1, col2, col3 = st.columns(
@@ -2518,11 +2410,6 @@ if cena["tipo"] == "inicio":
             use_container_width=True
         ):
 
-            # =========================================
-            # IMPORTANTE:
-            # Esta é a primeira cena após a capa.
-            # =========================================
-
             st.session_state.cena_atual = "pagina_01"
 
             st.rerun()
@@ -2535,31 +2422,43 @@ if cena["tipo"] == "inicio":
 
 
 # =========================================================
-# CENA — ESCOLHA
+# TIPO: CENA
+#
+# ESTE É O TIPO USADO PELO STORY.PY
 # =========================================================
 
-elif cena["tipo"] == "escolha":
+elif cena.get("tipo") == "cena":
 
-    renderizar_imagem(
-        cena["imagem"]
-    )
+    renderizar_cena_normal(cena)
 
 
-    st.markdown(
-        f"""
-        <p class="pergunta">
-            {cena.get(
-                "pergunta",
-                "O que fazer?"
-            )}
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
+# =========================================================
+# TIPO: ESCOLHA
+# =========================================================
+
+elif cena.get("tipo") == "escolha":
+
+    if cena.get("imagem"):
+
+        renderizar_imagem(
+            cena["imagem"]
+        )
+
+
+    if cena.get("pergunta"):
+
+        st.markdown(
+            f"""
+            <p class="pergunta">
+                {cena["pergunta"]}
+            </p>
+            """,
+            unsafe_allow_html=True
+        )
 
 
     opcoes = list(
-        cena["opcoes"].items()
+        cena.get("opcoes", {}).items()
     )
 
 
@@ -2595,17 +2494,19 @@ elif cena["tipo"] == "escolha":
 
 
 # =========================================================
-# CENA — FINAL
+# TIPO: FINAL
 # =========================================================
 
-elif cena["tipo"] == "final":
+elif cena.get("tipo") == "final":
 
-    renderizar_imagem(
-        cena["imagem"]
-    )
+    if cena.get("imagem"):
+
+        renderizar_imagem(
+            cena["imagem"]
+        )
 
 
-    if "mensagem" in cena:
+    if cena.get("mensagem"):
 
         st.markdown(
             f"""
@@ -2617,23 +2518,12 @@ elif cena["tipo"] == "final":
         )
 
 
-    st.markdown(
-        "<br>",
-        unsafe_allow_html=True
-    )
-
-
     col1, col2, col3 = st.columns(
         [1, 2, 1]
     )
 
 
     with col2:
-
-
-        # =============================================
-        # FINAL 1 → QUIZ 1
-        # =============================================
 
         if cena_id == "feedback_01b":
 
@@ -2648,10 +2538,6 @@ elif cena["tipo"] == "final":
                 )
 
 
-        # =============================================
-        # FINAL 2 → QUIZ 2
-        # =============================================
-
         elif cena_id == "feedback_02a":
 
             if st.button(
@@ -2665,10 +2551,6 @@ elif cena["tipo"] == "final":
                 )
 
 
-        # =============================================
-        # FINAL 3 → DECODIFICAR PLÁSTICOS
-        # =============================================
-
         elif cena_id == "feedback_03a":
 
             if st.button(
@@ -2681,10 +2563,6 @@ elif cena["tipo"] == "final":
                     "desafio_plasticos"
                 )
 
-
-        # =============================================
-        # FINAL 4 → POLÍMERO
-        # =============================================
 
         elif cena_id == "pagina_12b":
 
@@ -2700,29 +2578,25 @@ elif cena["tipo"] == "final":
 
 
 # =========================================================
-# TIPO DE CENA DESCONHECIDO
+# TIPO DESCONHECIDO
 # =========================================================
 
 else:
 
     st.error(
         f"""
-        ⚠️ Tipo de cena não reconhecido.
-
-        ID da cena:
-        `{cena_id}`
-
-        Tipo encontrado:
+        Tipo de cena não reconhecido:
         `{cena.get("tipo")}`
         """
     )
 
 
 # =========================================================
-# FECHAR CONTAINER PRINCIPAL
+# FECHAR CONTAINER
 # =========================================================
 
 st.markdown(
     "</div>",
     unsafe_allow_html=True
 )
+```
