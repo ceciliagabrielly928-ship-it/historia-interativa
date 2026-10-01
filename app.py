@@ -188,9 +188,8 @@ def aplicar_css():
 # ==========================================
 # DADOS DO QUIZ (2 perguntas = 2 desafios)
 # ==========================================
-
 # ==========================================
-# DADOS DO QUIZ
+# DADOS DO QUIZ (2 perguntas = 2 desafios)
 # ==========================================
 
 PERGUNTAS_QUIZ = [
@@ -200,9 +199,9 @@ PERGUNTAS_QUIZ = [
             "A": "Juntá-la com outros resíduos sem separar os materiais",
             "B": "Colocá-la no lixo comum junto aos demais resíduos",
             "C": "Deixá-la em um terreno vazio até encontrar uma nova utilidade",
-            "D": "Levá-la a um ponto de coleta ou encaminhá-la para reciclagem",
+            "D": "Levá-la a um ponto de coleta ou encaminhá-la para reciclagem"
         },
-        "correta": "D",
+        "correta": "D"
     },
     {
         "pergunta": "Depois de descobrirem o que significa PET, os amigos precisam escolher uma atitude para diminuir o problema antes que novas garrafas sejam produzidas. Qual decisão atende melhor a esse objetivo?",
@@ -210,10 +209,10 @@ PERGUNTAS_QUIZ = [
             "A": "Aumentar os pontos de coleta para receber mais garrafas descartáveis",
             "B": "Guardar as garrafas usadas para evitar que sejam encontradas no ambiente",
             "C": "Substituir garrafas descartáveis por recipientes que possam ser usados novamente",
-            "D": "Separar as garrafas usadas e enviá-las para uma cooperativa",
+            "D": "Separar as garrafas usadas e enviá-las para uma cooperativa"
         },
-        "correta": "C",
-    },
+        "correta": "C"
+    }
 ]
 
 
@@ -221,227 +220,229 @@ PERGUNTAS_QUIZ = [
 # ESTADO DO QUIZ
 # ==========================================
 
-
 def inicializar_estado():
+
     if "cena_atual" not in st.session_state:
         st.session_state.cena_atual = "inicio"
+
     if "quiz_pontuacao" not in st.session_state:
         st.session_state.quiz_pontuacao = 0
+
     if "quiz_respondeu" not in st.session_state:
         st.session_state.quiz_respondeu = False
+
     if "quiz_resposta_dada" not in st.session_state:
         st.session_state.quiz_resposta_dada = None
 
+    if "quiz_finalizado" not in st.session_state:
+        st.session_state.quiz_finalizado = False
+
+
+def ir_para_cena(cena_id):
+
+    st.session_state.cena_atual = cena_id
+    st.session_state.quiz_respondeu = False
+    st.session_state.quiz_resposta_dada = None
+    st.session_state.quiz_finalizado = False
+
+    st.rerun()
+
 
 def reiniciar_historia():
+
     st.session_state.cena_atual = "inicio"
     st.session_state.quiz_pontuacao = 0
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
+    st.session_state.quiz_finalizado = False
+
     st.rerun()
 
 
 # ==========================================
-# RENDERIZAR QUIZ
+# DESAFIO: QUIZ
+# ==========================================
+# DESAFIO: QUIZ
 # ==========================================
 
 
 def renderizar_quiz(numero_pergunta):
     pergunta = PERGUNTAS_QUIZ[numero_pergunta]
 
+    # ==========================================
+    # ESTILO CSS
+    # ==========================================
     st.markdown(
         """
         <style>
-        /* CARD BRANCO PRINCIPAL (CONTAINER COM SOMBRA DESTACADA E CENTRALIZADO) */
+        /* CARD BRANCO APENAS NO CONTAINER DO QUIZ */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
-            background-color: white;
-            border-radius: 24px;
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.09);
-            border: 1px solid #e9e2d6;
-            padding: 38px 45px 42px;
-            margin: 0 auto;
+            background-color: #ffffff !important;
+            border-radius: 20px !important;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08) !important;
+            border: 1px solid #f2f2f2 !important;
+            padding: 40px 35px !important;
+            margin-top: 20px !important;
         }
 
-        /* CABEÇALHO "DESAFIO" */
-        .quiz-header-container {
-            text-align: center;
+        /* CABEÇALHO */
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
             margin-bottom: 25px;
         }
 
-        .quiz-titulo-principal {
-            color: #1a1a1a;
-            font-family: Arial, sans-serif;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-
-        .quiz-linha-sub {
-            width: 45px;
-            height: 3px;
+        .quiz-linha {
+            width: 80px;
+            height: 2px;
             background: #d4a843;
-            margin: 0 auto;
-            border-radius: 2px;
         }
 
-        /* CAIXA AMARELADA/BEGE ENGLOBANDO A PERGUNTA */
-        .subcard-pergunta {
-            background-color: #fbf8f3;
-            border: 1px solid #f2e9dc;
-            border-radius: 14px;
-            padding: 22px 25px;
-            margin-bottom: 25px;
+        .quiz-k {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #d4a843;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            flex-shrink: 0;
         }
 
-        .quiz-pergunta-texto {
-            color: #2a2a2a;
+        .quiz-titulo {
+            color: #222222;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        /* PERGUNTA */
+        .quiz-pergunta {
+            background: transparent;
+            padding: 0 10px;
+            margin-bottom: 30px;
+            color: #333333;
             font-family: Arial, sans-serif;
             font-size: 15px;
             line-height: 1.6;
-            text-align: left;
+            text-align: center;
         }
 
-        /* BOTÕES DAS ALTERNATIVAS */
+        /* BOTÕES RETANGULARES (MODELO DO SEGUNDO PRINT) */
         div[data-testid="stButton"] {
-            margin-bottom: 10px !important;
+            margin-bottom: 14px !important;
         }
 
         div[data-testid="stButton"] > button {
             width: 100% !important;
-            min-height: 48px !important;
-            border-radius: 0px !important;
-            border: 1.5px solid #cb9b39 !important;
+            min-height: 52px !important;
+            border-radius: 4px !important; /* Retangular como na imagem */
+            border: 2px solid #d4a843 !important; /* Borda dourada marcante */
             background: #ffffff !important;
-            color: #222222 !important;
+            color: #d4a843 !important; /* Texto na cor dourada */
             font-family: Arial, sans-serif !important;
             font-size: 14px !important;
-            font-weight: 600 !important;
+            font-weight: 700 !important;
+            letter-spacing: 2px !important; /* Espaçamento entre letras */
+            text-transform: uppercase !important;
             text-align: center !important;
             padding: 12px 20px !important;
             box-shadow: none !important;
-            transition: all 0.2s ease !important;
+            transition: all 0.2s ease-in-out !important;
         }
 
         div[data-testid="stButton"] > button:hover {
-            background: #fffdf9 !important;
-            border-color: #b08328 !important;
+            background: #fffaf0 !important;
+            border-color: #b88e30 !important;
+            color: #b88e30 !important;
         }
 
-        /* CAIXAS RETANGULARES DE RESPOSTA REVELADA */
+        /* ESTILO RETANGULAR DAS ALTERNATIVAS APÓS RESPONDER */
         .box-resposta {
             padding: 14px 20px;
-            margin-bottom: 10px;
-            border-radius: 0px;
+            margin-bottom: 14px;
+            border-radius: 4px; /* Retangular */
             font-family: Arial, sans-serif;
             font-size: 14px;
             font-weight: 600;
+            letter-spacing: 1px;
             text-align: center;
         }
 
-        .box-correta {
-            background-color: #edf7ed;
-            border: 1.5px solid #75ad75;
-            color: #1e5e23;
-        }
-
-        .box-errada {
-            background-color: #fdf2f2;
-            border: 1.5px solid #e58b8b;
-            color: #8c2424;
-        }
-
-        .box-neutra {
-            background-color: #ffffff;
-            border: 1.5px solid #cb9b39;
-            color: #555555;
-        }
-
-        /* RETÂNGULO DE FEEDBACK ("RESPOSTA CORRETA!") FORA DO CARD MAIOR */
-        .area-feedback {
-            margin-top: 25px;
-            margin-bottom: 15px;
-        }
-
+        /* FEEDBACK DENTRO DO CARD */
         .quiz-feedback {
-            padding: 16px;
-            border-radius: 0px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 14px 18px;
+            border-radius: 4px;
             text-align: center;
             font-family: Arial, sans-serif;
             font-size: 15px;
-            font-weight: bold;
+            line-height: 1.5;
         }
 
-        /* BOTÃO RECOMEÇAR NO RODAPÉ */
         .area-recomecar {
-            margin-top: 15px;
-        }
-
-        .area-recomecar div[data-testid="stButton"] > button {
-            border-radius: 0px !important;
-            border: 1.5px solid #cb9b39 !important;
-            background: #ffffff !important;
-            color: #cb9b39 !important;
-            font-size: 13px !important;
-            letter-spacing: 2px !important;
-            font-weight: 700 !important;
-            text-transform: uppercase !important;
-        }
-
-        .area-recomecar div[data-testid="stButton"] > button:hover {
-            background: #fffdf9 !important;
-            border-color: #b08328 !important;
-            color: #b08328 !important;
+            margin-top: 25px;
         }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    col1, col2, col3 = st.columns([1, 8, 1])
+    # ==========================================
+    # LAYOUT
+    # ==========================================
+    col1, col2, col3 = st.columns([1, 6, 1])
 
     with col2:
-        # 1. CARD BRANCO PRINCIPAL (Contém Título, Pergunta Amarelada e Alternativas)
+        # CONTAINER EXCLUSIVO DO CARD BRANCO
         with st.container(border=True):
             st.markdown(
                 '<div class="meu-quiz-container"></div>',
                 unsafe_allow_html=True,
             )
 
-            # Cabeçalho "DESAFIO"
+            # Cabeçalho
             st.markdown(
                 """
-                <div class="quiz-header-container">
-                    <div class="quiz-titulo-principal">DESAFIO</div>
-                    <div class="quiz-linha-sub"></div>
+                <div class="quiz-header">
+                    <div class="quiz-linha"></div>
+                    <div class="quiz-k">K</div>
+                    <div class="quiz-titulo">DESAFIO DE KARLA</div>
+                    <div class="quiz-linha"></div>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
-            # Caixa Amarelada / Bege com a pergunta
+            # Pergunta
             st.markdown(
-                f"""
-                <div class="subcard-pergunta">
-                    <div class="quiz-pergunta-texto">{pergunta["pergunta"]}</div>
-                </div>
-                """,
+                f'<div class="quiz-pergunta">{pergunta["pergunta"]}</div>',
                 unsafe_allow_html=True,
             )
 
-            # Lista de Alternativas
+            # Alternativas
             for letra, texto in pergunta["alternativas"].items():
                 if not st.session_state.quiz_respondeu:
                     if st.button(
-                        f"{letra}) {texto}",
+                        f"  {letra}) {texto}",
                         key=f"quiz_{numero_pergunta}_{letra}",
                         use_container_width=True,
                     ):
                         st.session_state.quiz_respondeu = True
                         st.session_state.quiz_resposta_dada = letra
+
                         if letra == pergunta["correta"]:
                             st.session_state.quiz_pontuacao += 1
+
                         st.rerun()
                 else:
                     resposta_dada = st.session_state.quiz_resposta_dada
@@ -449,46 +450,87 @@ def renderizar_quiz(numero_pergunta):
 
                     if letra == correta:
                         st.markdown(
-                            f'<div class="box-resposta box-correta">✓ &nbsp; <strong>{letra})</strong> {texto}</div>',
+                            f"""
+                            <div class="box-resposta" style="
+                                background: #edf7ed;
+                                border: 2px solid #75ad75;
+                                color: #286b2f;
+                            ">
+                                ✓ &nbsp; {letra}) &nbsp; {texto}
+                            </div>
+                            """,
                             unsafe_allow_html=True,
                         )
                     elif letra == resposta_dada:
                         st.markdown(
-                            f'<div class="box-resposta box-errada">✕ &nbsp; <strong>{letra})</strong> {texto}</div>',
+                            f"""
+                            <div class="box-resposta" style="
+                                background: #fff0f0;
+                                border: 2px solid #d88b8b;
+                                color: #8a3030;
+                            ">
+                                ✕ &nbsp; {letra}) &nbsp; {texto}
+                            </div>
+                            """,
                             unsafe_allow_html=True,
                         )
                     else:
                         st.markdown(
-                            f'<div class="box-resposta box-neutra"><strong>{letra})</strong> {texto}</div>',
+                            f"""
+                            <div class="box-resposta" style="
+                                background: #ffffff;
+                                border: 2px solid #d4a843;
+                                color: #d4a843;
+                            ">
+                                {letra}) &nbsp; {texto}
+                            </div>
+                            """,
                             unsafe_allow_html=True,
                         )
 
-        # 2. RETÂNGULO DE FEEDBACK ("Resposta correta!") AFASTADO FORA DO CARD PRINCIPAL
-        if st.session_state.quiz_respondeu:
-            resposta_dada = st.session_state.quiz_resposta_dada
-            correta = pergunta["correta"]
+            # Feedback
+            if st.session_state.quiz_respondeu:
+                resposta_dada = st.session_state.quiz_resposta_dada
+                correta = pergunta["correta"]
 
-            st.markdown('<div class="area-feedback">', unsafe_allow_html=True)
-            if resposta_dada == correta:
-                st.markdown(
-                    '<div class="quiz-feedback box-correta">Resposta correta! 🎉</div>',
-                    unsafe_allow_html=True,
-                )
-            else:
-                st.markdown(
-                    f'<div class="quiz-feedback box-errada">Resposta incorreta. A certa é a <strong>{correta}</strong>.</div>',
-                    unsafe_allow_html=True,
-                )
-            st.markdown("</div>", unsafe_allow_html=True)
+                if resposta_dada == correta:
+                    st.markdown(
+                        """
+                        <div class="quiz-feedback"
+                             style="
+                                background:#edf7ed;
+                                border:1.5px solid #75ad75;
+                                color:#286b2f;
+                             ">
+                            <strong>Resposta correta!</strong> 
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+                else:
+                    st.markdown(
+                        f"""
+                        <div class="quiz-feedback"
+                             style="
+                                background:#fff0f0;
+                                border:1.5px solid #d88b8b;
+                                color:#8a3030;
+                             ">
+                            <strong>Não foi dessa vez!</strong><br>
+                            A resposta correta é <strong>{correta})</strong>.
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
 
-        # 3. BOTÃO RECOMEÇAR HISTÓRIA (Também fora do Card Principal)
+        # BOTÃO RECOMEÇAR FORA DO CARD
         if st.session_state.quiz_respondeu:
             st.markdown(
                 '<div class="area-recomecar">', unsafe_allow_html=True
             )
             if st.button(
-                "↺ RECOMEÇAR HISTÓRIA",
-                key=f"reiniciar_{numero_pergunta}",
+                "↻  RECOMEÇAR HISTÓRIA",
+                key=f"reiniciar_quiz_{numero_pergunta}",
                 use_container_width=True,
             ):
                 reiniciar_historia()
