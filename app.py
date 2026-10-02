@@ -1203,7 +1203,11 @@ def renderizar_quiz(numero_pergunta):
         }
         .quiz-header {
 
-            text-align: center;
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
 
             margin-bottom: 25px;
 
@@ -1227,7 +1231,7 @@ def renderizar_quiz(numero_pergunta):
 
 
 
-            font-weight: 700;
+            font-weight: 800;
 
 
 
@@ -1518,7 +1522,7 @@ def renderizar_quiz(numero_pergunta):
                 <div class="quiz-header">
 
                     <div class="quiz-titulo">
-                        <strong>DESAFIO</strong>
+                        DESAFIO
                     </div>
 
                 </div>
