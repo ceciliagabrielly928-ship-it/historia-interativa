@@ -1201,17 +1201,112 @@ def renderizar_quiz(numero_pergunta):
             margin-top: 20px !important;
 
         }
+
+
+
+
+
         .quiz-header {
+
+
 
             display: flex;
 
+
+
             align-items: center;
 
+
+
             justify-content: center;
+
+
+
+            gap: 14px;
+
+
 
             margin-bottom: 25px;
 
         }
+
+
+
+
+
+        .quiz-linha {
+
+
+
+            width: 80px;
+
+
+
+            height: 2px;
+
+
+
+            background: #d4a843;
+
+        }
+
+
+
+
+
+        .quiz-k {
+
+
+
+            width: 38px;
+
+
+
+            height: 38px;
+
+
+
+            border-radius: 50%;
+
+
+
+            background: #d4a843;
+
+
+
+            color: white;
+
+
+
+            display: inline-flex;
+
+
+
+            align-items: center;
+
+
+
+            justify-content: center;
+
+
+
+            font-family: Arial, sans-serif;
+
+
+
+            font-size: 17px;
+
+
+
+            font-weight: 700;
+
+
+
+            flex-shrink: 0;
+
+        }
+
+
 
 
 
@@ -1231,7 +1326,7 @@ def renderizar_quiz(numero_pergunta):
 
 
 
-            font-weight: 800;
+            font-weight: 700;
 
 
 
