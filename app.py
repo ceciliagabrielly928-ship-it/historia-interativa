@@ -967,7 +967,7 @@ def renderizar_desafio_plasticos():
             font-family: Arial, sans-serif;
             background: transparent;
             color: #292929;
-            padding: 0 5px;
+            padding: 0;
         }
 
         .container {
@@ -977,28 +977,28 @@ def renderizar_desafio_plasticos():
             background: #ffffff;
             border: 1px solid #e7e2da;
             border-radius: 25px;
-            padding: 30px 35px 30px;
+            padding: 25px 30px 20px;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
             position: relative;
             text-align: center;
-            font-size: 26px;
-            line-height: 1.3;
+            font-size: 24px;
+            line-height: 1.2;
             font-weight: 800;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             color: #292929;
         }
 
         h1::after {
             content: "";
             position: absolute;
-            width: 55px;
+            width: 50px;
             height: 3px;
             border-radius: 3px;
             background: #d4b04d;
-            bottom: -15px;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -1007,42 +1007,42 @@ def renderizar_desafio_plasticos():
             background: #faf7f0;
             border-left: 4px solid #d4b04d;
             border-radius: 14px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            font-size: 15px;
-            line-height: 1.6;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         .karla strong {
             display: block;
-            margin-bottom: 5px;
-            font-size: 13px;
-            letter-spacing: 1.5px;
+            margin-bottom: 3px;
+            font-size: 12px;
+            letter-spacing: 1.2px;
         }
 
         h2 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-align: center;
-            margin: 20px 0 12px;
+            margin: 15px 0 10px;
             color: #555555;
         }
 
         .banco {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             justify-content: center;
-            margin-bottom: 24px;
+            margin-bottom: 18px;
         }
 
         .palavra {
             background: #ffffff;
             border: 1px solid #cbb15e;
             border-radius: 999px;
-            padding: 6px 14px;
-            font-size: 13px;
+            padding: 5px 12px;
+            font-size: 12px;
         }
 
         .numeros {
@@ -1050,19 +1050,19 @@ def renderizar_desafio_plasticos():
             justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
-            margin: 18px 0 20px;
+            margin: 12px 0 15px;
         }
 
         .numero {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 64px;
-            height: 64px;
+            width: 56px;
+            height: 56px;
             border: 2px solid #d9d7d2;
             border-radius: 50%;
             background: #ffffff;
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 700;
             cursor: pointer;
             color: #333333;
@@ -1082,10 +1082,10 @@ def renderizar_desafio_plasticos():
 
         .desafio {
             display: none;
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 15px;
+            padding: 15px;
             border: 1px solid #e4e0d8;
-            border-radius: 17px;
+            border-radius: 15px;
             background: #faf9f6;
             text-align: center;
         }
@@ -1096,33 +1096,33 @@ def renderizar_desafio_plasticos():
 
         .pista-titulo {
             font-weight: 800;
-            font-size: 14px;
+            font-size: 13px;
             letter-spacing: 2px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #d0ad4c;
         }
 
         .pista {
-            font-size: 15px;
-            line-height: 1.5;
-            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 14px;
         }
 
         .opcoes {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .opcao {
             border: 1px solid #d3d0c9;
             background: #ffffff;
-            border-radius: 10px;
-            padding: 9px 15px;
+            border-radius: 8px;
+            padding: 8px 12px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             color: #333333;
         }
 
@@ -1137,38 +1137,38 @@ def renderizar_desafio_plasticos():
         }
 
         .feedback {
-            margin-top: 14px;
+            margin-top: 10px;
             font-weight: 700;
-            font-size: 14px;
-            min-height: 20px;
+            font-size: 13px;
+            min-height: 18px;
         }
 
         .final {
             display: none;
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 15px;
+            padding: 15px;
             background: #faf7f0;
             border: 1px solid #e4d7ae;
             border-radius: 12px;
             text-align: center;
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         @media (max-width: 650px) {
             .container {
-                padding: 22px 14px;
+                padding: 18px 12px;
             }
 
             h1 {
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .numero {
-                width: 48px;
-                height: 48px;
-                font-size: 20px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
             }
         }
     </style>
@@ -1346,10 +1346,9 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    # 1. Renderiza o HTML com altura reduzida (550px) para encostar no botão
-    components.html(html_desafio, height=550, scrolling=False)
+    # REDUZIDO O HEIGHT PARA 420px (Aproxima o botão do componente)
+    components.html(html_desafio, height=420, scrolling=False)
 
-    # 2. Botão centralizado logo abaixo
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
@@ -1364,491 +1363,6 @@ def renderizar_desafio_plasticos():
             st.session_state["quiz_resposta_dada"] = None
             st.session_state["quiz_finalizado"] = False
             st.rerun()
-# =========================================================
-# DESAFIO — POLÍMERO
-# =========================================================
-
-def renderizar_desafio_polimero():
-
-    html_polimero = """
-
-    <!DOCTYPE html>
-
-    <html lang="pt-BR">
-
-    <head>
-
-        <meta charset="UTF-8">
-
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-        >
-
-        <style>
-
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
-
-            body {
-
-                min-height: 100vh;
-
-                font-family: Arial, sans-serif;
-
-                background: white;
-
-                padding: 28px 20px 35px;
-            }
-
-            .container {
-
-                width: 100%;
-
-                max-width: 900px;
-
-                margin: 0 auto;
-
-                background: white;
-
-                border-radius: 24px;
-
-                padding: 38px 45px 42px;
-
-                border: 1px solid #e9e2d6;
-
-                box-shadow:
-                    0 12px 35px rgba(0, 0, 0, 0.09);
-            }
-
-            h1 {
-
-                text-align: center;
-
-                font-size: 27px;
-
-                font-weight: 800;
-
-                letter-spacing: .5px;
-
-                color: #222;
-
-                margin-bottom: 13px;
-            }
-
-            h1::after {
-
-                content: "";
-
-                display: block;
-
-                width: 55px;
-
-                height: 3px;
-
-                background: #d4a843;
-
-                margin: 13px auto 28px;
-
-                border-radius: 5px;
-            }
-
-            .camila {
-
-                background: #faf7f0;
-
-                border-left: 4px solid #d4a843;
-
-                border-radius: 12px;
-
-                padding: 18px 22px;
-
-                margin-bottom: 30px;
-
-                font-size: 16px;
-
-                line-height: 1.6;
-
-                color: #333;
-            }
-
-            h2 {
-
-                font-size: 15px;
-
-                letter-spacing: 2px;
-
-                text-transform: uppercase;
-
-                text-align: center;
-
-                color: #555;
-
-                margin-bottom: 18px;
-            }
-
-            .desafio {
-
-                padding: 27px 30px;
-
-                border-radius: 17px;
-
-                background: #faf8f4;
-
-                border: 1px solid #e8e1d5;
-
-                text-align: center;
-            }
-
-            .pergunta {
-
-                font-size: 19px;
-
-                line-height: 1.7;
-
-                color: #333;
-
-                margin-bottom: 20px;
-            }
-
-            .lacuna {
-
-                color: #b38725;
-
-                font-weight: bold;
-            }
-
-            button {
-
-                border: none;
-
-                padding: 12px 20px;
-
-                border-radius: 10px;
-
-                cursor: pointer;
-
-                font-weight: bold;
-
-                font-size: 14px;
-
-                transition: .2s;
-            }
-
-            .dica-btn {
-
-                background: #333;
-
-                color: white;
-
-                margin-bottom: 15px;
-            }
-
-            .dica-btn:hover {
-
-                transform: translateY(-2px);
-
-                opacity: .9;
-            }
-
-            .dica {
-
-                display: none;
-
-                text-align: left;
-
-                background: white;
-
-                border-left: 4px solid #d4a843;
-
-                border-radius: 10px;
-
-                padding: 16px 18px;
-
-                margin: 5px 0 20px;
-
-                font-size: 15px;
-
-                line-height: 1.6;
-
-                color: #444;
-            }
-
-            input {
-
-                width: 100%;
-
-                padding: 15px;
-
-                border: 1px solid #ddd;
-
-                border-radius: 10px;
-
-                font-size: 16px;
-
-                outline: none;
-
-                background: white;
-
-                margin-bottom: 15px;
-            }
-
-            input:focus {
-
-                border-color: #d4a843;
-            }
-
-            .responder {
-
-                background: #d4a843;
-
-                color: white;
-
-                width: 100%;
-
-                padding: 14px;
-
-                font-size: 15px;
-            }
-
-            .responder:hover {
-
-                background: #bd922f;
-
-                transform: translateY(-2px);
-            }
-
-            #resultado {
-
-                margin-top: 18px;
-
-                font-size: 17px;
-
-                font-weight: bold;
-            }
-
-            .acerto {
-
-                color: #247a3d;
-            }
-
-            .erro {
-
-                color: #b3261e;
-            }
-
-        </style>
-
-    </head>
-
-    <body>
-
-        <div class="container">
-
-            <h1>
-                DESAFIO
-            </h1>
-
-            <div class="camila">
-
-                <strong>Camila:</strong><br>
-
-                "Antes de continuar nossa investigação,
-                quero saber se vocês entenderam o que
-                existe por trás do material da garrafa."
-
-            </div>
-
-            <h2>
-                IDENTIFIQUE O MATERIAL
-            </h2>
-
-            <div class="desafio">
-
-                <p class="pergunta">
-
-                    O PET é um
-
-                    <span class="lacuna">
-                        __________
-                    </span>
-
-                    formado pela repetição de unidades
-                    menores, formando uma cadeia de moléculas.
-
-                </p>
-
-                <button
-                    class="dica-btn"
-                    onclick="mostrarDica()"
-                    id="dicaBtn"
-                >
-
-                    💡 VER DICA
-
-                </button>
-
-                <div
-                    class="dica"
-                    id="dica"
-                >
-
-                    Imagine um colar: uma grande estrutura
-                    construída pela repetição de várias peças
-                    menores. Na Química, damos um nome específico
-                    para esse tipo de estrutura. A palavra começa com
-                    <strong>P</strong>.
-
-                </div>
-
-                <input
-                    type="text"
-                    id="resposta"
-                    placeholder="Digite sua resposta..."
-                    autocomplete="off"
-                >
-
-                <button
-                    class="responder"
-                    onclick="verificarResposta()"
-                    id="responderBtn"
-                >
-
-                    RESPONDER
-
-                </button>
-
-                <div id="resultado"></div>
-
-            </div>
-
-        </div>
-
-
-        <script>
-
-            function mostrarDica() {
-
-                const dica =
-                    document.getElementById("dica");
-
-                const botao =
-                    document.getElementById("dicaBtn");
-
-
-                if (
-                    dica.style.display === "none" ||
-                    dica.style.display === ""
-                ) {
-
-                    dica.style.display = "block";
-
-                    botao.textContent =
-                        "ESCONDER DICA";
-
-                }
-
-                else {
-
-                    dica.style.display = "none";
-
-                    botao.textContent =
-                        "💡 VER DICA";
-
-                }
-
-            }
-
-
-            function verificarResposta() {
-
-                const campo =
-                    document.getElementById("resposta");
-
-                const resultado =
-                    document.getElementById("resultado");
-
-                const botao =
-                    document.getElementById("responderBtn");
-
-
-                const resposta =
-                    campo.value
-                    .trim()
-                    .toLowerCase()
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "");
-
-
-                if (resposta === "polimero") {
-
-                    resultado.textContent =
-                        "✓ ACERTOU! O PET é um polímero.";
-
-                    resultado.className =
-                        "acerto";
-
-
-                    campo.disabled = true;
-
-                    botao.disabled = true;
-
-                    botao.style.opacity = "0.5";
-
-                    botao.style.cursor = "default";
-
-                }
-
-                else {
-
-                    resultado.textContent =
-                        "✗ Tente novamente!";
-
-                    resultado.className =
-                        "erro";
-
-                    campo.value = "";
-
-                    campo.focus();
-
-                }
-
-            }
-
-
-            document
-                .getElementById("resposta")
-                .addEventListener(
-                    "keydown",
-                    function(event) {
-
-                        if (event.key === "Enter") {
-
-                            verificarResposta();
-
-                        }
-
-                    }
-                );
-
-        </script>
-
-    </body>
-
-    </html>
-    """
-
-
-    components.html(
-        html_polimero,
-        height=1000,
-        scrolling=False
-    )
-
-
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
