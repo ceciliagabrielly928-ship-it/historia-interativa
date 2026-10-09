@@ -1844,8 +1844,8 @@ def renderizar_desafio_polimero():
 
     components.html(
         html_polimero,
-        height=700,
-        scrolling=True
+        height=420,
+        scrolling=False
     )
 
 
