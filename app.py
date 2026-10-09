@@ -942,21 +942,11 @@ def renderizar_quiz(numero_pergunta):
 
 #DESAFIO DECODIFICAR
 
-import streamlit as st
+    import streamlit as st
 import streamlit.components.v1 as components
 
 
 def renderizar_desafio_plasticos():
-
-    # Trata a mensagem enviada pelo iframe via query params/postMessage
-    if st.query_params.get("reiniciar") == "true":
-        st.session_state["cena_atual"] = "inicio"
-        st.session_state["quiz_pontuacao"] = 0
-        st.session_state["quiz_respondeu"] = False
-        st.session_state["quiz_resposta_dada"] = None
-        st.session_state["quiz_finalizado"] = False
-        st.query_params.clear()
-        st.rerun()
 
     html_desafio = """
     <!DOCTYPE html>
@@ -976,7 +966,7 @@ def renderizar_desafio_plasticos():
             font-family: Arial, sans-serif;
             background: transparent;
             color: #292929;
-            padding: 10px;
+            padding: 10px 10px 0px 10px;
         }
 
         .container {
@@ -986,17 +976,17 @@ def renderizar_desafio_plasticos():
             background: #ffffff;
             border: 1px solid #e7e2da;
             border-radius: 25px;
-            padding: 38px 45px 35px;
+            padding: 35px 40px 30px;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
             position: relative;
             text-align: center;
-            font-size: 29px;
+            font-size: 28px;
             line-height: 1.3;
             font-weight: 800;
-            margin-bottom: 43px;
+            margin-bottom: 35px;
             color: #292929;
         }
 
@@ -1007,7 +997,7 @@ def renderizar_desafio_plasticos():
             height: 3px;
             border-radius: 3px;
             background: #d4b04d;
-            bottom: -19px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -1016,8 +1006,8 @@ def renderizar_desafio_plasticos():
             background: #faf7f0;
             border-left: 4px solid #d4b04d;
             border-radius: 14px;
-            padding: 19px 22px;
-            margin-bottom: 30px;
+            padding: 18px 22px;
+            margin-bottom: 25px;
             font-size: 15px;
             line-height: 1.6;
         }
@@ -1034,16 +1024,16 @@ def renderizar_desafio_plasticos():
             font-weight: 800;
             letter-spacing: 3px;
             text-align: center;
-            margin: 27px 0 15px;
+            margin: 25px 0 15px;
             color: #555555;
         }
 
         .banco {
             display: flex;
             flex-wrap: wrap;
-            gap: 9px;
+            gap: 8px;
             justify-content: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .palavra {
@@ -1059,19 +1049,19 @@ def renderizar_desafio_plasticos():
             justify-content: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin: 22px 0 28px;
+            margin: 20px 0 25px;
         }
 
         .numero {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 72px;
-            height: 72px;
+            width: 68px;
+            height: 68px;
             border: 2px solid #d9d7d2;
             border-radius: 50%;
             background: #ffffff;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             cursor: pointer;
             color: #333333;
@@ -1091,8 +1081,8 @@ def renderizar_desafio_plasticos():
 
         .desafio {
             display: none;
-            margin-top: 25px;
-            padding: 27px 28px 30px;
+            margin-top: 20px;
+            padding: 22px;
             border: 1px solid #e4e0d8;
             border-radius: 17px;
             background: #faf9f6;
@@ -1107,28 +1097,28 @@ def renderizar_desafio_plasticos():
             font-weight: 800;
             font-size: 14px;
             letter-spacing: 2px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             color: #d0ad4c;
         }
 
         .pista {
-            font-size: 16px;
-            line-height: 1.65;
-            margin-bottom: 23px;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
         .opcoes {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 9px;
+            gap: 8px;
         }
 
         .opcao {
             border: 1px solid #d3d0c9;
             background: #ffffff;
             border-radius: 10px;
-            padding: 11px 17px;
+            padding: 10px 16px;
             cursor: pointer;
             font-weight: 700;
             font-size: 13px;
@@ -1146,57 +1136,28 @@ def renderizar_desafio_plasticos():
         }
 
         .feedback {
-            margin-top: 18px;
+            margin-top: 15px;
             font-weight: 700;
             font-size: 15px;
-            min-height: 25px;
+            min-height: 22px;
         }
 
-        /* CARD FINAL COM BOTÃO INTEGRADO */
         .final {
             display: none;
-            margin-top: 25px;
-            padding: 25px 20px;
+            margin-top: 20px;
+            padding: 22px;
             background: #faf7f0;
             border: 1px solid #e4d7ae;
             border-radius: 12px;
             text-align: center;
             font-size: 18px;
             font-weight: 700;
-            line-height: 1.6;
-        }
-
-        .btn-recomecar-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .btn-recomecar {
-            background-color: #ffffff;
-            color: #d4b04d;
-            border: 2px solid #d4b04d;
-            border-radius: 10px;
-            padding: 12px 28px;
-            font-size: 15px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(212, 176, 77, 0.15);
-        }
-
-        .btn-recomecar:hover {
-            background-color: #d4b04d;
-            color: #ffffff;
+            line-height: 1.5;
         }
 
         @media (max-width: 650px) {
-            body {
-                padding: 5px;
-            }
-
             .container {
-                padding: 28px 18px;
+                padding: 25px 15px;
             }
 
             h1 {
@@ -1204,13 +1165,9 @@ def renderizar_desafio_plasticos():
             }
 
             .numero {
-                width: 54px;
-                height: 54px;
-                font-size: 23px;
-            }
-
-            .desafio {
-                padding: 22px 15px;
+                width: 52px;
+                height: 52px;
+                font-size: 22px;
             }
         }
     </style>
@@ -1257,17 +1214,10 @@ def renderizar_desafio_plasticos():
             <div class="pista" id="pista"></div>
             <div class="opcoes" id="opcoes"></div>
             <div class="feedback" id="feedback"></div>
-    </div>
+        </div>
 
-        <!-- QUADRADO FINAL (Só abre quando conclui o desafio) -->
         <div id="final" class="final">
             <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
-            
-            <div class="btn-recomecar-container">
-                <button class="btn-recomecar" onclick="reiniciarJogo()">
-                    ↻ RECOMEÇAR HISTÓRIA
-                </button>
-            </div>
         </div>
 
     </div>
@@ -1344,22 +1294,29 @@ def renderizar_desafio_plasticos():
                 feedback.style.color = "#b3261e";
             }
         }
-
-        function reiniciarJogo() {
-            // Notifica a janela principal do Streamlit para recarregar com o parâmetro 'reiniciar'
-            window.parent.postMessage({ type: 'streamlit:setQueryParams', queryParams: { reiniciar: 'true' } }, '*');
-            // Fallback para alterar a URL caso postMessage demore
-            setTimeout(() => {
-                window.parent.location.search = '?reiniciar=true';
-            }, 100);
-        }
     </script>
 
     </body>
     </html>
     """
 
-    components.html(html_desafio, height=800, scrolling=True)        
+    # Renderiza o HTML com a altura exata do container para não gerar rolagem nem espaço excessivo
+    components.html(html_desafio, height=620, scrolling=False)
+
+    # Botão nativo do Streamlit alinhado logo abaixo do quadrado
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button(
+            "↻ RECOMEÇAR HISTÓRIA",
+            key="reiniciar_historia_plasticos",
+            use_container_width=True,
+        ):
+            st.session_state["cena_atual"] = "inicio"
+            st.session_state["quiz_pontuacao"] = 0
+            st.session_state["quiz_respondeu"] = False
+            st.session_state["quiz_resposta_dada"] = None
+            st.session_state["quiz_finalizado"] = False
+            st.rerun()   
 
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
