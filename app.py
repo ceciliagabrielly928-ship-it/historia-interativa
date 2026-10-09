@@ -214,5 +214,4 @@ def aplicar_css():
             margin-bottom: 20px;
         }
 
-
         .linha {
