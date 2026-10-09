@@ -941,6 +941,7 @@ def renderizar_quiz(numero_pergunta):
         )
 
 
+
 # =========================================================
 # DESAFIO — DECODIFICAR PLÁSTICOS
 # =========================================================
@@ -1155,24 +1156,6 @@ def renderizar_desafio_plasticos():
             line-height: 1.6;
         }
 
-        #botaoRecomecar {
-            display: block;
-            margin: 22px auto 0;
-            padding: 13px 24px;
-            border: 2px solid #d4b04d;
-            border-radius: 8px;
-            background: #ffffff;
-            color: #bd9638;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        #botaoRecomecar:hover {
-            background: #fffaf0;
-            border-color: #b88e30;
-        }
-
         @media (max-width: 650px) {
             body {
                 padding: 12px 5px;
@@ -1242,11 +1225,11 @@ def renderizar_desafio_plasticos():
             <div class="feedback" id="feedback"></div>
         </div>
 
-<div id="final" class="final">
-    <p>
-        Parabéns! Você decodificou todos os tipos de plástico!
-    </p>
-</div>
+        <div id="final" class="final">
+            <p>
+                Parabéns! Você decodificou todos os tipos de plástico!
+            </p>
+        </div>
 
     </div>
 
@@ -1365,38 +1348,35 @@ def renderizar_desafio_plasticos():
                 feedback.style.color = "#b3261e";
             }
         }
-
-        function recomecarHistoria() {
-            // Navega para a página principal, solicitando o reinício.
-            const url = new URL(window.parent.location.href);
-            url.searchParams.set("restart_story", "1");
-            window.parent.location.href = url.href;
-        }
     </script>
 
     </body>
     </html>
     """
 
-    
+    # Exibe o desafio interativo
     components.html(
         html_desafio,
         height=1050,
         scrolling=True
     )
 
-    # Botão conectado diretamente ao Streamlit
+    # BOTÃO REAL DO STREAMLIT: VOLTAR PARA A CAPA
     if st.button(
         "↻ RECOMEÇAR HISTÓRIA",
         key="reiniciar_historia_plasticos",
         use_container_width=True
     ):
+        # Volta para a cena inicial (capa)
         st.session_state.cena_atual = "inicio"
+
+        # Limpa o progresso do quiz, se essas variáveis existirem
         st.session_state.quiz_pontuacao = 0
         st.session_state.quiz_respondeu = False
         st.session_state.quiz_resposta_dada = None
         st.session_state.quiz_finalizado = False
 
+        # Reinicia a página
         st.rerun()
 
 # =========================================================
