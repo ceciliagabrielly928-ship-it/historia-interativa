@@ -9,6 +9,11 @@ from story import HISTORY, get_cena
 from pathlib import Path
 import base64
 
+# Detecta o pedido de reinício vindo do desafio dos plásticos
+if st.query_params.get("restart_story") == "1":
+    st.query_params.clear()
+    reiniciar_historia()
+
 
 # =========================================================
 # CONFIGURAÇÃO
@@ -945,7 +950,6 @@ def renderizar_quiz(numero_pergunta):
 # =========================================================
 
 
-
 def renderizar_desafio_plasticos():
 
     html_desafio = """
@@ -1375,9 +1379,10 @@ def renderizar_desafio_plasticos():
         }
 
         function recomecarHistoria() {
-            const url = new URL(window.parent.location.href);
-            url.searchParams.set("restart_story", "1");
-            window.parent.location.href = url.toString();
+    const url = new URL(window.parent.location.href);
+    url.searchParams.set("restart_story", "1");
+    window.parent.location.href = url.href;
+}
         }
     </script>
 
