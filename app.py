@@ -1242,18 +1242,11 @@ def renderizar_desafio_plasticos():
             <div class="feedback" id="feedback"></div>
         </div>
 
-        <div id="final" class="final">
-            <p>
-                Parabéns! Você decodificou todos os tipos de plástico!
-            </p>
-
-            <button
-                id="botaoRecomecar"
-                onclick="recomecarHistoria()"
-            >
-                ↻ RECOMEÇAR HISTÓRIA
-            </button>
-        </div>
+<div id="final" class="final">
+    <p>
+        Parabéns! Você decodificou todos os tipos de plástico!
+    </p>
+</div>
 
     </div>
 
@@ -1385,11 +1378,26 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
+    
     components.html(
         html_desafio,
         height=1050,
         scrolling=True
     )
+
+    # Botão conectado diretamente ao Streamlit
+    if st.button(
+        "↻ RECOMEÇAR HISTÓRIA",
+        key="reiniciar_historia_plasticos",
+        use_container_width=True
+    ):
+        st.session_state.cena_atual = "inicio"
+        st.session_state.quiz_pontuacao = 0
+        st.session_state.quiz_respondeu = False
+        st.session_state.quiz_resposta_dada = None
+        st.session_state.quiz_finalizado = False
+
+        st.rerun()
 
 # =========================================================
 # DESAFIO — POLÍMERO
