@@ -940,10 +940,10 @@ def renderizar_quiz(numero_pergunta):
             unsafe_allow_html=True
         )
 
+
 # =========================================================
 # DESAFIO — DECODIFICAR PLÁSTICOS
 # =========================================================
-
 
 def renderizar_desafio_plasticos():
 
@@ -1246,7 +1246,6 @@ def renderizar_desafio_plasticos():
             <p>
                 Parabéns! Você decodificou todos os tipos de plástico!
             </p>
-        </div>
 
             <button
                 id="botaoRecomecar"
@@ -1375,9 +1374,10 @@ def renderizar_desafio_plasticos():
         }
 
         function recomecarHistoria() {
+            // Navega para a página principal, solicitando o reinício.
             const url = new URL(window.parent.location.href);
             url.searchParams.set("restart_story", "1");
-            window.parent.location.href = url.toString();
+            window.parent.location.href = url.href;
         }
     </script>
 
@@ -1385,17 +1385,11 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-      components.html(
+    components.html(
         html_desafio,
         height=1050,
         scrolling=True
     )
-
-    if st.button(
-        "↻ RECOMEÇAR HISTÓRIA",
-        key="recomecar_historia_plasticos"
-    ):
-        reiniciar_historia()
 
 # =========================================================
 # DESAFIO — POLÍMERO
