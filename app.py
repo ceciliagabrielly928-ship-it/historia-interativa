@@ -1246,6 +1246,7 @@ def renderizar_desafio_plasticos():
             <p>
                 Parabéns! Você decodificou todos os tipos de plástico!
             </p>
+        </div>
 
             <button
                 id="botaoRecomecar"
@@ -1384,11 +1385,17 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    components.html(
+      components.html(
         html_desafio,
         height=1050,
         scrolling=True
     )
+
+    if st.button(
+        "↻ RECOMEÇAR HISTÓRIA",
+        key="recomecar_historia_plasticos"
+    ):
+        reiniciar_historia()
 
 # =========================================================
 # DESAFIO — POLÍMERO
