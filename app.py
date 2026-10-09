@@ -946,8 +946,17 @@ def renderizar_quiz(numero_pergunta):
 import streamlit as st
 import streamlit.components.v1 as components
 
-
 def renderizar_desafio_plasticos():
+
+    # Inicializa o estado do desafio concluído
+    if "desafio_concluido" not in st.session_state:
+        st.session_state["desafio_concluido"] = False
+
+    # Captura a mensagem do JS indicando que o desafio foi finalizado
+    # (Funciona em versões recentes do Streamlit se capturado via parâmetro de URL)
+    if st.query_params.get("concluido") == "true":
+        st.session_state["desafio_concluido"] = True
+        st.query_params.clear()
 
     html_desafio = """
     <!DOCTYPE html>
@@ -967,7 +976,7 @@ def renderizar_desafio_plasticos():
             font-family: Arial, sans-serif;
             background: transparent;
             color: #292929;
-            padding: 0;
+            padding: 10px;
         }
 
         .container {
@@ -977,28 +986,28 @@ def renderizar_desafio_plasticos():
             background: #ffffff;
             border: 1px solid #e7e2da;
             border-radius: 25px;
-            padding: 25px 30px 20px;
+            padding: 35px 40px;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
             position: relative;
             text-align: center;
-            font-size: 24px;
-            line-height: 1.2;
+            font-size: 28px;
+            line-height: 1.3;
             font-weight: 800;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
             color: #292929;
         }
 
         h1::after {
             content: "";
             position: absolute;
-            width: 50px;
+            width: 55px;
             height: 3px;
             border-radius: 3px;
             background: #d4b04d;
-            bottom: -10px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -1007,62 +1016,62 @@ def renderizar_desafio_plasticos():
             background: #faf7f0;
             border-left: 4px solid #d4b04d;
             border-radius: 14px;
-            padding: 12px 16px;
-            margin-bottom: 18px;
-            font-size: 14px;
-            line-height: 1.5;
+            padding: 18px 22px;
+            margin-bottom: 25px;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
         .karla strong {
             display: block;
-            margin-bottom: 3px;
-            font-size: 12px;
-            letter-spacing: 1.2px;
+            margin-bottom: 5px;
+            font-size: 13px;
+            letter-spacing: 1.5px;
         }
 
         h2 {
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 800;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-align: center;
-            margin: 15px 0 10px;
+            margin: 25px 0 15px;
             color: #555555;
         }
 
         .banco {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
             justify-content: center;
-            margin-bottom: 18px;
+            margin-bottom: 28px;
         }
 
         .palavra {
             background: #ffffff;
             border: 1px solid #cbb15e;
             border-radius: 999px;
-            padding: 5px 12px;
-            font-size: 12px;
+            padding: 8px 16px;
+            font-size: 13px;
         }
 
         .numeros {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
-            margin: 12px 0 15px;
+            gap: 12px;
+            margin: 20px 0 25px;
         }
 
         .numero {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 56px;
-            height: 56px;
+            width: 68px;
+            height: 68px;
             border: 2px solid #d9d7d2;
             border-radius: 50%;
             background: #ffffff;
-            font-size: 22px;
+            font-size: 26px;
             font-weight: 700;
             cursor: pointer;
             color: #333333;
@@ -1082,10 +1091,10 @@ def renderizar_desafio_plasticos():
 
         .desafio {
             display: none;
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 22px;
             border: 1px solid #e4e0d8;
-            border-radius: 15px;
+            border-radius: 17px;
             background: #faf9f6;
             text-align: center;
         }
@@ -1096,33 +1105,33 @@ def renderizar_desafio_plasticos():
 
         .pista-titulo {
             font-weight: 800;
-            font-size: 13px;
+            font-size: 14px;
             letter-spacing: 2px;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: #d0ad4c;
         }
 
         .pista {
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 14px;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
         .opcoes {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .opcao {
             border: 1px solid #d3d0c9;
             background: #ffffff;
-            border-radius: 8px;
-            padding: 8px 12px;
+            border-radius: 10px;
+            padding: 10px 16px;
             cursor: pointer;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 13px;
             color: #333333;
         }
 
@@ -1137,38 +1146,38 @@ def renderizar_desafio_plasticos():
         }
 
         .feedback {
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: 700;
-            font-size: 13px;
-            min-height: 18px;
+            font-size: 15px;
+            min-height: 22px;
         }
 
         .final {
             display: none;
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 22px;
             background: #faf7f0;
             border: 1px solid #e4d7ae;
             border-radius: 12px;
             text-align: center;
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         @media (max-width: 650px) {
             .container {
-                padding: 18px 12px;
+                padding: 25px 15px;
             }
 
             h1 {
-                font-size: 18px;
+                font-size: 22px;
             }
 
             .numero {
-                width: 44px;
-                height: 44px;
-                font-size: 18px;
+                width: 52px;
+                height: 52px;
+                font-size: 22px;
             }
         }
     </style>
@@ -1218,77 +1227,40 @@ def renderizar_desafio_plasticos():
         </div>
 
         <div id="final" class="final">
-            <p>
-                Parabéns! Você decodificou todos os tipos de plástico!
-            </p>
+            <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
         </div>
 
     </div>
 
     <script>
         const desafios = {
-            1: {
-                pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
-                resposta: "PET"
-            },
-            2: {
-                pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
-                resposta: "HDPE"
-            },
-            3: {
-                pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
-                resposta: "PVC"
-            },
-            4: {
-                pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
-                resposta: "LDPE"
-            },
-            5: {
-                pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
-                resposta: "PP"
-            },
-            6: {
-                pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
-                resposta: "PS"
-            },
-            7: {
-                pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
-                resposta: "OTHER"
-            }
+            1: { pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.", resposta: "PET" },
+            2: { pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.", resposta: "HDPE" },
+            3: { pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.", resposta: "PVC" },
+            4: { pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.", resposta: "LDPE" },
+            5: { pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.", resposta: "PP" },
+            6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.", resposta: "PS" },
+            7: { pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.", resposta: "OTHER" }
         };
 
-        const palavras = [
-            "PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"
-        ];
-
+        const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
         let numeroAtual = null;
         let resolvidos = [];
 
         function abrirDesafio(numero) {
             numeroAtual = numero;
-
             const d = desafios[numero];
 
-            document.getElementById("desafio")
-                .classList.add("ativo");
-
-            document.getElementById("final")
-                .style.display = "none";
-
-            document.getElementById("pistaTitulo")
-                .textContent = "PISTA " + numero;
-
-            document.getElementById("pista")
-                .textContent = '"' + d.pista + '"';
-
-            document.getElementById("feedback")
-                .textContent = "";
+            document.getElementById("desafio").classList.add("ativo");
+            document.getElementById("final").style.display = "none";
+            document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
+            document.getElementById("pista").textContent = '"' + d.pista + '"';
+            document.getElementById("feedback").textContent = "";
 
             criarOpcoes();
 
             document.querySelectorAll(".numero").forEach((botao, i) => {
                 botao.classList.remove("selecionado");
-
                 if (i + 1 === numero) {
                     botao.classList.add("selecionado");
                 }
@@ -1320,20 +1292,14 @@ def renderizar_desafio_plasticos():
                     resolvidos.push(numeroAtual);
                 }
 
-                document.querySelectorAll(".numero")[numeroAtual - 1]
-                    .classList.add("concluido");
-
-                document.querySelectorAll(".opcao")
-                    .forEach(botao => {
-                        botao.disabled = true;
-                    });
+                document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
+                document.querySelectorAll(".opcao").forEach(botao => botao.disabled = true);
 
                 if (resolvidos.length === 7) {
-                    document.getElementById("desafio")
-                        .classList.remove("ativo");
-
-                    document.getElementById("final")
-                        .style.display = "block";
+                    document.getElementById("desafio").classList.remove("ativo");
+                    document.getElementById("final").style.display = "block";
+                    // Notifica o Streamlit que o desafio foi concluído
+                    window.parent.location.href = window.parent.location.pathname + '?concluido=true';
                 }
             } else {
                 feedback.textContent = "✗ Tente novamente!";
@@ -1346,23 +1312,25 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    # REDUZIDO O HEIGHT PARA 420px (Aproxima o botão do componente)
-    components.html(html_desafio, height=420, scrolling=False)
+    # Mantemos uma altura confortável no tamanho original sem encolher elementos
+    components.html(html_desafio, height=720, scrolling=True)
 
-    col1, col2, col3 = st.columns([1, 2, 1])
-
-    with col2:
-        if st.button(
-            "↻ RECOMEÇAR HISTÓRIA",
-            key="reiniciar_historia_plasticos",
-            use_container_width=True,
-        ):
-            st.session_state["cena_atual"] = "inicio"
-            st.session_state["quiz_pontuacao"] = 0
-            st.session_state["quiz_respondeu"] = False
-            st.session_state["quiz_resposta_dada"] = None
-            st.session_state["quiz_finalizado"] = False
-            st.rerun()
+    # O BOTÃO SÓ APARECE SE O DESAFIO FOR CONCLUÍDO
+    if st.session_state.get("desafio_concluido", False):
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button(
+                "↻ RECOMEÇAR HISTÓRIA",
+                key="reiniciar_historia_plasticos",
+                use_container_width=True,
+            ):
+                st.session_state["cena_atual"] = "inicio"
+                st.session_state["quiz_pontuacao"] = 0
+                st.session_state["quiz_respondeu"] = False
+                st.session_state["quiz_resposta_dada"] = None
+                st.session_state["quiz_finalizado"] = False
+                st.session_state["desafio_concluido"] = False
+                st.rerun()
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
