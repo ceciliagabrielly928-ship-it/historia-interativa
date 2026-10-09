@@ -947,17 +947,15 @@ import streamlit.components.v1 as components
 
 
 def renderizar_desafio_plasticos():
-    # BOTÃO PARA RECOMEÇAR E VOLTAR À CAPA (Nativo do Streamlit)
-    if st.button(
-        "↻ RECOMEÇAR HISTÓRIA",
-        key="reiniciar_historia_plasticos",
-        use_container_width=True,
-    ):
+
+    # Trata a mensagem enviada pelo iframe via query params/postMessage
+    if st.query_params.get("reiniciar") == "true":
         st.session_state["cena_atual"] = "inicio"
         st.session_state["quiz_pontuacao"] = 0
         st.session_state["quiz_respondeu"] = False
         st.session_state["quiz_resposta_dada"] = None
         st.session_state["quiz_finalizado"] = False
+        st.query_params.clear()
         st.rerun()
 
     html_desafio = """
@@ -988,7 +986,7 @@ def renderizar_desafio_plasticos():
             background: #ffffff;
             border: 1px solid #e7e2da;
             border-radius: 25px;
-            padding: 38px 45px 42px;
+            padding: 38px 45px 35px;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
@@ -1154,6 +1152,7 @@ def renderizar_desafio_plasticos():
             min-height: 25px;
         }
 
+        /* CARD FINAL COM BOTÃO INTEGRADO */
         .final {
             display: none;
             margin-top: 25px;
@@ -1165,6 +1164,30 @@ def renderizar_desafio_plasticos():
             font-size: 18px;
             font-weight: 700;
             line-height: 1.6;
+        }
+
+        .btn-recomecar-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn-recomecar {
+            background-color: #ffffff;
+            color: #d4b04d;
+            border: 2px solid #d4b04d;
+            border-radius: 10px;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(212, 176, 77, 0.15);
+        }
+
+        .btn-recomecar:hover {
+            background-color: #d4b04d;
+            color: #ffffff;
         }
 
         @media (max-width: 650px) {
@@ -1234,80 +1257,50 @@ def renderizar_desafio_plasticos():
             <div class="pista" id="pista"></div>
             <div class="opcoes" id="opcoes"></div>
             <div class="feedback" id="feedback"></div>
-        </div>
+    </div>
 
+        <!-- QUADRADO FINAL (Só abre quando conclui o desafio) -->
         <div id="final" class="final">
-            <p>
-                Parabéns! Você decodificou todos os tipos de plástico!
-            </p>
+            <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
+            
+            <div class="btn-recomecar-container">
+                <button class="btn-recomecar" onclick="reiniciarJogo()">
+                    ↻ RECOMEÇAR HISTÓRIA
+                </button>
+            </div>
         </div>
 
     </div>
 
     <script>
         const desafios = {
-            1: {
-                pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
-                resposta: "PET"
-            },
-            2: {
-                pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
-                resposta: "HDPE"
-            },
-            3: {
-                pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
-                resposta: "PVC"
-            },
-            4: {
-                pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
-                resposta: "LDPE"
-            },
-            5: {
-                pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
-                resposta: "PP"
-            },
-            6: {
-                pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
-                resposta: "PS"
-            },
-            7: {
-                pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
-                resposta: "OTHER"
-            }
+            1: { pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.", resposta: "PET" },
+            2: { pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.", resposta: "HDPE" },
+            3: { pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.", resposta: "PVC" },
+            4: { pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.", resposta: "LDPE" },
+            5: { pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.", resposta: "PP" },
+            6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.", resposta: "PS" },
+            7: { pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.", resposta: "OTHER" }
         };
 
-        const palavras = [
-            "PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"
-        ];
-
+        const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
         let numeroAtual = null;
         let resolvidos = [];
 
         function abrirDesafio(numero) {
             numeroAtual = numero;
-
             const d = desafios[numero];
 
-            document.getElementById("desafio")
-                .classList.add("ativo");
-
-            document.getElementById("final")
-                .style.display = "none";
-
-            document.getElementById("pistaTitulo")
-                .textContent = "PISTA " + numero;
-
-            document.getElementById("pista")
-                .textContent = '"' + d.pista + '"';
-
-            document.getElementById("feedback")
-                .textContent = "";
+            document.getElementById("desafio").classList.add("ativo");
+            document.getElementById("final").style.display = "none";
+            document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
+            document.getElementById("pista").textContent = '"' + d.pista + '"';
+            document.getElementById("feedback").textContent = "";
 
             criarOpcoes();
 
             document.querySelectorAll(".numero").forEach((botao, i) => {
                 botao.classList.remove("selecionado");
-
                 if (i + 1 === numero) {
                     botao.classList.add("selecionado");
                 }
@@ -1339,25 +1332,26 @@ def renderizar_desafio_plasticos():
                     resolvidos.push(numeroAtual);
                 }
 
-                document.querySelectorAll(".numero")[numeroAtual - 1]
-                    .classList.add("concluido");
-
-                document.querySelectorAll(".opcao")
-                    .forEach(botao => {
-                        botao.disabled = true;
-                    });
+                document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
+                document.querySelectorAll(".opcao").forEach(botao => botao.disabled = true);
 
                 if (resolvidos.length === 7) {
-                    document.getElementById("desafio")
-                        .classList.remove("ativo");
-
-                    document.getElementById("final")
-                        .style.display = "block";
+                    document.getElementById("desafio").classList.remove("ativo");
+                    document.getElementById("final").style.display = "block";
                 }
             } else {
                 feedback.textContent = "✗ Tente novamente!";
                 feedback.style.color = "#b3261e";
             }
+        }
+
+        function reiniciarJogo() {
+            // Notifica a janela principal do Streamlit para recarregar com o parâmetro 'reiniciar'
+            window.parent.postMessage({ type: 'streamlit:setQueryParams', queryParams: { reiniciar: 'true' } }, '*');
+            // Fallback para alterar a URL caso postMessage demore
+            setTimeout(() => {
+                window.parent.location.search = '?reiniciar=true';
+            }, 100);
         }
     </script>
 
@@ -1365,8 +1359,8 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    # Exibe o desafio em HTML
-    components.html(html_desafio, height=850, scrolling=True)
+    components.html(html_desafio, height=800, scrolling=True)        
+
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
