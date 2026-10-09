@@ -940,14 +940,25 @@ def renderizar_quiz(numero_pergunta):
             unsafe_allow_html=True
         )
 
-
-
+#DESAFIO DECODIFICAR
 
 import streamlit as st
 import streamlit.components.v1 as components
 
 
 def renderizar_desafio_plasticos():
+    # BOTÃO PARA RECOMEÇAR E VOLTAR À CAPA (Nativo do Streamlit)
+    if st.button(
+        "↻ RECOMEÇAR HISTÓRIA",
+        key="reiniciar_historia_plasticos",
+        use_container_width=True,
+    ):
+        st.session_state["cena_atual"] = "inicio"
+        st.session_state["quiz_pontuacao"] = 0
+        st.session_state["quiz_respondeu"] = False
+        st.session_state["quiz_resposta_dada"] = None
+        st.session_state["quiz_finalizado"] = False
+        st.rerun()
 
     html_desafio = """
     <!DOCTYPE html>
@@ -967,7 +978,7 @@ def renderizar_desafio_plasticos():
             font-family: Arial, sans-serif;
             background: transparent;
             color: #292929;
-            padding: 0 5px;
+            padding: 10px;
         }
 
         .container {
@@ -977,17 +988,17 @@ def renderizar_desafio_plasticos():
             background: #ffffff;
             border: 1px solid #e7e2da;
             border-radius: 25px;
-            padding: 30px 35px 30px;
+            padding: 38px 45px 42px;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
             position: relative;
             text-align: center;
-            font-size: 26px;
+            font-size: 29px;
             line-height: 1.3;
             font-weight: 800;
-            margin-bottom: 35px;
+            margin-bottom: 43px;
             color: #292929;
         }
 
@@ -998,7 +1009,7 @@ def renderizar_desafio_plasticos():
             height: 3px;
             border-radius: 3px;
             background: #d4b04d;
-            bottom: -15px;
+            bottom: -19px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -1007,8 +1018,8 @@ def renderizar_desafio_plasticos():
             background: #faf7f0;
             border-left: 4px solid #d4b04d;
             border-radius: 14px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
+            padding: 19px 22px;
+            margin-bottom: 30px;
             font-size: 15px;
             line-height: 1.6;
         }
@@ -1021,27 +1032,27 @@ def renderizar_desafio_plasticos():
         }
 
         h2 {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 800;
             letter-spacing: 3px;
             text-align: center;
-            margin: 20px 0 12px;
+            margin: 27px 0 15px;
             color: #555555;
         }
 
         .banco {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 9px;
             justify-content: center;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
         }
 
         .palavra {
             background: #ffffff;
             border: 1px solid #cbb15e;
             border-radius: 999px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             font-size: 13px;
         }
 
@@ -1049,20 +1060,20 @@ def renderizar_desafio_plasticos():
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 10px;
-            margin: 18px 0 20px;
+            gap: 12px;
+            margin: 22px 0 28px;
         }
 
         .numero {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border: 2px solid #d9d7d2;
             border-radius: 50%;
             background: #ffffff;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             cursor: pointer;
             color: #333333;
@@ -1082,8 +1093,8 @@ def renderizar_desafio_plasticos():
 
         .desafio {
             display: none;
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 25px;
+            padding: 27px 28px 30px;
             border: 1px solid #e4e0d8;
             border-radius: 17px;
             background: #faf9f6;
@@ -1098,28 +1109,28 @@ def renderizar_desafio_plasticos():
             font-weight: 800;
             font-size: 14px;
             letter-spacing: 2px;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
             color: #d0ad4c;
         }
 
         .pista {
-            font-size: 15px;
-            line-height: 1.5;
-            margin-bottom: 18px;
+            font-size: 16px;
+            line-height: 1.65;
+            margin-bottom: 23px;
         }
 
         .opcoes {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
+            gap: 9px;
         }
 
         .opcao {
             border: 1px solid #d3d0c9;
             background: #ffffff;
             border-radius: 10px;
-            padding: 9px 15px;
+            padding: 11px 17px;
             cursor: pointer;
             font-weight: 700;
             font-size: 13px;
@@ -1137,38 +1148,46 @@ def renderizar_desafio_plasticos():
         }
 
         .feedback {
-            margin-top: 14px;
+            margin-top: 18px;
             font-weight: 700;
-            font-size: 14px;
-            min-height: 20px;
+            font-size: 15px;
+            min-height: 25px;
         }
 
         .final {
             display: none;
-            margin-top: 20px;
-            padding: 20px;
+            margin-top: 25px;
+            padding: 25px 20px;
             background: #faf7f0;
             border: 1px solid #e4d7ae;
             border-radius: 12px;
             text-align: center;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 700;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         @media (max-width: 650px) {
+            body {
+                padding: 5px;
+            }
+
             .container {
-                padding: 22px 14px;
+                padding: 28px 18px;
             }
 
             h1 {
-                font-size: 20px;
+                font-size: 22px;
             }
 
             .numero {
-                width: 48px;
-                height: 48px;
-                font-size: 20px;
+                width: 54px;
+                height: 54px;
+                font-size: 23px;
+            }
+
+            .desafio {
+                padding: 22px 15px;
             }
         }
     </style>
@@ -1346,24 +1365,8 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    # 1. Renderiza o HTML com altura reduzida (550px) para encostar no botão
-    components.html(html_desafio, height=550, scrolling=False)
-
-    # 2. Botão centralizado logo abaixo
-    col1, col2, col3 = st.columns([1, 2, 1])
-
-    with col2:
-        if st.button(
-            "↻ RECOMEÇAR HISTÓRIA",
-            key="reiniciar_historia_plasticos",
-            use_container_width=True,
-        ):
-            st.session_state["cena_atual"] = "inicio"
-            st.session_state["quiz_pontuacao"] = 0
-            st.session_state["quiz_respondeu"] = False
-            st.session_state["quiz_resposta_dada"] = None
-            st.session_state["quiz_finalizado"] = False
-            st.rerun()
+    # Exibe o desafio em HTML
+    components.html(html_desafio, height=850, scrolling=True)
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
