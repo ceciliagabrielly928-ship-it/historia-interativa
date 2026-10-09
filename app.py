@@ -946,17 +946,18 @@ def renderizar_quiz(numero_pergunta):
 import streamlit as st
 import streamlit.components.v1 as components
 
+
 def renderizar_desafio_plasticos():
 
-    # Inicializa o estado do desafio concluído
-    if "desafio_concluido" not in st.session_state:
-        st.session_state["desafio_concluido"] = False
-
-    # Captura a mensagem do JS indicando que o desafio foi finalizado
-    # (Funciona em versões recentes do Streamlit se capturado via parâmetro de URL)
-    if st.query_params.get("concluido") == "true":
-        st.session_state["desafio_concluido"] = True
+    # Verifica se o jogador clicou no botão de reiniciar dentro do HTML
+    if st.query_params.get("reiniciar") == "true":
+        st.session_state["cena_atual"] = "inicio"
+        st.session_state["quiz_pontuacao"] = 0
+        st.session_state["quiz_respondeu"] = False
+        st.session_state["quiz_resposta_dada"] = None
+        st.session_state["quiz_finalizado"] = False
         st.query_params.clear()
+        st.rerun()
 
     html_desafio = """
     <!DOCTYPE html>
@@ -1152,17 +1153,36 @@ def renderizar_desafio_plasticos():
             min-height: 22px;
         }
 
+        /* CARD FINAL DE VITÓRIA COM O BOTÃO */
         .final {
             display: none;
             margin-top: 20px;
-            padding: 22px;
+            padding: 25px;
             background: #faf7f0;
             border: 1px solid #e4d7ae;
             border-radius: 12px;
             text-align: center;
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 700;
             line-height: 1.5;
+        }
+
+        .btn-recomecar-html {
+            margin-top: 18px;
+            padding: 12px 28px;
+            background: #ffffff;
+            color: #d4b04d;
+            border: 2px solid #d4b04d;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-recomecar-html:hover {
+            background: #d4b04d;
+            color: #ffffff;
         }
 
         @media (max-width: 650px) {
@@ -1226,8 +1246,12 @@ def renderizar_desafio_plasticos():
             <div class="feedback" id="feedback"></div>
         </div>
 
+        <!-- TELA FINAL: O BOTÃO ESTÁ AQUI DENTRO E SÓ APARECE AQUI -->
         <div id="final" class="final">
             <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
+            <button class="btn-recomecar-html" onclick="reiniciar()">
+                ↻ RECOMEÇAR HISTÓRIA
+            </button>
         </div>
 
     </div>
@@ -1295,16 +1319,19 @@ def renderizar_desafio_plasticos():
                 document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
                 document.querySelectorAll(".opcao").forEach(botao => botao.disabled = true);
 
+                // QUANDO COMPLETAR OS 7, EXIBE A MENSAGEM E O BOTÃO DE RECOMEÇAR
                 if (resolvidos.length === 7) {
                     document.getElementById("desafio").classList.remove("ativo");
                     document.getElementById("final").style.display = "block";
-                    // Notifica o Streamlit que o desafio foi concluído
-                    window.parent.location.href = window.parent.location.pathname + '?concluido=true';
                 }
             } else {
                 feedback.textContent = "✗ Tente novamente!";
                 feedback.style.color = "#b3261e";
             }
+        }
+
+        function reiniciar() {
+            window.top.location.href = window.top.location.pathname + '?reiniciar=true';
         }
     </script>
 
@@ -1312,25 +1339,7 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    # Mantemos uma altura confortável no tamanho original sem encolher elementos
-    components.html(html_desafio, height=720, scrolling=True)
-
-    # O BOTÃO SÓ APARECE SE O DESAFIO FOR CONCLUÍDO
-    if st.session_state.get("desafio_concluido", False):
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button(
-                "↻ RECOMEÇAR HISTÓRIA",
-                key="reiniciar_historia_plasticos",
-                use_container_width=True,
-            ):
-                st.session_state["cena_atual"] = "inicio"
-                st.session_state["quiz_pontuacao"] = 0
-                st.session_state["quiz_respondeu"] = False
-                st.session_state["quiz_resposta_dada"] = None
-                st.session_state["quiz_finalizado"] = False
-                st.session_state["desafio_concluido"] = False
-                st.rerun()
+    components.html(html_desafio, height=750, scrolling=True)
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
