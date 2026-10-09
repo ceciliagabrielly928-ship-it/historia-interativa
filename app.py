@@ -884,27 +884,19 @@ def renderizar_quiz(numero_pergunta):
 
 
 # =========================================================
-# DESAFIO — PLÁSTICOS
+# DESAFIO — DECODIFICAR PLÁSTICOS
 # =========================================================
 
 def renderizar_desafio_plasticos():
 
     html_desafio = """
     <!DOCTYPE html>
-
     <html lang="pt-BR">
-
     <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -912,301 +904,253 @@ def renderizar_desafio_plasticos():
         }
 
         body {
-
             font-family: Arial, sans-serif;
-
-            background: #f5f1e8;
-
-            color: #222;
-
-            padding: 20px;
-
+            background: #ffffff;
+            color: #292929;
+            padding: 35px 20px;
             min-height: 100vh;
         }
 
         .container {
-
             width: 100%;
-
-            max-width: 950px;
-
+            max-width: 900px;
             margin: 0 auto;
-
-            background: white;
-
-            border-radius: 20px;
-
-            padding: 35px;
-
-            box-shadow:
-                0 5px 20px rgba(0,0,0,0.08);
+            background: #ffffff;
+            border: 1px solid #e7e2da;
+            border-radius: 25px;
+            padding: 38px 45px 42px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
-
+            position: relative;
             text-align: center;
+            font-size: 29px;
+            line-height: 1.25;
+            font-weight: 800;
+            margin-bottom: 43px;
+            color: #292929;
+            letter-spacing: 0.4px;
+        }
 
-            font-size: 28px;
-
-            margin-bottom: 25px;
-
-            color: #222;
+        h1::after {
+            content: "";
+            position: absolute;
+            width: 55px;
+            height: 3px;
+            border-radius: 3px;
+            background: #d4b04d;
+            bottom: -19px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .karla {
-
-            background: #f0f0f0;
-
-            border-radius: 12px;
-
-            padding: 18px;
-
-            margin-bottom: 25px;
-
-            font-size: 16px;
-
-            line-height: 1.5;
-
-            color: #222;
+            background: #faf7f0;
+            border-left: 4px solid #d4b04d;
+            border-radius: 14px;
+            padding: 19px 22px;
+            margin-bottom: 30px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333333;
         }
 
         .karla strong {
-
             display: block;
-
             margin-bottom: 5px;
+            font-size: 13px;
+            letter-spacing: 1.5px;
         }
 
         h2 {
-
-            font-size: 18px;
-
-            margin-top: 25px;
-
-            margin-bottom: 12px;
-
-            color: #222;
+            font-size: 15px;
+            line-height: 1.4;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-top: 27px;
+            margin-bottom: 15px;
+            color: #555555;
         }
 
         .banco {
-
             display: flex;
-
             flex-wrap: wrap;
-
-            gap: 10px;
-
+            gap: 9px;
             justify-content: center;
-
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         .palavra {
-
-            background: #eeeeee;
-
-            border-radius: 8px;
-
-            padding: 9px 13px;
-
-            font-weight: bold;
-
-            font-size: 14px;
-
-            color: #222;
+            background: #ffffff;
+            border: 1px solid #cbb15e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #333333;
         }
 
         .numeros {
-
             display: flex;
-
-            justify-content: space-between;
-
-            gap: 10px;
-
-            margin: 30px 0;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 22px 0 28px;
         }
 
         .numero {
-
-            flex: 1;
-
-            min-height: 70px;
-
-            border: none;
-
-            border-bottom: 3px solid #222;
-
-            background: transparent;
-
-            font-size: 30px;
-
-            font-weight: bold;
-
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 72px;
+            width: 72px;
+            height: 72px;
+            border: 2px solid #d9d7d2;
+            border-radius: 50%;
+            background: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
             cursor: pointer;
-
-            transition: 0.2s;
-
-            color: #222;
+            transition: 0.2s ease;
+            color: #333333;
         }
 
         .numero:hover {
-
-            background: #f0f0f0;
+            border-color: #d4b04d;
+            background: #fffaf0;
         }
 
-        .numero.selecionado {
-
-            background: #e6e6e6;
-        }
-
+        .numero.selecionado,
         .numero.concluido {
-
-            border-bottom: 4px solid #333;
-
-            background: #dcdcdc;
+            border: 2px solid #d4b04d;
+            background: #d4b04d;
+            color: #ffffff;
+            box-shadow: 0 5px 12px rgba(212, 176, 77, 0.22);
         }
 
         .desafio {
-
             display: none;
-
-            margin-top: 20px;
-
-            padding: 25px;
-
-            border-radius: 15px;
-
-            background: #f7f7f7;
+            margin-top: 25px;
+            padding: 27px 28px 30px;
+            border: 1px solid #e4e0d8;
+            border-radius: 17px;
+            background: #faf9f6;
+            text-align: center;
         }
 
         .desafio.ativo {
-
             display: block;
         }
 
         .pista-titulo {
-
-            font-weight: bold;
-
-            font-size: 19px;
-
-            margin-bottom: 10px;
-
-            color: #222;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            color: #d0ad4c;
         }
 
         .pista {
-
-            font-size: 17px;
-
-            line-height: 1.5;
-
-            margin-bottom: 20px;
-
-            color: #333;
+            font-size: 16px;
+            line-height: 1.65;
+            margin-bottom: 23px;
+            color: #333333;
         }
 
         .opcoes {
-
             display: flex;
-
             flex-wrap: wrap;
-
-            gap: 10px;
+            justify-content: center;
+            gap: 9px;
         }
 
         .opcao {
-
-            border: 2px solid #333;
-
-            background: white;
-
-            border-radius: 9px;
-
-            padding: 11px 16px;
-
+            border: 1px solid #d3d0c9;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 11px 17px;
             cursor: pointer;
-
-            font-weight: bold;
-
-            transition: 0.2s;
-
-            font-size: 14px;
-
-            color: #222;
+            font-weight: 700;
+            transition: 0.2s ease;
+            font-size: 13px;
+            color: #333333;
         }
 
-        .opcao:hover {
-
-            background: #eeeeee;
+        .opcao:hover:not(:disabled) {
+            border-color: #d4b04d;
+            background: #fffaf0;
         }
 
         .opcao:disabled {
-
             cursor: default;
+            opacity: 0.75;
         }
 
         .feedback {
-
             margin-top: 18px;
-
-            font-weight: bold;
-
-            font-size: 17px;
-
+            font-weight: 700;
+            font-size: 15px;
             min-height: 25px;
         }
 
         .final {
-
             display: none;
-
             margin-top: 25px;
-
             padding: 22px;
-
-            background: #eeeeee;
-
+            background: #faf7f0;
+            border: 1px solid #e4d7ae;
             border-radius: 12px;
-
             text-align: center;
-
-            font-size: 20px;
-
-            font-weight: bold;
-
-            color: #222;
+            font-size: 18px;
+            font-weight: 700;
+            color: #333333;
         }
 
+        @media (max-width: 650px) {
+            body {
+                padding: 15px 10px;
+            }
+
+            .container {
+                padding: 28px 18px;
+                border-radius: 18px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .numero {
+                flex-basis: 54px;
+                width: 54px;
+                height: 54px;
+                font-size: 23px;
+            }
+
+            .desafio {
+                padding: 22px 15px;
+            }
+        }
     </style>
-
     </head>
-
     <body>
+        <div class="container">
 
-    <div class="container">
-
-        <h1>
-            DESAFIO — DECODIFIQUE OS PLÁSTICOS
-        </h1>
+        <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
 
         <div class="karla">
-
             <strong>KARLA:</strong>
-
             "Esses números não estão aqui por acaso.
             Cada um representa um tipo de plástico.
             Use as pistas para descobrir qual é qual!"
-
         </div>
 
-        <h2>
-            BANCO DE PALAVRAS
-        </h2>
+        <h2>BANCO DE PALAVRAS</h2>
 
         <div class="banco">
-
             <span class="palavra">PP</span>
             <span class="palavra">PET</span>
             <span class="palavra">PVC</span>
@@ -1214,283 +1158,142 @@ def renderizar_desafio_plasticos():
             <span class="palavra">LDPE</span>
             <span class="palavra">OTHER</span>
             <span class="palavra">HDPE</span>
-
         </div>
 
-        <h2>
-            IDENTIFIQUE CADA PLÁSTICO
-        </h2>
+        <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
 
         <div class="numeros">
-
-            <button class="numero" onclick="abrirDesafio(1)">①</button>
-            <button class="numero" onclick="abrirDesafio(2)">②</button>
-            <button class="numero" onclick="abrirDesafio(3)">③</button>
-            <button class="numero" onclick="abrirDesafio(4)">④</button>
-            <button class="numero" onclick="abrirDesafio(5)">⑤</button>
-            <button class="numero" onclick="abrirDesafio(6)">⑥</button>
-            <button class="numero" onclick="abrirDesafio(7)">⑦</button>
-
+            <button class="numero" onclick="abrirDesafio(1)">1</button>
+            <button class="numero" onclick="abrirDesafio(2)">2</button>
+            <button class="numero" onclick="abrirDesafio(3)">3</button>
+            <button class="numero" onclick="abrirDesafio(4)">4</button>
+            <button class="numero" onclick="abrirDesafio(5)">5</button>
+            <button class="numero" onclick="abrirDesafio(6)">6</button>
+            <button class="numero" onclick="abrirDesafio(7)">7</button>
         </div>
 
         <div id="desafio" class="desafio">
-
-            <div
-                class="pista-titulo"
-                id="pistaTitulo"
-            ></div>
-
-            <div
-                class="pista"
-                id="pista"
-            ></div>
-
-            <div
-                class="opcoes"
-                id="opcoes"
-            ></div>
-
-            <div
-                class="feedback"
-                id="feedback"
-            ></div>
-
+            <div class="pista-titulo" id="pistaTitulo"></div>
+            <div class="pista" id="pista"></div>
+            <div class="opcoes" id="opcoes"></div>
+            <div class="feedback" id="feedback"></div>
         </div>
 
         <div id="final" class="final">
-
             Parabéns! Você decodificou todos os tipos de plástico!
-
         </div>
 
     </div>
-
-
-    <script>
-
+        <script>
     const desafios = {
-
         1: {
-            pista:
-                "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
+            pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
             resposta: "PET"
         },
-
         2: {
-            pista:
-                "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
+            pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
             resposta: "HDPE"
         },
-
         3: {
-            pista:
-                "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
+            pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
             resposta: "PVC"
         },
-
         4: {
-            pista:
-                "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
+            pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
             resposta: "LDPE"
         },
-
         5: {
-            pista:
-                "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
+            pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
             resposta: "PP"
         },
-
         6: {
-            pista:
-                "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
+            pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
             resposta: "PS"
         },
-
         7: {
-            pista:
-                "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
+            pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
             resposta: "OTHER"
         }
-
     };
 
-
-    const palavras = [
-        "PP",
-        "PET",
-        "PVC",
-        "PS",
-        "LDPE",
-        "OTHER",
-        "HDPE"
-    ];
-
+    const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
 
     let numeroAtual = null;
-
     let resolvidos = [];
 
-
     function abrirDesafio(numero) {
-
         numeroAtual = numero;
-
         const d = desafios[numero];
 
-
-        document
-            .getElementById("desafio")
-            .classList
-            .add("ativo");
-
-
-        document
-            .getElementById("pistaTitulo")
-            .textContent =
-                "PISTA " + numero;
-
-
-        document
-            .getElementById("pista")
-            .textContent =
-                '"' + d.pista + '"';
-
-
-        document
-            .getElementById("feedback")
-            .textContent = "";
-
+        document.getElementById("desafio").classList.add("ativo");
+        document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
+        document.getElementById("pista").textContent = '"' + d.pista + '"';
+        document.getElementById("feedback").textContent = "";
 
         criarOpcoes();
 
+        document.querySelectorAll(".numero").forEach((b, i) => {
+            b.classList.remove("selecionado");
 
-        document
-            .querySelectorAll(".numero")
-            .forEach((b, i) => {
-
-                b.classList.remove("selecionado");
-
-                if (i + 1 === numero) {
-
-                    b.classList.add("selecionado");
-
-                }
-
-            });
-
+            if (i + 1 === numero) {
+                b.classList.add("selecionado");
+            }
+        });
     }
-
 
     function criarOpcoes() {
-
-        const area =
-            document.getElementById("opcoes");
-
+        const area = document.getElementById("opcoes");
         area.innerHTML = "";
 
-
         palavras.forEach(p => {
-
-            const b =
-                document.createElement("button");
-
+            const b = document.createElement("button");
             b.className = "opcao";
-
             b.textContent = p;
-
-            b.onclick = () =>
-                verificarResposta(p);
-
+            b.onclick = () => verificarResposta(p);
             area.appendChild(b);
-
         });
-
     }
-
 
     function verificarResposta(resposta) {
-
-        const correta =
-            desafios[numeroAtual].resposta;
-
-        const fb =
-            document.getElementById("feedback");
-
+        const correta = desafios[numeroAtual].resposta;
+        const fb = document.getElementById("feedback");
 
         if (resposta === correta) {
-
             fb.textContent = "✓ Acertou!";
-
             fb.style.color = "#247a3d";
 
-
             if (!resolvidos.includes(numeroAtual)) {
-
                 resolvidos.push(numeroAtual);
-
             }
 
+            document.querySelectorAll(".numero")[numeroAtual - 1]
+                .classList.add("concluido");
 
-            document
-                .querySelectorAll(".numero")
-                [numeroAtual - 1]
-                .classList
-                .add("concluido");
-
-
-            document
-                .querySelectorAll(".opcao")
-                .forEach(
-                    b => b.disabled = true
-                );
-
+            document.querySelectorAll(".opcao")
+                .forEach(b => b.disabled = true);
 
             if (resolvidos.length === 7) {
-
                 setTimeout(() => {
-
-                    document
-                        .getElementById("final")
-                        .style.display = "block";
-
-
-                    document
-                        .getElementById("desafio")
-                        .classList
-                        .remove("ativo");
-
+                    document.getElementById("final").style.display = "block";
+                    document.getElementById("desafio").classList.remove("ativo");
                 }, 600);
-
             }
-
+        } else {
+            fb.textContent = "✗ Tente novamente!";
+            fb.style.color = "#b3261e";
         }
-
-        else {
-
-            fb.textContent =
-                "✗ Tente novamente!";
-
-            fb.style.color =
-                "#b3261e";
-
-        }
-
     }
-
     </script>
 
     </body>
-
     </html>
     """
-
 
     components.html(
         html_desafio,
         height=900,
         scrolling=True
     )
-
 
 # =========================================================
 # DESAFIO — POLÍMERO
