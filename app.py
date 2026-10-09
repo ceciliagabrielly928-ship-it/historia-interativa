@@ -967,7 +967,7 @@ def renderizar_desafio_plasticos():
             font-family: Arial, sans-serif;
             background: transparent;
             color: #292929;
-            padding: 10px;
+            padding: 0 5px;
         }
 
         .container {
@@ -977,17 +977,17 @@ def renderizar_desafio_plasticos():
             background: #ffffff;
             border: 1px solid #e7e2da;
             border-radius: 25px;
-            padding: 38px 45px 42px;
+            padding: 30px 35px 30px;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
             position: relative;
             text-align: center;
-            font-size: 29px;
+            font-size: 26px;
             line-height: 1.3;
             font-weight: 800;
-            margin-bottom: 43px;
+            margin-bottom: 35px;
             color: #292929;
         }
 
@@ -998,7 +998,7 @@ def renderizar_desafio_plasticos():
             height: 3px;
             border-radius: 3px;
             background: #d4b04d;
-            bottom: -19px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
         }
@@ -1007,8 +1007,8 @@ def renderizar_desafio_plasticos():
             background: #faf7f0;
             border-left: 4px solid #d4b04d;
             border-radius: 14px;
-            padding: 19px 22px;
-            margin-bottom: 30px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
             font-size: 15px;
             line-height: 1.6;
         }
@@ -1021,27 +1021,27 @@ def renderizar_desafio_plasticos():
         }
 
         h2 {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             letter-spacing: 3px;
             text-align: center;
-            margin: 27px 0 15px;
+            margin: 20px 0 12px;
             color: #555555;
         }
 
         .banco {
             display: flex;
             flex-wrap: wrap;
-            gap: 9px;
+            gap: 8px;
             justify-content: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .palavra {
             background: #ffffff;
             border: 1px solid #cbb15e;
             border-radius: 999px;
-            padding: 8px 16px;
+            padding: 6px 14px;
             font-size: 13px;
         }
 
@@ -1049,20 +1049,20 @@ def renderizar_desafio_plasticos():
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 12px;
-            margin: 22px 0 28px;
+            gap: 10px;
+            margin: 18px 0 20px;
         }
 
         .numero {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border: 2px solid #d9d7d2;
             border-radius: 50%;
             background: #ffffff;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             cursor: pointer;
             color: #333333;
@@ -1082,8 +1082,8 @@ def renderizar_desafio_plasticos():
 
         .desafio {
             display: none;
-            margin-top: 25px;
-            padding: 27px 28px 30px;
+            margin-top: 20px;
+            padding: 20px;
             border: 1px solid #e4e0d8;
             border-radius: 17px;
             background: #faf9f6;
@@ -1098,28 +1098,28 @@ def renderizar_desafio_plasticos():
             font-weight: 800;
             font-size: 14px;
             letter-spacing: 2px;
-            margin-bottom: 14px;
+            margin-bottom: 10px;
             color: #d0ad4c;
         }
 
         .pista {
-            font-size: 16px;
-            line-height: 1.65;
-            margin-bottom: 23px;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 18px;
         }
 
         .opcoes {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 9px;
+            gap: 8px;
         }
 
         .opcao {
             border: 1px solid #d3d0c9;
             background: #ffffff;
             border-radius: 10px;
-            padding: 11px 17px;
+            padding: 9px 15px;
             cursor: pointer;
             font-weight: 700;
             font-size: 13px;
@@ -1137,46 +1137,38 @@ def renderizar_desafio_plasticos():
         }
 
         .feedback {
-            margin-top: 18px;
+            margin-top: 14px;
             font-weight: 700;
-            font-size: 15px;
-            min-height: 25px;
+            font-size: 14px;
+            min-height: 20px;
         }
 
         .final {
             display: none;
-            margin-top: 25px;
-            padding: 25px 20px;
+            margin-top: 20px;
+            padding: 20px;
             background: #faf7f0;
             border: 1px solid #e4d7ae;
             border-radius: 12px;
             text-align: center;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         @media (max-width: 650px) {
-            body {
-                padding: 5px;
-            }
-
             .container {
-                padding: 28px 18px;
+                padding: 22px 14px;
             }
 
             h1 {
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .numero {
-                width: 54px;
-                height: 54px;
-                font-size: 23px;
-            }
-
-            .desafio {
-                padding: 22px 15px;
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
             }
         }
     </style>
@@ -1354,13 +1346,10 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    # 1. Renderiza o HTML do desafio primeiro
-    components.html(html_desafio, height=850, scrolling=True)
+    # 1. Renderiza o HTML com altura reduzida (550px) para encostar no botão
+    components.html(html_desafio, height=550, scrolling=False)
 
-    # 2. Adiciona um espaço vertical
-    st.write("")
-
-    # 3. Cria colunas para centralizar o botão em baixo do container
+    # 2. Botão centralizado logo abaixo
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
