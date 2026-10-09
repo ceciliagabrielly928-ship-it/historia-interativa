@@ -949,16 +949,6 @@ import streamlit.components.v1 as components
 
 def renderizar_desafio_plasticos():
 
-    # Verifica se o jogador clicou no botão de reiniciar dentro do HTML
-    if st.query_params.get("reiniciar") == "true":
-        st.session_state["cena_atual"] = "inicio"
-        st.session_state["quiz_pontuacao"] = 0
-        st.session_state["quiz_respondeu"] = False
-        st.session_state["quiz_resposta_dada"] = None
-        st.session_state["quiz_finalizado"] = False
-        st.query_params.clear()
-        st.rerun()
-
     html_desafio = """
     <!DOCTYPE html>
     <html lang="pt-BR">
@@ -977,7 +967,7 @@ def renderizar_desafio_plasticos():
             font-family: Arial, sans-serif;
             background: transparent;
             color: #292929;
-            padding: 10px;
+            padding: 0 5px;
         }
 
         .container {
@@ -987,14 +977,14 @@ def renderizar_desafio_plasticos():
             background: #ffffff;
             border: 1px solid #e7e2da;
             border-radius: 25px;
-            padding: 35px 40px;
+            padding: 30px 35px 30px;
             box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
             position: relative;
             text-align: center;
-            font-size: 28px;
+            font-size: 26px;
             line-height: 1.3;
             font-weight: 800;
             margin-bottom: 35px;
@@ -1017,8 +1007,8 @@ def renderizar_desafio_plasticos():
             background: #faf7f0;
             border-left: 4px solid #d4b04d;
             border-radius: 14px;
-            padding: 18px 22px;
-            margin-bottom: 25px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
             font-size: 15px;
             line-height: 1.6;
         }
@@ -1031,11 +1021,11 @@ def renderizar_desafio_plasticos():
         }
 
         h2 {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             letter-spacing: 3px;
             text-align: center;
-            margin: 25px 0 15px;
+            margin: 20px 0 12px;
             color: #555555;
         }
 
@@ -1044,14 +1034,14 @@ def renderizar_desafio_plasticos():
             flex-wrap: wrap;
             gap: 8px;
             justify-content: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .palavra {
             background: #ffffff;
             border: 1px solid #cbb15e;
             border-radius: 999px;
-            padding: 8px 16px;
+            padding: 6px 14px;
             font-size: 13px;
         }
 
@@ -1059,16 +1049,16 @@ def renderizar_desafio_plasticos():
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 12px;
-            margin: 20px 0 25px;
+            gap: 10px;
+            margin: 18px 0 20px;
         }
 
         .numero {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 68px;
-            height: 68px;
+            width: 64px;
+            height: 64px;
             border: 2px solid #d9d7d2;
             border-radius: 50%;
             background: #ffffff;
@@ -1093,7 +1083,7 @@ def renderizar_desafio_plasticos():
         .desafio {
             display: none;
             margin-top: 20px;
-            padding: 22px;
+            padding: 20px;
             border: 1px solid #e4e0d8;
             border-radius: 17px;
             background: #faf9f6;
@@ -1108,14 +1098,14 @@ def renderizar_desafio_plasticos():
             font-weight: 800;
             font-size: 14px;
             letter-spacing: 2px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #d0ad4c;
         }
 
         .pista {
             font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 20px;
+            line-height: 1.5;
+            margin-bottom: 18px;
         }
 
         .opcoes {
@@ -1129,7 +1119,7 @@ def renderizar_desafio_plasticos():
             border: 1px solid #d3d0c9;
             background: #ffffff;
             border-radius: 10px;
-            padding: 10px 16px;
+            padding: 9px 15px;
             cursor: pointer;
             font-weight: 700;
             font-size: 13px;
@@ -1147,57 +1137,38 @@ def renderizar_desafio_plasticos():
         }
 
         .feedback {
-            margin-top: 15px;
+            margin-top: 14px;
             font-weight: 700;
-            font-size: 15px;
-            min-height: 22px;
+            font-size: 14px;
+            min-height: 20px;
         }
 
-        /* CARD FINAL DE VITÓRIA COM O BOTÃO */
         .final {
             display: none;
             margin-top: 20px;
-            padding: 25px;
+            padding: 20px;
             background: #faf7f0;
             border: 1px solid #e4d7ae;
             border-radius: 12px;
             text-align: center;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             line-height: 1.5;
         }
 
-        .btn-recomecar-html {
-            margin-top: 18px;
-            padding: 12px 28px;
-            background: #ffffff;
-            color: #d4b04d;
-            border: 2px solid #d4b04d;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-recomecar-html:hover {
-            background: #d4b04d;
-            color: #ffffff;
-        }
-
         @media (max-width: 650px) {
             .container {
-                padding: 25px 15px;
+                padding: 22px 14px;
             }
 
             h1 {
-                font-size: 22px;
+                font-size: 20px;
             }
 
             .numero {
-                width: 52px;
-                height: 52px;
-                font-size: 22px;
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
             }
         }
     </style>
@@ -1246,45 +1217,78 @@ def renderizar_desafio_plasticos():
             <div class="feedback" id="feedback"></div>
         </div>
 
-        <!-- TELA FINAL: O BOTÃO ESTÁ AQUI DENTRO E SÓ APARECE AQUI -->
         <div id="final" class="final">
-            <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
-            <button class="btn-recomecar-html" onclick="reiniciar()">
-                ↻ RECOMEÇAR HISTÓRIA
-            </button>
+            <p>
+                Parabéns! Você decodificou todos os tipos de plástico!
+            </p>
         </div>
 
     </div>
 
     <script>
         const desafios = {
-            1: { pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.", resposta: "PET" },
-            2: { pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.", resposta: "HDPE" },
-            3: { pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.", resposta: "PVC" },
-            4: { pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.", resposta: "LDPE" },
-            5: { pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.", resposta: "PP" },
-            6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.", resposta: "PS" },
-            7: { pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.", resposta: "OTHER" }
+            1: {
+                pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
+                resposta: "PET"
+            },
+            2: {
+                pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
+                resposta: "HDPE"
+            },
+            3: {
+                pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
+                resposta: "PVC"
+            },
+            4: {
+                pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
+                resposta: "LDPE"
+            },
+            5: {
+                pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
+                resposta: "PP"
+            },
+            6: {
+                pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
+                resposta: "PS"
+            },
+            7: {
+                pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
+                resposta: "OTHER"
+            }
         };
 
-        const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
+        const palavras = [
+            "PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"
+        ];
+
         let numeroAtual = null;
         let resolvidos = [];
 
         function abrirDesafio(numero) {
             numeroAtual = numero;
+
             const d = desafios[numero];
 
-            document.getElementById("desafio").classList.add("ativo");
-            document.getElementById("final").style.display = "none";
-            document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
-            document.getElementById("pista").textContent = '"' + d.pista + '"';
-            document.getElementById("feedback").textContent = "";
+            document.getElementById("desafio")
+                .classList.add("ativo");
+
+            document.getElementById("final")
+                .style.display = "none";
+
+            document.getElementById("pistaTitulo")
+                .textContent = "PISTA " + numero;
+
+            document.getElementById("pista")
+                .textContent = '"' + d.pista + '"';
+
+            document.getElementById("feedback")
+                .textContent = "";
 
             criarOpcoes();
 
             document.querySelectorAll(".numero").forEach((botao, i) => {
                 botao.classList.remove("selecionado");
+
                 if (i + 1 === numero) {
                     botao.classList.add("selecionado");
                 }
@@ -1316,22 +1320,25 @@ def renderizar_desafio_plasticos():
                     resolvidos.push(numeroAtual);
                 }
 
-                document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
-                document.querySelectorAll(".opcao").forEach(botao => botao.disabled = true);
+                document.querySelectorAll(".numero")[numeroAtual - 1]
+                    .classList.add("concluido");
 
-                // QUANDO COMPLETAR OS 7, EXIBE A MENSAGEM E O BOTÃO DE RECOMEÇAR
+                document.querySelectorAll(".opcao")
+                    .forEach(botao => {
+                        botao.disabled = true;
+                    });
+
                 if (resolvidos.length === 7) {
-                    document.getElementById("desafio").classList.remove("ativo");
-                    document.getElementById("final").style.display = "block";
+                    document.getElementById("desafio")
+                        .classList.remove("ativo");
+
+                    document.getElementById("final")
+                        .style.display = "block";
                 }
             } else {
                 feedback.textContent = "✗ Tente novamente!";
                 feedback.style.color = "#b3261e";
             }
-        }
-
-        function reiniciar() {
-            window.top.location.href = window.top.location.pathname + '?reiniciar=true';
         }
     </script>
 
@@ -1339,7 +1346,24 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    components.html(html_desafio, height=750, scrolling=True)
+    # 1. Renderiza o HTML com altura reduzida (550px) para encostar no botão
+    components.html(html_desafio, height=550, scrolling=False)
+
+    # 2. Botão centralizado logo abaixo
+    col1, col2, col3 = st.columns([1, 2, 1])
+
+    with col2:
+        if st.button(
+            "↻ RECOMEÇAR HISTÓRIA",
+            key="reiniciar_historia_plasticos",
+            use_container_width=True,
+        ):
+            st.session_state["cena_atual"] = "inicio"
+            st.session_state["quiz_pontuacao"] = 0
+            st.session_state["quiz_respondeu"] = False
+            st.session_state["quiz_resposta_dada"] = None
+            st.session_state["quiz_finalizado"] = False
+            st.rerun()
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
