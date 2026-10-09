@@ -945,6 +945,7 @@ def renderizar_quiz(numero_pergunta):
 # =========================================================
 
 
+
 def renderizar_desafio_plasticos():
 
     html_desafio = """
@@ -988,7 +989,6 @@ def renderizar_desafio_plasticos():
             font-weight: 800;
             margin-bottom: 43px;
             color: #292929;
-            letter-spacing: 0.4px;
         }
 
         h1::after {
@@ -1011,7 +1011,6 @@ def renderizar_desafio_plasticos():
             margin-bottom: 30px;
             font-size: 15px;
             line-height: 1.6;
-            color: #333333;
         }
 
         .karla strong {
@@ -1023,12 +1022,10 @@ def renderizar_desafio_plasticos():
 
         h2 {
             font-size: 15px;
-            line-height: 1.4;
             font-weight: 800;
             letter-spacing: 3px;
             text-align: center;
-            margin-top: 27px;
-            margin-bottom: 15px;
+            margin: 27px 0 15px;
             color: #555555;
         }
 
@@ -1045,15 +1042,12 @@ def renderizar_desafio_plasticos():
             border: 1px solid #cbb15e;
             border-radius: 999px;
             padding: 8px 16px;
-            font-weight: 500;
             font-size: 13px;
-            color: #333333;
         }
 
         .numeros {
             display: flex;
             justify-content: center;
-            align-items: center;
             flex-wrap: wrap;
             gap: 12px;
             margin: 22px 0 28px;
@@ -1063,7 +1057,6 @@ def renderizar_desafio_plasticos():
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 0 0 72px;
             width: 72px;
             height: 72px;
             border: 2px solid #d9d7d2;
@@ -1072,7 +1065,6 @@ def renderizar_desafio_plasticos():
             font-size: 28px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.2s ease;
             color: #333333;
         }
 
@@ -1083,10 +1075,9 @@ def renderizar_desafio_plasticos():
 
         .numero.selecionado,
         .numero.concluido {
-            border: 2px solid #d4b04d;
+            border-color: #d4b04d;
             background: #d4b04d;
             color: #ffffff;
-            box-shadow: 0 5px 12px rgba(212, 176, 77, 0.22);
         }
 
         .desafio {
@@ -1115,7 +1106,6 @@ def renderizar_desafio_plasticos():
             font-size: 16px;
             line-height: 1.65;
             margin-bottom: 23px;
-            color: #333333;
         }
 
         .opcoes {
@@ -1132,7 +1122,6 @@ def renderizar_desafio_plasticos():
             padding: 11px 17px;
             cursor: pointer;
             font-weight: 700;
-            transition: 0.2s ease;
             font-size: 13px;
             color: #333333;
         }
@@ -1165,10 +1154,7 @@ def renderizar_desafio_plasticos():
             font-size: 18px;
             font-weight: 700;
             line-height: 1.6;
-            color: #333333;
         }
-
-        /* BOTÃO RECOMEÇAR */
 
         #botaoRecomecar {
             display: block;
@@ -1181,13 +1167,11 @@ def renderizar_desafio_plasticos():
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.2s ease;
         }
 
         #botaoRecomecar:hover {
             background: #fffaf0;
             border-color: #b88e30;
-            color: #b88e30;
         }
 
         @media (max-width: 650px) {
@@ -1197,7 +1181,6 @@ def renderizar_desafio_plasticos():
 
             .container {
                 padding: 28px 18px;
-                border-radius: 18px;
             }
 
             h1 {
@@ -1205,7 +1188,6 @@ def renderizar_desafio_plasticos():
             }
 
             .numero {
-                flex-basis: 54px;
                 width: 54px;
                 height: 54px;
                 font-size: 23px;
@@ -1268,9 +1250,9 @@ def renderizar_desafio_plasticos():
 
             <button
                 id="botaoRecomecar"
-                onclick="recomecarDesafio()"
+                onclick="recomecarHistoria()"
             >
-                ↻ RECOMEÇAR DESAFIO
+                ↻ RECOMEÇAR HISTÓRIA
             </button>
         </div>
 
@@ -1348,16 +1330,13 @@ def renderizar_desafio_plasticos():
 
         function criarOpcoes() {
             const area = document.getElementById("opcoes");
-
             area.innerHTML = "";
 
             palavras.forEach(palavra => {
                 const botao = document.createElement("button");
-
                 botao.className = "opcao";
                 botao.textContent = palavra;
                 botao.onclick = () => verificarResposta(palavra);
-
                 area.appendChild(botao);
             });
         }
@@ -1389,40 +1368,16 @@ def renderizar_desafio_plasticos():
                     document.getElementById("final")
                         .style.display = "block";
                 }
-
             } else {
                 feedback.textContent = "✗ Tente novamente!";
                 feedback.style.color = "#b3261e";
             }
         }
 
-        /* RECOMEÇAR O DESAFIO */
-
-        function recomecarDesafio() {
-            resolvidos = [];
-            numeroAtual = null;
-
-            document.getElementById("final")
-                .style.display = "none";
-
-            document.getElementById("desafio")
-                .classList.remove("ativo");
-
-            document.getElementById("pistaTitulo")
-                .textContent = "";
-
-            document.getElementById("pista")
-                .textContent = "";
-
-            document.getElementById("opcoes")
-                .innerHTML = "";
-
-            document.getElementById("feedback")
-                .textContent = "";
-
-            document.querySelectorAll(".numero").forEach(botao => {
-                botao.classList.remove("selecionado", "concluido");
-            });
+        function recomecarHistoria() {
+            const url = new URL(window.parent.location.href);
+            url.searchParams.set("restart_story", "1");
+            window.parent.location.href = url.toString();
         }
     </script>
 
