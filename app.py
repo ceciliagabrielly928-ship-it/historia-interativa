@@ -1374,17 +1374,16 @@ def renderizar_desafio_plasticos():
         height=1050,
         scrolling=True
     )
-# =========================================================
-# DESAFIO — DECODIFICAR PLÁSTICOS
-# =========================================================
+import streamlit as st
+import streamlit.components.v1 as components
+
 
 def renderizar_desafio_plasticos():
-
-    # BOTÃO PARA RECOMEÇAR E VOLTAR À CAPA
+    # BOTÃO PARA RECOMEÇAR E VOLTAR À CAPA (Nativo do Streamlit)
     if st.button(
         "↻ RECOMEÇAR HISTÓRIA",
         key="reiniciar_historia_plasticos",
-        use_container_width=True
+        use_container_width=True,
     ):
         st.session_state["cena_atual"] = "inicio"
         st.session_state["quiz_pontuacao"] = 0
@@ -1409,10 +1408,9 @@ def renderizar_desafio_plasticos():
 
         body {
             font-family: Arial, sans-serif;
-            background: #ffffff;
+            background: transparent;
             color: #292929;
-            padding: 20px 10px;
-            min-height: 100vh;
+            padding: 10px;
         }
 
         .container {
@@ -1603,7 +1601,7 @@ def renderizar_desafio_plasticos():
 
         @media (max-width: 650px) {
             body {
-                padding: 12px 5px;
+                padding: 5px;
             }
 
             .container {
@@ -1799,12 +1797,8 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    # Exibe o desafio
-    components.html(
-        html_desafio,
-        height=1050,
-        scrolling=True
-    )
+    # Exibe o desafio em HTML
+    components.html(html_desafio, height=850, scrolling=True)
 # =========================================================
 # DESAFIO — POLÍMERO
 # =========================================================
