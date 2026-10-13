@@ -944,7 +944,10 @@ def renderizar_quiz(numero_pergunta):
 #-------------------------------------------------------------------------------
 import streamlit as st
 import streamlit.components.v1 as components
+
+
 def renderizar_desafio_polimero():
+
     # Reinício da história pelo Streamlit
     if st.session_state.pop("solicitar_reinicio_plasticos", False):
         st.session_state["cena_atual"] = "inicio"
@@ -1138,6 +1141,28 @@ def renderizar_desafio_polimero():
             line-height: 1.6;
         }
 
+        /* Botão de recomeçar: escondido até concluir os sete desafios */
+        .botao-recomecar {
+            display: none;
+            width: 100%;
+            margin-top: 25px;
+            padding: 20px;
+            background: transparent;
+            border: 1px solid #e69a00;
+            border-radius: 4px;
+            color: #d99518;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            letter-spacing: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .botao-recomecar:hover {
+            background: #fffaf0;
+        }
+
         @media (max-width: 650px) {
             body {
                 padding: 5px;
@@ -1160,12 +1185,18 @@ def renderizar_desafio_polimero():
             .desafio {
                 padding: 22px 15px;
             }
+
+            .botao-recomecar {
+                font-size: 10px;
+                letter-spacing: 3px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
+
         <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
 
         <div class="karla">
@@ -1208,10 +1239,21 @@ def renderizar_desafio_polimero():
 
         <div id="final" class="final">
             <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
+
             <p style="margin-top: 10px; font-size: 14px; font-weight: 400;">
-                Volte à aplicação para iniciar a história novamente.
+                Você concluiu todos os desafios!
             </p>
+
+            <button
+                id="botaoRecomecar"
+                class="botao-recomecar"
+                type="button"
+                onclick="recomecarHistoria()"
+            >
+                ↻ RECOMEÇAR HISTÓRIA
+            </button>
         </div>
+
     </div>
 
     <script>
@@ -1220,26 +1262,32 @@ def renderizar_desafio_polimero():
                 pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
                 resposta: "PET"
             },
+
             2: {
                 pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
                 resposta: "HDPE"
             },
+
             3: {
                 pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
                 resposta: "PVC"
             },
+
             4: {
                 pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
                 resposta: "LDPE"
             },
+
             5: {
                 pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
                 resposta: "PP"
             },
+
             6: {
                 pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
                 resposta: "PS"
             },
+
             7: {
                 pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
                 resposta: "OTHER"
@@ -1247,20 +1295,26 @@ def renderizar_desafio_polimero():
         };
 
         const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
+
         let numeroAtual = null;
+
         const resolvidos = new Set();
 
         function abrirDesafio(numero) {
             numeroAtual = numero;
 
             document.getElementById("desafio").classList.add("ativo");
+
             document.getElementById("final").style.display = "none";
 
-            document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
+            document.getElementById("pistaTitulo").textContent =
+                "PISTA " + numero;
+
             document.getElementById("pista").textContent =
                 '"' + desafios[numero].pista + '"';
 
             const feedback = document.getElementById("feedback");
+
             feedback.textContent = "";
             feedback.style.color = "";
 
@@ -1270,14 +1324,18 @@ def renderizar_desafio_polimero():
             });
 
             const area = document.getElementById("opcoes");
+
             area.innerHTML = "";
 
             palavras.forEach(palavra => {
                 const botao = document.createElement("button");
+
                 botao.type = "button";
                 botao.className = "opcao";
                 botao.textContent = palavra;
+
                 botao.onclick = () => verificarResposta(palavra);
+
                 area.appendChild(botao);
             });
 
@@ -1309,20 +1367,29 @@ def renderizar_desafio_polimero():
 
                 if (resolvidos.size === 7) {
                     document.getElementById("desafio").classList.remove("ativo");
+
                     document.getElementById("final").style.display = "block";
+
+                    document.getElementById("botaoRecomecar").style.display =
+                        "block";
                 }
+
             } else {
                 feedback.textContent = "✗ Tente novamente!";
                 feedback.style.color = "#b3261e";
             }
         }
+
+        function recomecarHistoria() {
+            window.parent.location.reload();
+        }
     </script>
+
 </body>
 </html>
 """
 
     components.html(html_desafio, height=850, scrolling=True)
-
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
