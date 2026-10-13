@@ -373,12 +373,6 @@ def _checar_reset_via_url():
     """
     Permite que botões DENTRO dos iframes (components.html)
     acionem um recomeço de história via query param ?reset=1.
-
-    Fluxo:
-      1. Usuário clica em "RECOMEÇAR HISTÓRIA" dentro do iframe
-      2. JS define window.parent.location.href = "...?reset=1"
-      3. Streamlit recarrega com ?reset=1
-      4. Esta função detecta, reseta o estado e limpa o param
     """
     try:
         reset = st.query_params.get("reset")
@@ -395,7 +389,6 @@ def _checar_reset_via_url():
         st.session_state.quiz_resposta_dada = None
         st.session_state.quiz_finalizado = False
 
-        # Limpa o parâmetro da URL (isso pode disparar rerun no Streamlit)
         try:
             st.query_params.clear()
         except Exception:
@@ -416,7 +409,6 @@ def renderizar_quiz(numero_pergunta):
         """
         <style>
 
-        /* CARTÃO PRINCIPAL — MAIS LARGO */
         div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
             background-color: #ffffff !important;
             border-radius: 20px !important;
@@ -428,7 +420,6 @@ def renderizar_quiz(numero_pergunta):
             max-width: 1100px !important;
         }
 
-        /* TÍTULO DESAFIO */
         .quiz-header {
             display: flex;
             flex-direction: column;
@@ -448,7 +439,6 @@ def renderizar_quiz(numero_pergunta):
             margin-bottom: 13px;
         }
 
-        /* TRACINHO DOURADO */
         .quiz-linha {
             width: 55px;
             height: 3px;
@@ -457,7 +447,6 @@ def renderizar_quiz(numero_pergunta):
             margin: 0 auto;
         }
 
-        /* RETÂNGULO DA PERGUNTA */
         .quiz-pergunta {
             background: #faf7f0;
             border-left: 4px solid #d4b04d;
@@ -473,10 +462,8 @@ def renderizar_quiz(numero_pergunta):
             box-sizing: border-box;
         }
 
-        /* ESPAÇAMENTO ENTRE AS ALTERNATIVAS */
         div[data-testid="stButton"] { margin-bottom: 14px !important; }
 
-        /* ALTERNATIVAS BRANCAS COM BORDA DOURADA */
         div[data-testid="stButton"] > button {
             width: 100% !important;
             min-height: 58px !important;
@@ -501,7 +488,6 @@ def renderizar_quiz(numero_pergunta):
             color: #b88e30 !important;
         }
 
-        /* RESPOSTAS DEPOIS DA ESCOLHA */
         .box-resposta {
             padding: 14px 20px;
             margin-bottom: 14px;
@@ -513,7 +499,6 @@ def renderizar_quiz(numero_pergunta):
             text-align: left;
         }
 
-        /* FEEDBACK DE ACERTO OU ERRO */
         .quiz-feedback {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -525,10 +510,8 @@ def renderizar_quiz(numero_pergunta):
             line-height: 1.5;
         }
 
-        /* BOTÃO DE RECOMEÇAR */
         .area-recomecar { margin-top: 25px; }
 
-        /* AJUSTES PARA CELULAR */
         @media (max-width: 650px) {
             div[data-testid="stVerticalBlockBorderWrapper"]:has(.meu-quiz-container) {
                 padding: 22px 16px !important;
@@ -546,19 +529,16 @@ def renderizar_quiz(numero_pergunta):
         unsafe_allow_html=True
     )
 
-    # COLUNAS MAIS LARGAS PARA O DESAFIO
     col1, col2, col3 = st.columns([0.2, 12, 0.2])
 
     with col2:
         with st.container(border=True):
 
-            # IDENTIFICADOR DO CARTÃO
             st.markdown(
                 '<div class="meu-quiz-container"></div>',
                 unsafe_allow_html=True
             )
 
-            # TÍTULO COM TRACINHO DOURADO
             st.markdown(
                 """
                 <div class="quiz-header">
@@ -569,7 +549,6 @@ def renderizar_quiz(numero_pergunta):
                 unsafe_allow_html=True
             )
 
-            # PERGUNTA DENTRO DO RETÂNGULO BEGE
             st.markdown(
                 f"""
                 <div class="quiz-pergunta">
@@ -579,7 +558,6 @@ def renderizar_quiz(numero_pergunta):
                 unsafe_allow_html=True
             )
 
-            # ALTERNATIVAS
             for letra, texto in pergunta["alternativas"].items():
 
                 if not st.session_state.quiz_respondeu:
@@ -602,7 +580,6 @@ def renderizar_quiz(numero_pergunta):
                     resposta_dada = st.session_state.quiz_resposta_dada
                     correta = pergunta["correta"]
 
-                    # RESPOSTA CORRETA
                     if letra == correta:
                         st.markdown(
                             f"""
@@ -613,8 +590,6 @@ def renderizar_quiz(numero_pergunta):
                             """,
                             unsafe_allow_html=True
                         )
-
-                    # RESPOSTA ERRADA ESCOLHIDA
                     elif letra == resposta_dada:
                         st.markdown(
                             f"""
@@ -625,8 +600,6 @@ def renderizar_quiz(numero_pergunta):
                             """,
                             unsafe_allow_html=True
                         )
-
-                    # DEMAIS ALTERNATIVAS
                     else:
                         st.markdown(
                             f"""
@@ -638,7 +611,6 @@ def renderizar_quiz(numero_pergunta):
                             unsafe_allow_html=True
                         )
 
-            # FEEDBACK DEPOIS DE RESPONDER
             if st.session_state.quiz_respondeu:
 
                 resposta_dada = st.session_state.quiz_resposta_dada
@@ -668,7 +640,6 @@ def renderizar_quiz(numero_pergunta):
                         unsafe_allow_html=True
                     )
 
-                # BOTÃO PARA RECOMEÇAR A HISTÓRIA
                 st.markdown('<div class="area-recomecar">', unsafe_allow_html=True)
 
                 if st.button(
@@ -1032,12 +1003,19 @@ def renderizar_desafio_polimero():
         padding: 15px;
     }
 
+    /* =========================================
+       CARD BRANCO BONITO — IGUAL AOS OUTROS DESAFIOS
+    ========================================= */
+
     .container {
         width: 100%;
         max-width: 720px;
         margin: 0 auto;
-        padding: 15px;
-        background: transparent;
+        background: #ffffff;
+        border: 1px solid #ece7de;
+        border-radius: 22px;
+        padding: 48px 55px 42px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
         text-align: center;
     }
 
@@ -1127,6 +1105,12 @@ def renderizar_desafio_polimero():
         box-shadow: 0 0 0 3px rgba(34, 34, 34, 0.06);
     }
 
+    .input-resposta:disabled {
+        background: #f5f5f5;
+        color: #555;
+        cursor: not-allowed;
+    }
+
     .btn-acao {
         background-color: #222222;
         color: #ffffff;
@@ -1142,6 +1126,11 @@ def renderizar_desafio_polimero():
     }
     .btn-acao:hover { background-color: #3b3b3b; }
 
+    .btn-acao:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
     .feedback {
         font-weight: 700;
         font-size: 15px;
@@ -1149,9 +1138,34 @@ def renderizar_desafio_polimero():
         min-height: 24px;
     }
 
+    /* =========================================
+       BOTÃO RECOMEÇAR — SÓ APARECE AO ACERTAR
+    ========================================= */
+
+    .btn-recomecar {
+        display: none;                 /* escondido por padrão */
+        margin: 26px auto 0 auto;
+        background: #d4a843;
+        color: #0a0a0a;
+        border: none;
+        border-radius: 6px;
+        padding: 14px 38px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .btn-recomecar:hover {
+        background: #e8c86a;
+        transform: scale(1.02);
+    }
+
     @media (max-width: 650px) {
         body { padding: 10px 5px; }
-        .container { padding: 10px 5px; }
+        .container { padding: 32px 22px 30px; border-radius: 18px; }
         h1 { font-size: 20px; margin-bottom: 26px; }
         .texto-desafio { font-size: 15px; line-height: 1.8; }
         .lacuna { min-width: 90px; }
@@ -1187,12 +1201,26 @@ def renderizar_desafio_polimero():
         />
 
         <div>
-            <button type="button" class="btn-acao" onclick="verificarRespostaPolimero()">
+            <button
+                type="button"
+                id="btnResponder"
+                class="btn-acao"
+                onclick="verificarRespostaPolimero()"
+            >
                 RESPONDER
             </button>
         </div>
 
         <div id="feedback" class="feedback"></div>
+
+        <button
+            type="button"
+            id="btnRecomecar"
+            class="btn-recomecar"
+            onclick="recomecarHistoria()"
+        >
+            ↻ RECOMEÇAR HISTÓRIA
+        </button>
 
     </div>
 
@@ -1209,9 +1237,31 @@ def renderizar_desafio_polimero():
         if (resp === "polímero" || resp === "polimero") {
             feedback.textContent = "✓ Resposta correta! Parabéns!";
             feedback.style.color = "#286b2f";
+
+            // Bloqueia input e botão responder
+            document.getElementById("respostaUsuario").disabled = true;
+            document.getElementById("btnResponder").disabled = true;
+
+            // ✅ SÓ AGORA mostra o botão recomeçar
+            document.getElementById("btnRecomecar").style.display = "inline-block";
+
         } else {
             feedback.textContent = "✗ Tente novamente!";
             feedback.style.color = "#b3261e";
+        }
+    }
+
+    function recomecarHistoria() {
+        try {
+            const url = new URL(window.parent.location.href);
+            url.searchParams.set("reset", "1");
+            window.parent.location.href = url.toString();
+        } catch (e) {
+            try {
+                window.top.location.href = "?reset=1";
+            } catch (e2) {
+                window.top.location.reload();
+            }
         }
     }
 
@@ -1225,7 +1275,7 @@ def renderizar_desafio_polimero():
     </html>
     """
 
-    components.html(html_desafio, height=560, scrolling=False)
+    components.html(html_desafio, height=620, scrolling=False)
 
 
 # =========================================================
@@ -1234,24 +1284,15 @@ def renderizar_desafio_polimero():
 
 def renderizar_cena_normal(cena):
 
-    # -----------------------------------------------------
-    # IMAGEM
-    # -----------------------------------------------------
     if cena.get("imagem"):
         renderizar_imagem(cena["imagem"], "Imagem da história")
 
-    # -----------------------------------------------------
-    # PERSONAGEM
-    # -----------------------------------------------------
     personagem = (
         cena.get("personagem")
         or cena.get("personagem_nome")
         or cena.get("nome")
     )
 
-    # -----------------------------------------------------
-    # TEXTO / DIÁLOGO
-    # -----------------------------------------------------
     texto = (
         cena.get("texto")
         or cena.get("dialogo")
@@ -1282,9 +1323,6 @@ def renderizar_cena_normal(cena):
             unsafe_allow_html=True
         )
 
-    # -----------------------------------------------------
-    # TÍTULO
-    # -----------------------------------------------------
     if cena.get("titulo"):
         st.markdown(
             f"""
@@ -1295,9 +1333,6 @@ def renderizar_cena_normal(cena):
             unsafe_allow_html=True
         )
 
-    # -----------------------------------------------------
-    # BOTÃO / PRÓXIMA CENA
-    # -----------------------------------------------------
     proxima = (
         cena.get("proxima")
         or cena.get("proxima_cena")
@@ -1323,7 +1358,7 @@ def renderizar_cena_normal(cena):
 
 aplicar_css()
 inicializar_estado()
-_checar_reset_via_url()   # ⬅️ detecta ?reset=1 vindo dos iframes
+_checar_reset_via_url()
 
 
 # =========================================================
@@ -1372,21 +1407,11 @@ elif cena_id == "desafio_plasticos":
 
 # =========================================================
 # DESAFIO — POLÍMERO (LACUNA)
+# Sem botão Python — o botão vive dentro do iframe agora
 # =========================================================
 
 elif cena_id == "desafio_polimero":
     renderizar_desafio_polimero()
-    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
-
-    col_esq, col_botao, col_dir = st.columns([1, 2, 1])
-    with col_botao:
-        if st.button(
-            "↻ RECOMEÇAR HISTÓRIA",
-            key="reiniciar_polimero",
-            use_container_width=True
-        ):
-            reiniciar_historia()
-
     st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
@@ -1438,7 +1463,6 @@ if cena.get("tipo") == "inicio":
 
 # =========================================================
 # TIPO: CENA
-# ESTE É O TIPO USADO PELO STORY.PY
 # =========================================================
 
 elif cena.get("tipo") == "cena":
