@@ -2202,16 +2202,76 @@ if cena_id == "desafio_plasticos":
 
 
 elif cena_id == "desafio_polimero":
-   renderizar_desafio_lacuna_polimero()
-   st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+    # --- COLE O HTML DO DESAFIO AQUI DENTRO ---
+    html_desafio = """
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: transparent; color: #292929; padding: 10px; display: flex; justify-content: center; align-items: center; }
+    .container { width: 100%; max-width: 650px; background: #ffffff; border: 1px solid #e7e2da; border-radius: 20px; padding: 40px 45px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); text-align: center; }
+    h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; margin-bottom: 25px; color: #1a1a1a; }
+    .texto-desafio { font-size: 16px; line-height: 1.6; color: #333333; margin-bottom: 25px; }
+    .input-resposta { padding: 8px 12px; font-size: 15px; border: 2px solid #dcd6cb; border-radius: 10px; outline: none; margin: 0 5px; width: 160px; text-align: center; transition: border-color 0.2s; }
+    .input-resposta:focus { border-color: #222222; }
+    .btn-acao { width: 100%; background-color: #222222; color: #ffffff; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; letter-spacing: 1px; cursor: pointer; margin-top: 15px; transition: background 0.2s; }
+    .btn-acao:hover { background-color: #3b3b3b; }
+    .btn-dica { background-color: #222222; color: #ffffff; border: none; border-radius: 10px; padding: 10px 24px; font-size: 13px; font-weight: 700; letter-spacing: 1px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; transition: background 0.2s; }
+    .btn-dica:hover { background-color: #3b3b3b; }
+    .dica-box { display: none; background: #faf7f0; border-left: 4px solid #d4b04d; padding: 12px 15px; font-size: 14px; color: #555; border-radius: 6px; margin-bottom: 20px; text-align: left; }
+    .feedback { font-weight: 700; font-size: 15px; margin-top: 15px; min-height: 25px; }
+    </style>
+    </head>
+    <body>
+    <div class="container">
+        <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
+        <div class="texto-desafio">
+            O PET é um <input type="text" id="respostaUsuario" class="input-resposta" placeholder="Digite sua resposta..." /> formado pela repetição de unidades menores, formando uma cadeia de moléculas.
+        </div>
+        <button type="button" class="btn-dica" onclick="mostrarDica()">💡 VER DICA</button>
+        <div id="dicaBox" class="dica-box">
+            <strong>Dica:</strong> É uma macromolécula formada pela união de várias moléculas menores (monômeros). Começa com a letra 'P'.
+        </div>
+        <div>
+            <button type="button" class="btn-acao" onclick="verificarRespostaPolimero()">RESPONDER</button>
+        </div>
+        <div id="feedback" class="feedback"></div>
+    </div>
+    <script>
+    function mostrarDica() {
+        const caixa = document.getElementById("dicaBox");
+        caixa.style.display = caixa.style.display === "block" ? "none" : "block";
+    }
+    function verificarRespostaPolimero() {
+        const resp = document.getElementById("respostaUsuario").value.trim().toLowerCase();
+        const feedback = document.getElementById("feedback");
+        if (resp === "polímero" || resp === "polimero") {
+            feedback.textContent = "✓ Resposta correta! Parabéns!";
+            feedback.style.color = "#286b2f";
+        } else {
+            feedback.textContent = "✗ Tente novamente!";
+            feedback.style.color = "#b3261e";
+        }
+    }
+    </script>
+    </body>
+    </html>
+    """
+    components.html(html_desafio, height=450, scrolling=True)
+    
+    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
   
-   col_esquerda, col_botao, col_direita = st.columns([1, 2, 1])
-   with col_botao:
-       if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_polimero", use_container_width=True):
-           reiniciar_historia()
+    col_esquerda, col_botao, col_direita = st.columns([1, 2, 1])
+    with col_botao:
+        if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_polimero", use_container_width=True):
+            reiniciar_historia()
           
-   st.markdown("</div>", unsafe_allow_html=True)
-   st.stop()
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.stop()
+
 
 
 cena = get_cena(cena_id)
