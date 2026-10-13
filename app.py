@@ -942,42 +942,6 @@ def renderizar_quiz(numero_pergunta):
 #-------------------------------------------------------------------------------
 #DESAFIO - IDENTIFIQUE O TIPO DE PLÁSTICO
 #-------------------------------------------------------------------------------
-import streamlit as st
-import streamlit.components.v1 as components
-import streamlit.components.v1 as st_components
-
-
-def renderizar_desafio_polimero():
-
-    # =========================================================
-    # 1. ESTADO DO DESAFIO
-    # =========================================================
-
-    if "desafio_plasticos_concluido" not in st.session_state:
-        st.session_state["desafio_plasticos_concluido"] = False
-
-    if "desafio_plasticos_reset" not in st.session_state:
-        st.session_state["desafio_plasticos_reset"] = 0
-
-    # Reiniciar a história
-    if st.session_state.pop("solicitar_reinicio_plasticos", False):
-        st.session_state["cena_atual"] = "inicio"
-        st.session_state["quiz_pontuacao"] = 0
-        st.session_state["quiz_respondeu"] = False
-        st.session_state["quiz_resposta_dada"] = None
-        st.session_state["quiz_finalizado"] = False
-        st.session_state["desafio_plasticos_concluido"] = False
-        st.session_state["desafio_plasticos_reset"] += 1
-        st.rerun()
-
-    desafio_concluido = st.session_state["desafio_plasticos_concluido"]
-    reset_id = st.session_state["desafio_plasticos_reset"]
-
-    # =========================================================
-    # 2. HTML DO DESAFIO
-    # =========================================================
-
-    html_desafio = r"""
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1184,6 +1148,7 @@ h2 {
 </head>
 
 <body>
+
 <div class="container">
 
     <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
@@ -1236,6 +1201,44 @@ h2 {
 </div>
 
 <script>
+/*
+ * Comunicação com o Streamlit.
+ * Este arquivo é servido por declare_component, portanto
+ * pode enviar o resultado usando o protocolo do componente.
+ */
+
+function enviarParaStreamlit(valor) {
+    window.parent.postMessage(
+        {
+            isStreamlitMessage: true,
+            type: "streamlit:setComponentValue",
+            value: valor,
+            dataType: "json"
+        },
+        "*"
+    );
+}
+
+function ajustarAltura() {
+    window.parent.postMessage(
+        {
+            isStreamlitMessage: true,
+            type: "streamlit:setFrameHeight",
+            height: document.documentElement.scrollHeight
+        },
+        "*"
+    );
+}
+
+window.parent.postMessage(
+    {
+        isStreamlitMessage: true,
+        type: "streamlit:componentReady",
+        apiVersion: 1
+    },
+    "*"
+);
+
 const desafios = {
     1: {
         pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
@@ -1273,14 +1276,40 @@ let numeroAtual = null;
 const resolvidos = new Set();
 let concluido = false;
 
+/*
+ * O Python envia este parâmetro quando o desafio já foi
+ * concluído ou quando a página é reconstruída.
+ */
+function receberDadosStreamlit(evento) {
+    const dados = evento.data;
+
+    if (!dados || dados.type !== "streamlit:render") {
+        return;
+    }
+
+    const args = dados.args || {};
+
+    if (args.concluido === true) {
+        concluido = true;
+        mostrarConclusao();
+    }
+
+    ajustarAltura();
+}
+
+window.addEventListener("message", receberDadosStreamlit);
+
 function abrirDesafio(numero) {
-    if (concluido) return;
+    if (concluido || resolvidos.has(numero)) return;
 
     numeroAtual = numero;
 
     document.getElementById("desafio").classList.add("ativo");
     document.getElementById("final").style.display = "none";
-    document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
+
+    document.getElementById("pistaTitulo").textContent =
+        "PISTA " + numero;
+
     document.getElementById("pista").textContent =
         '"' + desafios[numero].pista + '"';
 
@@ -1302,8 +1331,11 @@ function abrirDesafio(numero) {
         botao.className = "opcao";
         botao.textContent = palavra;
         botao.onclick = () => verificarResposta(palavra);
+
         area.appendChild(botao);
     });
+
+    ajustarAltura();
 }
 
 function verificarResposta(resposta) {
@@ -1326,32 +1358,18 @@ function verificarResposta(resposta) {
 
         if (resolvidos.size === 7) {
             concluirDesafio();
+        } else {
+            ajustarAltura();
         }
+
     } else {
         feedback.textContent = "✗ Tente novamente!";
         feedback.style.color = "#b3261e";
     }
 }
 
-function concluirDesafio() {
-    if (resolvidos.size !== 7 || concluido) return;
-
-    concluido = true;
-
+function mostrarConclusao() {
     document.getElementById("desafio").classList.remove("ativo");
-    document.getElementById("final").style.display = "block";
-
-    // Envia a conclusão para o Streamlit.
-    window.parent.postMessage({
-        type: "streamlit:setComponentValue",
-        value: "plasticos_concluido"
-    }, "*");
-}
-
-const desafioJaConcluido = __DESAFIO_CONCLUIDO__;
-
-if (desafioJaConcluido) {
-    concluido = true;
     document.getElementById("final").style.display = "block";
     document.querySelector(".numeros").style.display = "none";
     document.querySelector(".banco").style.display = "none";
@@ -1359,71 +1377,26 @@ if (desafioJaConcluido) {
     document.querySelectorAll("h2").forEach(titulo => {
         titulo.style.display = "none";
     });
+
+    ajustarAltura();
 }
+
+function concluirDesafio() {
+    if (resolvidos.size !== 7 || concluido) return;
+
+    concluido = true;
+
+    mostrarConclusao();
+
+    // O valor é devolvido ao Python pelo componente.
+    enviarParaStreamlit("concluido");
+}
+
+ajustarAltura();
 </script>
+
 </body>
 </html>
-"""
-
-    html_desafio = html_desafio.replace(
-        "__DESAFIO_CONCLUIDO__",
-        str(desafio_concluido).lower()
-    )
-
-    # =========================================================
-    # 3. EXIBE O DESAFIO
-    # =========================================================
-
-    # IMPORTANTE:
-    # components.html não retorna eventos JavaScript ao Python.
-    # Portanto, postMessage sozinho não atualiza session_state.
-    # O botão não pode depender dessa comunicação sem um componente
-    # Streamlit próprio.
-
-    components.html(
-        html_desafio,
-        height=850,
-        scrolling=True
-    )
-
-    # =========================================================
-    # 4. BOTÃO DE REINICIAR — OCULTO ATÉ A CONCLUSÃO
-    # =========================================================
-
-    if st.session_state["desafio_plasticos_concluido"]:
-
-        st.markdown(
-            """
-            <style>
-            .st-key-botao_recomecar_plasticos button {
-                background: transparent !important;
-                color: #d99518 !important;
-                border: 1px solid #e69a00 !important;
-                border-radius: 4px !important;
-                padding: 14px 20px !important;
-                font-size: 12px !important;
-                letter-spacing: 4px !important;
-                text-transform: uppercase !important;
-                width: 100%;
-            }
-
-            .st-key-botao_recomecar_plasticos button:hover {
-                background: #fffaf0 !important;
-                color: #b78316 !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-
-        with st.container(key="botao_recomecar_plasticos"):
-            if st.button(
-                "↻ RECOMEÇAR HISTÓRIA",
-                key="recomecar_historia_plasticos",
-                use_container_width=True
-            ):
-                st.session_state["solicitar_reinicio_plasticos"] = True
-                st.rerun()
 #=========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
