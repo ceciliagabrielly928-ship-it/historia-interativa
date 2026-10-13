@@ -369,6 +369,42 @@ def reiniciar_historia():
     st.rerun()
 
 
+def _checar_reset_via_url():
+    """
+    Permite que botões DENTRO dos iframes (components.html)
+    acionem um recomeço de história via query param ?reset=1.
+
+    Fluxo:
+      1. Usuário clica em "RECOMEÇAR HISTÓRIA" dentro do iframe
+      2. JS define window.parent.location.href = "...?reset=1"
+      3. Streamlit recarrega com ?reset=1
+      4. Esta função detecta, reseta o estado e limpa o param
+    """
+    try:
+        reset = st.query_params.get("reset")
+    except Exception:
+        try:
+            reset = st.experimental_get_query_params().get("reset", [None])[0]
+        except Exception:
+            reset = None
+
+    if reset == "1":
+        st.session_state.cena_atual = "inicio"
+        st.session_state.quiz_pontuacao = 0
+        st.session_state.quiz_respondeu = False
+        st.session_state.quiz_resposta_dada = None
+        st.session_state.quiz_finalizado = False
+
+        # Limpa o parâmetro da URL (isso pode disparar rerun no Streamlit)
+        try:
+            st.query_params.clear()
+        except Exception:
+            try:
+                st.experimental_set_query_params()
+            except Exception:
+                pass
+
+
 # =========================================================
 # QUIZ — RENDERIZAÇÃO
 # =========================================================
@@ -659,51 +695,177 @@ def renderizar_desafio_plasticos():
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: transparent; color: #292929; padding: 10px; }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: transparent;
+        color: #292929;
+        padding: 10px;
+    }
+
     .container {
-        width: 100%; max-width: 1000px; margin: 0 auto;
-        background: #ffffff; border: 1px solid #e7e2da; border-radius: 25px;
-        padding: 38px 45px 35px; box-shadow: 0 8px 28px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 10px 15px;
+        background: transparent;
     }
-    h1 { text-align: center; font-size: 29px; line-height: 1.3; font-weight: 800; margin-bottom: 30px; color: #292929; }
+
+    h1 {
+        text-align: center;
+        font-size: 29px;
+        line-height: 1.3;
+        font-weight: 800;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        color: #292929;
+    }
+
     .karla {
-        background: #faf7f0; border-left: 4px solid #d4b04d; border-radius: 14px;
-        padding: 19px 22px; margin-bottom: 30px; font-size: 15px; line-height: 1.6;
+        background: #faf7f0;
+        border-left: 4px solid #d4b04d;
+        border-radius: 14px;
+        padding: 19px 22px;
+        margin-bottom: 30px;
+        font-size: 15px;
+        line-height: 1.6;
     }
-    .karla strong { display: block; margin-bottom: 5px; font-size: 13px; letter-spacing: 1.5px; }
-    h2 { font-size: 15px; font-weight: 800; letter-spacing: 2px; text-align: center; margin: 27px 0 15px; color: #555; }
-    .banco, .numeros, .opcoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
+    .karla strong {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 13px;
+        letter-spacing: 1.5px;
+    }
+
+    h2 {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-align: center;
+        margin: 27px 0 15px;
+        color: #555;
+    }
+
+    .banco, .numeros, .opcoes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 9px;
+    }
     .banco { margin-bottom: 32px; }
-    .palavra { border: 1px solid #cbb15e; border-radius: 999px; padding: 8px 16px; font-size: 13px; }
-    .numeros { gap: 12px; margin: 22px 0 28px; }
-    .numero {
-        display: flex; align-items: center; justify-content: center;
-        width: 65px; height: 65px; border: 2px solid #d9d7d2; border-radius: 50%;
-        background: #fff; font-size: 25px; font-weight: 700; cursor: pointer; color: #333;
+
+    .palavra {
+        border: 1px solid #cbb15e;
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 13px;
     }
-    .numero:hover, .opcao:hover:not(:disabled) { border-color: #d4b04d; background: #fffaf0; }
-    .numero.selecionado, .numero.concluido { border-color: #d4b04d; background: #d4b04d; color: #fff; }
+
+    .numeros { gap: 12px; margin: 22px 0 28px; }
+
+    .numero {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 65px;
+        height: 65px;
+        border: 2px solid #d9d7d2;
+        border-radius: 50%;
+        background: #fff;
+        font-size: 25px;
+        font-weight: 700;
+        cursor: pointer;
+        color: #333;
+    }
+
+    .numero:hover, .opcao:hover:not(:disabled) {
+        border-color: #d4b04d;
+        background: #fffaf0;
+    }
+
+    .numero.selecionado, .numero.concluido {
+        border-color: #d4b04d;
+        background: #d4b04d;
+        color: #fff;
+    }
+
     .desafio {
-        display: none; margin-top: 25px; padding: 27px 28px 30px;
-        border: 1px solid #e4e0d8; border-radius: 17px; background: #faf9f6; text-align: center;
+        display: none;
+        margin-top: 25px;
+        padding: 27px 28px 30px;
+        border: 1px solid #e4e0d8;
+        border-radius: 17px;
+        background: #faf9f6;
+        text-align: center;
     }
     .desafio.ativo { display: block; }
-    .pista-titulo { font-weight: 800; font-size: 14px; letter-spacing: 2px; margin-bottom: 14px; color: #b28c24; }
-    .pista { font-size: 16px; line-height: 1.65; margin-bottom: 23px; }
+
+    .pista-titulo {
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 2px;
+        margin-bottom: 14px;
+        color: #b28c24;
+    }
+
+    .pista {
+        font-size: 16px;
+        line-height: 1.65;
+        margin-bottom: 23px;
+    }
+
     .opcao {
-        border: 1px solid #d3d0c9; background: #fff; border-radius: 10px;
-        padding: 11px 17px; cursor: pointer; font-weight: 700; font-size: 13px; color: #333;
+        border: 1px solid #d3d0c9;
+        background: #fff;
+        border-radius: 10px;
+        padding: 11px 17px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 13px;
+        color: #333;
     }
     .opcao:disabled { cursor: default; opacity: 0.75; }
-    .feedback { margin-top: 18px; font-weight: 700; font-size: 15px; min-height: 25px; }
-    .final {
-        display: none; margin-top: 25px; padding: 25px 20px;
-        background: #faf7f0; border: 1px solid #e4d7ae; border-radius: 12px;
-        text-align: center; font-size: 18px; font-weight: 700; line-height: 1.6;
+
+    .feedback {
+        margin-top: 18px;
+        font-weight: 700;
+        font-size: 15px;
+        min-height: 25px;
     }
+
+    .final {
+        display: none;
+        margin-top: 25px;
+        padding: 25px 20px;
+        background: #faf7f0;
+        border: 1px solid #e4d7ae;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.6;
+    }
+
+    .btn-recomecar {
+        margin-top: 22px;
+        background: #d4a843;
+        color: #0a0a0a;
+        border: none;
+        border-radius: 6px;
+        padding: 14px 34px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        transition: background 0.2s;
+    }
+    .btn-recomecar:hover { background: #e8c86a; }
+
     @media (max-width: 650px) {
         body { padding: 5px; }
-        .container { padding: 28px 18px; }
+        .container { padding: 5px; }
         h1 { font-size: 22px; }
         .numero { width: 50px; height: 50px; font-size: 21px; }
         .desafio { padding: 22px 15px; }
@@ -712,11 +874,14 @@ def renderizar_desafio_plasticos():
     </head>
     <body>
     <div class="container">
-    <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
+
+    <h1>DESAFIO</h1>
+
     <div class="karla">
     <strong>KARLA:</strong>
     "Esses números não estão aqui por acaso. Cada um representa um tipo de plástico. Use as pistas para descobrir qual é qual!"
     </div>
+
     <h2>BANCO DE PALAVRAS</h2>
     <div class="banco">
     <span class="palavra">PP</span>
@@ -727,6 +892,7 @@ def renderizar_desafio_plasticos():
     <span class="palavra">OTHER</span>
     <span class="palavra">HDPE</span>
     </div>
+
     <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
     <div class="numeros">
     <button class="numero" type="button" onclick="abrirDesafio(1)">1</button>
@@ -737,19 +903,23 @@ def renderizar_desafio_plasticos():
     <button class="numero" type="button" onclick="abrirDesafio(6)">6</button>
     <button class="numero" type="button" onclick="abrirDesafio(7)">7</button>
     </div>
+
     <div id="desafio" class="desafio">
     <div id="pistaTitulo" class="pista-titulo"></div>
     <div id="pista" class="pista"></div>
     <div id="opcoes" class="opcoes"></div>
     <div id="feedback" class="feedback"></div>
     </div>
+
     <div id="final" class="final">
     <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
-    <p style="margin-top: 10px; font-size: 14px; font-weight: 400;">
-    Volte à aplicação para iniciar a história novamente.
-    </p>
+    <button class="btn-recomecar" type="button" onclick="recomecarHistoria()">
+        ↻ RECOMEÇAR HISTÓRIA
+    </button>
     </div>
+
     </div>
+
     <script>
     const desafios = {
     1: { pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.", resposta: "PET" },
@@ -768,15 +938,19 @@ def renderizar_desafio_plasticos():
         numeroAtual = numero;
         document.getElementById("desafio").classList.add("ativo");
         document.getElementById("final").style.display = "none";
+
         document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
         document.getElementById("pista").textContent = '"' + desafios[numero].pista + '"';
+
         const feedback = document.getElementById("feedback");
         feedback.textContent = "";
         feedback.style.color = "";
+
         document.querySelectorAll(".numero").forEach((botao, i) => {
             botao.classList.toggle("selecionado", i + 1 === numero);
             botao.classList.toggle("concluido", resolvidos.has(i + 1));
         });
+
         const area = document.getElementById("opcoes");
         area.innerHTML = "";
         palavras.forEach(palavra => {
@@ -787,6 +961,7 @@ def renderizar_desafio_plasticos():
             botao.onclick = () => verificarResposta(palavra);
             area.appendChild(botao);
         });
+
         if (resolvidos.has(numero)) {
             feedback.textContent = "✓ Você já resolveu este desafio!";
             feedback.style.color = "#247a3d";
@@ -799,9 +974,11 @@ def renderizar_desafio_plasticos():
         if (resposta === desafios[numeroAtual].resposta) {
             feedback.textContent = "✓ Acertou!";
             feedback.style.color = "#247a3d";
+
             resolvidos.add(numeroAtual);
             document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
             document.querySelectorAll(".opcao").forEach(botao => { botao.disabled = true; });
+
             if (resolvidos.size === 7) {
                 document.getElementById("desafio").classList.remove("ativo");
                 document.getElementById("final").style.display = "block";
@@ -809,6 +986,20 @@ def renderizar_desafio_plasticos():
         } else {
             feedback.textContent = "✗ Tente novamente!";
             feedback.style.color = "#b3261e";
+        }
+    }
+
+    function recomecarHistoria() {
+        try {
+            const url = new URL(window.parent.location.href);
+            url.searchParams.set("reset", "1");
+            window.parent.location.href = url.toString();
+        } catch (e) {
+            try {
+                window.top.location.href = "?reset=1";
+            } catch (e2) {
+                window.top.location.reload();
+            }
         }
     }
     </script>
@@ -836,33 +1027,28 @@ def renderizar_desafio_polimero():
 
     body {
         font-family: Arial, Helvetica, sans-serif;
-        background: #f6f1e8;
+        background: transparent;
         color: #292929;
-        padding: 30px 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
+        padding: 15px;
     }
 
     .container {
         width: 100%;
         max-width: 720px;
-        background: #ffffff;
-        border: 1px solid #ece7de;
-        border-radius: 22px;
-        padding: 48px 55px 42px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+        margin: 0 auto;
+        padding: 15px;
+        background: transparent;
         text-align: center;
     }
 
     h1 {
         font-size: 26px;
         font-weight: 800;
-        letter-spacing: 0.5px;
+        letter-spacing: 2px;
         color: #1a1a1a;
         margin-bottom: 34px;
         line-height: 1.3;
+        text-align: center;
     }
 
     .texto-desafio {
@@ -873,6 +1059,7 @@ def renderizar_desafio_polimero():
         max-width: 560px;
         margin-left: auto;
         margin-right: auto;
+        text-align: center;
     }
 
     .lacuna {
@@ -963,8 +1150,8 @@ def renderizar_desafio_polimero():
     }
 
     @media (max-width: 650px) {
-        body { padding: 15px 8px; }
-        .container { padding: 32px 22px 30px; border-radius: 18px; }
+        body { padding: 10px 5px; }
+        .container { padding: 10px 5px; }
         h1 { font-size: 20px; margin-bottom: 26px; }
         .texto-desafio { font-size: 15px; line-height: 1.8; }
         .lacuna { min-width: 90px; }
@@ -975,7 +1162,7 @@ def renderizar_desafio_polimero():
     <body>
     <div class="container">
 
-        <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
+        <h1>DESAFIO</h1>
 
         <div class="texto-desafio">
             O PET é um <span class="lacuna"></span> formado pela repetição de
@@ -1028,7 +1215,6 @@ def renderizar_desafio_polimero():
         }
     }
 
-    // Permite responder pressionando Enter
     document.getElementById("respostaUsuario").addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
             verificarRespostaPolimero();
@@ -1137,6 +1323,7 @@ def renderizar_cena_normal(cena):
 
 aplicar_css()
 inicializar_estado()
+_checar_reset_via_url()   # ⬅️ detecta ?reset=1 vindo dos iframes
 
 
 # =========================================================
@@ -1179,17 +1366,6 @@ elif cena_id == "desafio_quiz_2":
 
 elif cena_id == "desafio_plasticos":
     renderizar_desafio_plasticos()
-    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
-
-    col_esq, col_botao, col_dir = st.columns([1, 2, 1])
-    with col_botao:
-        if st.button(
-            "↻ RECOMEÇAR HISTÓRIA",
-            key="reiniciar_plasticos",
-            use_container_width=True
-        ):
-            reiniciar_historia()
-
     st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
