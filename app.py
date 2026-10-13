@@ -1407,158 +1407,387 @@ elif cena_id == "desafio_quiz_2":
 # =========================================================
 # DESAFIO — PLÁSTICOS
 # =========================================================
+import streamlit as st
+import streamlit.components.v1 as components
 
-elif cena_id == "desafio_plasticos":
+def reiniciar_historia():
+    st.session_state["cena_atual"] = "inicio"
+    st.rerun()
 
+def get_cena(cena_id):
+    # Exemplo simulado da sua função de busca de cenas
+    cenas = {
+        "pagina_01": {"tipo": "normal", "titulo": "Página 1"}
+    }
+    return cenas.get(cena_id)
+
+def renderizar_imagem(imagem_path, legenda):
+    st.image(imagem_path, caption=legenda)
+
+def renderizar_desafio_plasticos():
+    if st.session_state.pop("solicitar_reinicio_plasticos", False):
+        st.session_state["cena_atual"] = "inicio"
+        st.rerun()
+
+    html_plasticos = """
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: transparent; color: #292929; padding: 10px; }
+        .container { width: 100%; max-width: 1000px; margin: 0 auto; background: #ffffff; border: 1px solid #e7e2da; border-radius: 25px; padding: 38px 45px 35px; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05); }
+        h1 { text-align: center; font-size: 29px; line-height: 1.3; font-weight: 800; margin-bottom: 30px; color: #292929; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DESAFIO — PLÁSTICOS</h1>
+        <p>Resolva o desafio correspondente nesta etapa para continuar.</p>
+    </div>
+</body>
+</html>
+    """
+    components.html(html_plasticos, height=400, scrolling=True)
+
+
+def renderizar_desafio_polimero():
+    if st.session_state.pop("solicitar_reinicio_plasticos", False):
+        st.session_state["cena_atual"] = "inicio"
+        st.session_state["quiz_pontuacao"] = 0
+        st.session_state["quiz_respondeu"] = False
+        st.session_state["quiz_resposta_dada"] = None
+        st.session_state["quiz_finalizado"] = False
+        st.rerun()
+
+    html_desafio = """
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: transparent;
+            color: #292929;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e7e2da;
+            border-radius: 25px;
+            padding: 38px 45px 35px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            text-align: center;
+            font-size: 29px;
+            line-height: 1.3;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: #292929;
+        }
+        .karla {
+            background: #faf7f0;
+            border-left: 4px solid #d4b04d;
+            border-radius: 14px;
+            padding: 19px 22px;
+            margin-bottom: 30px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .karla strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+        }
+        h2 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-align: center;
+            margin: 27px 0 15px;
+            color: #555;
+        }
+        .banco, .numeros, .opcoes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 9px;
+        }
+        .banco {
+            margin-bottom: 32px;
+        }
+        .palavra {
+            border: 1px solid #cbb15e;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        .numeros {
+            gap: 12px;
+            margin: 22px 0 28px;
+        }
+        .numero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+            border: 2px solid #d9d7d2;
+            border-radius: 50%;
+            background: #fff;
+            font-size: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #333;
+        }
+        .numero:hover, .opcao:hover:not(:disabled) {
+            border-color: #d4b04d;
+            background: #fffaf0;
+        }
+        .numero.selecionado, .numero.concluido {
+            border-color: #d4b04d;
+            background: #d4b04d;
+            color: #fff;
+        }
+        .desafio {
+            display: none;
+            margin-top: 25px;
+            padding: 27px 28px 30px;
+            border: 1px solid #e4e0d8;
+            border-radius: 17px;
+            background: #faf9f6;
+            text-align: center;
+        }
+        .desafio.ativo {
+            display: block;
+        }
+        .pista-titulo {
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            color: #b28c24;
+        }
+        .pista {
+            font-size: 16px;
+            line-height: 1.65;
+            margin-bottom: 23px;
+        }
+        .opcao {
+            border: 1px solid #d3d0c9;
+            background: #fff;
+            border-radius: 10px;
+            padding: 11px 17px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            color: #333;
+        }
+        .opcao:disabled {
+            cursor: default;
+            opacity: 0.75;
+        }
+        .feedback {
+            margin-top: 18px;
+            font-weight: 700;
+            font-size: 15px;
+            min-height: 25px;
+        }
+        .final {
+            display: none;
+            margin-top: 25px;
+            padding: 25px 20px;
+            background: #faf7f0;
+            border: 1px solid #e4d7ae;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+        @media (max-width: 650px) {
+            body { padding: 5px; }
+            .container { padding: 28px 18px; }
+            h1 { font-size: 22px; }
+            .numero { width: 50px; height: 50px; font-size: 21px; }
+            .desafio { padding: 22px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
+        <div class="karla">
+            <strong>KARLA:</strong>
+            "Esses números não estão aqui por acaso. Cada um representa um tipo de plástico. Use as pistas para descobrir qual é qual!"
+        </div>
+        <h2>BANCO DE PALAVRAS</h2>
+        <div class="banco">
+            <span class="palavra">PP</span>
+            <span class="palavra">PET</span>
+            <span class="palavra">PVC</span>
+            <span class="palavra">PS</span>
+            <span class="palavra">LDPE</span>
+            <span class="palavra">OTHER</span>
+            <span class="palavra">HDPE</span>
+        </div>
+        <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
+        <div class="numeros">
+            <button class="numero" type="button" onclick="abrirDesafio(1)">1</button>
+            <button class="numero" type="button" onclick="abrirDesafio(2)">2</button>
+            <button class="numero" type="button" onclick="abrirDesafio(3)">3</button>
+            <button class="numero" type="button" onclick="abrirDesafio(4)">4</button>
+            <button class="numero" type="button" onclick="abrirDesafio(5)">5</button>
+            <button class="numero" type="button" onclick="abrirDesafio(6)">6</button>
+            <button class="numero" type="button" onclick="abrirDesafio(7)">7</button>
+        </div>
+        <div id="desafio" class="desafio">
+            <div id="pistaTitulo" class="pista-titulo"></div>
+            <div id="pista" class="pista"></div>
+            <div id="opcoes" class="opcoes"></div>
+            <div id="feedback" class="feedback"></div>
+        </div>
+        <div id="final" class="final">
+            <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
+            <p style="margin-top: 10px; font-size: 14px; font-weight: 400;">
+                Volte à aplicação para iniciar a história novamente.
+            </p>
+        </div>
+    </div>
+    <script>
+        const desafios = {
+            1: { pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.", resposta: "PET" },
+            2: { pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.", resposta: "HDPE" },
+            3: { pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.", resposta: "PVC" },
+            4: { pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.", resposta: "LDPE" },
+            5: { pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.", resposta: "PP" },
+            6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.", resposta: "PS" },
+            7: { pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.", resposta: "OTHER" }
+        };
+        const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
+        let numeroAtual = null;
+        const resolvidos = new Set();
+
+        function abrirDesafio(numero) {
+            numeroAtual = numero;
+            document.getElementById("desafio").classList.add("ativo");
+            document.getElementById("final").style.display = "none";
+            document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
+            document.getElementById("pista").textContent = '"' + desafios[numero].pista + '"';
+            const feedback = document.getElementById("feedback");
+            feedback.textContent = "";
+            feedback.style.color = "";
+            document.querySelectorAll(".numero").forEach((botao, i) => {
+                botao.classList.toggle("selecionado", i + 1 === numero);
+                botao.classList.toggle("concluido", resolvidos.has(i + 1));
+            });
+            const area = document.getElementById("opcoes");
+            area.innerHTML = "";
+            palavras.forEach(palavra => {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                botao.className = "opcao";
+                botao.textContent = palavra;
+                botao.onclick = () => verificarResposta(palavra);
+                area.appendChild(botao);
+            });
+            if (resolvidos.has(numero)) {
+                feedback.textContent = "✓ Você já resolveu este desafio!";
+                feedback.style.color = "#247a3d";
+                area.querySelectorAll("button").forEach(botao => {
+                    botao.disabled = true;
+                });
+            }
+        }
+
+        function verificarResposta(resposta) {
+            const feedback = document.getElementById("feedback");
+            if (resposta === desafios[numeroAtual].resposta) {
+                feedback.textContent = "✓ Acertou!";
+                feedback.style.color = "#247a3d";
+                resolvidos.add(numeroAtual);
+                document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
+                document.querySelectorAll(".opcao").forEach(botao => {
+                    botao.disabled = true;
+                });
+                if (resolvidos.size === 7) {
+                    document.getElementById("desafio").classList.remove("ativo");
+                    document.getElementById("final").style.display = "block";
+                }
+            } else {
+                feedback.textContent = "✗ Tente novamente!";
+                feedback.style.color = "#b3261e";
+            }
+        }
+    </script>
+</body>
+</html>
+"""
+    components.html(html_desafio, height=850, scrolling=True)
+
+
+# =========================================================
+# LÓGICA DE NAVEGAÇÃO DE CENAS
+# =========================================================
+
+cena_id = st.session_state.get("cena_atual", "inicio")
+
+if cena_id == "desafio_plasticos":
     renderizar_desafio_plasticos()
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
+    st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
-
-
-# =========================================================
-# DESAFIO — POLÍMERO
-# =========================================================
 
 elif cena_id == "desafio_polimero":
-
     renderizar_desafio_polimero()
-
-
-    st.markdown(
-        "<div style='height: 25px;'></div>",
-        unsafe_allow_html=True
-    )
-
-
-    col_esquerda, col_botao, col_direita = st.columns(
-        [1, 2, 1]
-    )
-
-
+    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
+    
+    col_esquerda, col_botao, col_direita = st.columns([1, 2, 1])
     with col_botao:
-
-        if st.button(
-            "↻ RECOMEÇAR HISTÓRIA",
-            key="reiniciar_polimero",
-            use_container_width=True
-        ):
-
+        if st.button("↻ RECOMEÇAR HISTÓRIA", key="reiniciar_polimero", use_container_width=True):
             reiniciar_historia()
-
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
+            
+    st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
-
-
-# =========================================================
-# CENAS NORMAIS
-# =========================================================
 
 cena = get_cena(cena_id)
 
-
-# =========================================================
-# SE NÃO ENCONTROU A CENA
-# =========================================================
-
 if cena is None:
-
-    st.error(
-        f"""
-        Cena não encontrada: `{cena_id}`
-        """
-    )
-
-    st.markdown(
-        "</div>",
-        unsafe_allow_html=True
-    )
-
+    st.error(f"Cena não encontrada: `{cena_id}`")
+    st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
-
-# =========================================================
-# TIPO: INÍCIO
-# =========================================================
-
 if cena.get("tipo") == "inicio":
-
     if cena.get("imagem"):
-
-        renderizar_imagem(
-            cena["imagem"],
-            "Capa da história"
-        )
-
-
+        renderizar_imagem(cena["imagem"], "Capa da história")
     if cena.get("titulo"):
-
-        st.markdown(
-            f"""
-            <h1 class="titulo">
-                {cena["titulo"]}
-            </h1>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-    st.markdown(
-        '<div class="linha"></div>',
-        unsafe_allow_html=True
-    )
-
-
+        st.markdown(f'<h1 class="titulo">{cena["titulo"]}</h1>', unsafe_allow_html=True)
+    
+    st.markdown('<div class="linha"></div>', unsafe_allow_html=True)
+    
     if cena.get("descricao"):
-
-        st.markdown(
-            f"""
-            <p class="subtitulo">
-                {cena["descricao"]}
-            </p>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-    col1, col2, col3 = st.columns(
-        [1, 2, 1]
-    )
-
-
+        st.markdown(f'<p class="subtitulo">{cena["descricao"]}</p>', unsafe_allow_html=True)
+        
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-
-        st.markdown(
-            '<div class="btn-comecar">',
-            unsafe_allow_html=True
-        )
-
-
-        if st.button(
-            "▶ COMEÇAR",
-            key="comecar",
-            use_container_width=True
-        ):
-
+        st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
+        if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
             st.session_state.cena_atual = "pagina_01"
-
             st.rerun()
-
-
-        st.markdown(
-            "</div>",
-            unsafe_allow_html=True
-        )
-
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================================================
 # TIPO: CENA
