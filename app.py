@@ -939,14 +939,29 @@ def renderizar_quiz(numero_pergunta):
             "</div>",
             unsafe_allow_html=True
         )
-
-import streamlit as st
+#-------------------------------------------------------------------------------
+#DESAFIO - IDENTIFIQUE O TIPO DE PLÁSTICO
+#-------------------------------------------------------------------------------
+iimport streamlit as st
 import streamlit.components.v1 as components
 
 
-def renderizar_desafio_plasticos():
+def renderizar_desafio_polimero():
 
-    # Reinicia o estado quando o botão solicitar o retorno ao início.
+    # Inicializa o estado necessário para a história.
+    valores_iniciais = {
+        "cena_atual": "inicio",
+        "quiz_pontuacao": 0,
+        "quiz_respondeu": False,
+        "quiz_resposta_dada": None,
+        "quiz_finalizado": False,
+    }
+
+    for chave, valor in valores_iniciais.items():
+        if chave not in st.session_state:
+            st.session_state[chave] = valor
+
+    # O reinício é solicitado por um parâmetro da URL.
     if st.query_params.get("reiniciar") == "true":
         st.session_state["cena_atual"] = "inicio"
         st.session_state["quiz_pontuacao"] = 0
@@ -956,6 +971,7 @@ def renderizar_desafio_plasticos():
 
         st.query_params.clear()
         st.rerun()
+        return
 
     html_desafio = """
     <!DOCTYPE html>
@@ -1375,25 +1391,16 @@ def renderizar_desafio_plasticos():
             }
 
             function voltarParaCapa() {
-                // Solicita ao componente Streamlit que reinicie a história.
-                // O evento é enviado ao pai do iframe.
-                window.parent.postMessage(
-                    {
-                        isStreamlitMessage: true,
-                        type: "streamlit:setComponentValue",
-                        value: "reiniciar"
-                    },
-                    "*"
-                );
+                // A navegação ocorre na janela principal, não dentro do iframe.
+                // O parâmetro é lido pelo Python na próxima execução do Streamlit.
+                const destino = new URL(window.location.href);
+                destino.searchParams.set("reiniciar", "true");
 
-                // Fallback: navega para a URL atual com o parâmetro de reinício.
-                // É útil quando a aplicação permite navegação no frame pai.
                 try {
-                    const url = new URL(window.location.href);
-                    url.searchParams.set("reiniciar", "true");
-                    window.location.href = url.toString();
+                    window.parent.location.href = destino.toString();
                 } catch (erro) {
-                    console.error("Não foi possível solicitar o reinício:", erro);
+                    // Alternativa para ambientes que bloqueiam o acesso ao pai.
+                    window.open(destino.toString(), "_top");
                 }
             }
         </script>
@@ -1401,7 +1408,7 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    components.html(html_desafio, height=750, scrolling=True)
+    components.html(html_desafio, height=850, scrolling=True)
 
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
