@@ -948,14 +948,28 @@ import streamlit.components.v1 as components
 
 def renderizar_desafio_polimero():
 
-    # Reinício da história pelo Streamlit
+    # Inicializa o estado do desafio
+    if "desafio_plasticos_concluido" not in st.session_state:
+        st.session_state["desafio_plasticos_concluido"] = False
+
+    # Detecta quando o desafio foi concluído dentro do HTML
+    if st.query_params.get("plasticos_concluido") == "1":
+        st.session_state["desafio_plasticos_concluido"] = True
+        del st.query_params["plasticos_concluido"]
+        st.rerun()
+
+    # Reinicia a história quando o botão do Streamlit for acionado
     if st.session_state.pop("solicitar_reinicio_plasticos", False):
         st.session_state["cena_atual"] = "inicio"
         st.session_state["quiz_pontuacao"] = 0
         st.session_state["quiz_respondeu"] = False
         st.session_state["quiz_resposta_dada"] = None
         st.session_state["quiz_finalizado"] = False
+        st.session_state["desafio_plasticos_concluido"] = False
         st.rerun()
+
+    # Informa ao HTML se o desafio já foi concluído
+    desafio_concluido = st.session_state["desafio_plasticos_concluido"]
 
     html_desafio = """
 <!DOCTYPE html>
@@ -1141,28 +1155,6 @@ def renderizar_desafio_polimero():
             line-height: 1.6;
         }
 
-        /* Botão de recomeçar: escondido até concluir os sete desafios */
-        .botao-recomecar {
-            display: none;
-            width: 100%;
-            margin-top: 25px;
-            padding: 20px;
-            background: transparent;
-            border: 1px solid #e69a00;
-            border-radius: 4px;
-            color: #d99518;
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            letter-spacing: 5px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .botao-recomecar:hover {
-            background: #fffaf0;
-        }
-
         @media (max-width: 650px) {
             body {
                 padding: 5px;
@@ -1184,11 +1176,6 @@ def renderizar_desafio_polimero():
 
             .desafio {
                 padding: 22px 15px;
-            }
-
-            .botao-recomecar {
-                font-size: 10px;
-                letter-spacing: 3px;
             }
         }
     </style>
@@ -1243,15 +1230,6 @@ def renderizar_desafio_polimero():
             <p style="margin-top: 10px; font-size: 14px; font-weight: 400;">
                 Você concluiu todos os desafios!
             </p>
-
-            <button
-                id="botaoRecomecar"
-                class="botao-recomecar"
-                type="button"
-                onclick="recomecarHistoria()"
-            >
-                ↻ RECOMEÇAR HISTÓRIA
-            </button>
         </div>
 
     </div>
@@ -1262,32 +1240,26 @@ def renderizar_desafio_polimero():
                 pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
                 resposta: "PET"
             },
-
             2: {
                 pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
                 resposta: "HDPE"
             },
-
             3: {
                 pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
                 resposta: "PVC"
             },
-
             4: {
                 pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
                 resposta: "LDPE"
             },
-
             5: {
                 pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
                 resposta: "PP"
             },
-
             6: {
                 pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
                 resposta: "PS"
             },
-
             7: {
                 pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
                 resposta: "OTHER"
@@ -1297,14 +1269,15 @@ def renderizar_desafio_polimero():
         const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
 
         let numeroAtual = null;
-
         const resolvidos = new Set();
+
+        // O Streamlit informa se os desafios já foram concluídos.
+        const desafioJaConcluido = __DESAFIO_CONCLUIDO__;
 
         function abrirDesafio(numero) {
             numeroAtual = numero;
 
             document.getElementById("desafio").classList.add("ativo");
-
             document.getElementById("final").style.display = "none";
 
             document.getElementById("pistaTitulo").textContent =
@@ -1314,7 +1287,6 @@ def renderizar_desafio_polimero():
                 '"' + desafios[numero].pista + '"';
 
             const feedback = document.getElementById("feedback");
-
             feedback.textContent = "";
             feedback.style.color = "";
 
@@ -1324,7 +1296,6 @@ def renderizar_desafio_polimero():
             });
 
             const area = document.getElementById("opcoes");
-
             area.innerHTML = "";
 
             palavras.forEach(palavra => {
@@ -1333,20 +1304,10 @@ def renderizar_desafio_polimero():
                 botao.type = "button";
                 botao.className = "opcao";
                 botao.textContent = palavra;
-
                 botao.onclick = () => verificarResposta(palavra);
 
                 area.appendChild(botao);
             });
-
-            if (resolvidos.has(numero)) {
-                feedback.textContent = "✓ Você já resolveu este desafio!";
-                feedback.style.color = "#247a3d";
-
-                area.querySelectorAll("button").forEach(botao => {
-                    botao.disabled = true;
-                });
-            }
         }
 
         function verificarResposta(resposta) {
@@ -1366,12 +1327,7 @@ def renderizar_desafio_polimero():
                 });
 
                 if (resolvidos.size === 7) {
-                    document.getElementById("desafio").classList.remove("ativo");
-
-                    document.getElementById("final").style.display = "block";
-
-                    document.getElementById("botaoRecomecar").style.display =
-                        "block";
+                    concluirDesafio();
                 }
 
             } else {
@@ -1380,8 +1336,28 @@ def renderizar_desafio_polimero():
             }
         }
 
-        function recomecarHistoria() {
-            window.parent.location.reload();
+        function concluirDesafio() {
+            document.getElementById("desafio").classList.remove("ativo");
+            document.getElementById("final").style.display = "block";
+
+            // Comunica a conclusão ao Streamlit pela URL da página principal.
+            try {
+                const url = new URL(window.parent.location.href);
+                url.searchParams.set("plasticos_concluido", "1");
+                window.parent.location.href = url.toString();
+            } catch (erro) {
+                document.getElementById("final").style.display = "block";
+            }
+        }
+
+        // Mostra a mensagem final novamente após o Streamlit atualizar a página.
+        if (desafioJaConcluido) {
+            document.getElementById("final").style.display = "block";
+            document.querySelector(".numeros").style.display = "none";
+            document.querySelector(".banco").style.display = "none";
+            document.querySelectorAll("h2").forEach(titulo => {
+                titulo.style.display = "none";
+            });
         }
     </script>
 
@@ -1389,7 +1365,49 @@ def renderizar_desafio_polimero():
 </html>
 """
 
+    # Transfere o estado do Streamlit para o JavaScript
+    html_desafio = html_desafio.replace(
+        "__DESAFIO_CONCLUIDO__",
+        str(desafio_concluido).lower()
+    )
+
     components.html(html_desafio, height=850, scrolling=True)
+
+    # O botão do Streamlit só aparece depois da conclusão.
+    if st.session_state["desafio_plasticos_concluido"]:
+
+        st.markdown(
+            """
+            <style>
+            .st-key-botao_recomecar_plasticos button {
+                background: transparent !important;
+                color: #d99518 !important;
+                border: 1px solid #e69a00 !important;
+                border-radius: 4px !important;
+                padding: 14px 20px !important;
+                font-size: 12px !important;
+                letter-spacing: 4px !important;
+                text-transform: uppercase !important;
+                width: 100%;
+            }
+
+            .st-key-botao_recomecar_plasticos button:hover {
+                background: #fffaf0 !important;
+                color: #b78316 !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+        with st.container(key="botao_recomecar_plasticos"):
+            if st.button(
+                "↻ RECOMEÇAR HISTÓRIA",
+                key="recomecar_historia_plasticos",
+                use_container_width=True
+            ):
+                st.session_state["solicitar_reinicio_plasticos"] = True
+                st.rerun()
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
