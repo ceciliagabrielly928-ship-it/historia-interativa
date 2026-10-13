@@ -940,21 +940,20 @@ def renderizar_quiz(numero_pergunta):
             unsafe_allow_html=True
         )
 
-#DESAFIO DECODIFICAR
-
 import streamlit as st
 import streamlit.components.v1 as components
 
 
 def renderizar_desafio_plasticos():
 
-    # Verifica se o parâmetro de recomeçar foi passado para reiniciar a história
+    # Reinicia o estado quando o botão solicitar o retorno ao início.
     if st.query_params.get("reiniciar") == "true":
         st.session_state["cena_atual"] = "inicio"
         st.session_state["quiz_pontuacao"] = 0
         st.session_state["quiz_respondeu"] = False
         st.session_state["quiz_resposta_dada"] = None
         st.session_state["quiz_finalizado"] = False
+
         st.query_params.clear()
         st.rerun()
 
@@ -962,396 +961,442 @@ def renderizar_desafio_plasticos():
     <!DOCTYPE html>
     <html lang="pt-BR">
     <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: transparent;
-            color: #292929;
-            padding: 10px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            background: #ffffff;
-            border: 1px solid #e7e2da;
-            border-radius: 25px;
-            padding: 38px 45px 35px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
-        }
-
-        h1 {
-            position: relative;
-            text-align: center;
-            font-size: 29px;
-            line-height: 1.3;
-            font-weight: 800;
-            margin-bottom: 43px;
-            color: #292929;
-        }
-
-        h1::after {
-            content: "";
-            position: absolute;
-            width: 55px;
-            height: 3px;
-            border-radius: 3px;
-            background: #d4b04d;
-            bottom: -19px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .karla {
-            background: #faf7f0;
-            border-left: 4px solid #d4b04d;
-            border-radius: 14px;
-            padding: 19px 22px;
-            margin-bottom: 30px;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .karla strong {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 13px;
-            letter-spacing: 1.5px;
-        }
-
-        h2 {
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: 3px;
-            text-align: center;
-            margin: 27px 0 15px;
-            color: #555555;
-        }
-
-        .banco {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 9px;
-            justify-content: center;
-            margin-bottom: 32px;
-        }
-
-        .palavra {
-            background: #ffffff;
-            border: 1px solid #cbb15e;
-            border-radius: 999px;
-            padding: 8px 16px;
-            font-size: 13px;
-        }
-
-        .numeros {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 22px 0 28px;
-        }
-
-        .numero {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 72px;
-            height: 72px;
-            border: 2px solid #d9d7d2;
-            border-radius: 50%;
-            background: #ffffff;
-            font-size: 28px;
-            font-weight: 700;
-            cursor: pointer;
-            color: #333333;
-        }
-
-        .numero:hover {
-            border-color: #d4b04d;
-            background: #fffaf0;
-        }
-
-        .numero.selecionado,
-        .numero.concluido {
-            border-color: #d4b04d;
-            background: #d4b04d;
-            color: #ffffff;
-        }
-
-        .desafio {
-            display: none;
-            margin-top: 25px;
-            padding: 27px 28px 30px;
-            border: 1px solid #e4e0d8;
-            border-radius: 17px;
-            background: #faf9f6;
-            text-align: center;
-        }
-
-        .desafio.ativo {
-            display: block;
-        }
-
-        .pista-titulo {
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 2px;
-            margin-bottom: 14px;
-            color: #d0ad4c;
-        }
-
-        .pista {
-            font-size: 16px;
-            line-height: 1.65;
-            margin-bottom: 23px;
-        }
-
-        .opcoes {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 9px;
-        }
-
-        .opcao {
-            border: 1px solid #d3d0c9;
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 11px 17px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 13px;
-            color: #333333;
-        }
-
-        .opcao:hover:not(:disabled) {
-            border-color: #d4b04d;
-            background: #fffaf0;
-        }
-
-        .opcao:disabled {
-            cursor: default;
-            opacity: 0.75;
-        }
-
-        .feedback {
-            margin-top: 18px;
-            font-weight: 700;
-            font-size: 15px;
-            min-height: 25px;
-        }
-
-        /* CARD FINAL — SÓ É EXIBIDO QUANDO RESOLVE OS 7 PLÁSTICOS */
-        .final {
-            display: none;
-            margin-top: 25px;
-            padding: 25px 20px;
-            background: #faf7f0;
-            border: 1px solid #e4d7ae;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 700;
-            line-height: 1.6;
-        }
-
-        /* BOTÃO COM O DESIGN EXATO DA SUA APLICAÇÃO */
-        .btn-recomecar-container {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .btn-recomecar {
-            background-color: #ffffff;
-            color: #d4b04d;
-            border: 2px solid #d4b04d;
-            border-radius: 8px;
-            padding: 12px 30px;
-            font-size: 14px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-        }
-
-        .btn-recomecar:hover {
-            background-color: #d4b04d;
-            color: #ffffff;
-        }
-
-        @media (max-width: 650px) {
             body {
-                padding: 5px;
+                font-family: Arial, sans-serif;
+                background: transparent;
+                color: #292929;
+                padding: 10px;
             }
 
             .container {
-                padding: 28px 18px;
+                width: 100%;
+                max-width: 1000px;
+                margin: 0 auto;
+                background: #ffffff;
+                border: 1px solid #e7e2da;
+                border-radius: 25px;
+                padding: 38px 45px 35px;
+                box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
             }
 
             h1 {
-                font-size: 22px;
+                position: relative;
+                text-align: center;
+                font-size: 29px;
+                line-height: 1.3;
+                font-weight: 800;
+                margin-bottom: 43px;
+                color: #292929;
+            }
+
+            h1::after {
+                content: "";
+                position: absolute;
+                width: 55px;
+                height: 3px;
+                border-radius: 3px;
+                background: #d4b04d;
+                bottom: -19px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .karla {
+                background: #faf7f0;
+                border-left: 4px solid #d4b04d;
+                border-radius: 14px;
+                padding: 19px 22px;
+                margin-bottom: 30px;
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .karla strong {
+                display: block;
+                margin-bottom: 5px;
+                font-size: 13px;
+                letter-spacing: 1.5px;
+            }
+
+            h2 {
+                font-size: 15px;
+                font-weight: 800;
+                letter-spacing: 3px;
+                text-align: center;
+                margin: 27px 0 15px;
+                color: #555555;
+            }
+
+            .banco {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 9px;
+                justify-content: center;
+                margin-bottom: 32px;
+            }
+
+            .palavra {
+                background: #ffffff;
+                border: 1px solid #cbb15e;
+                border-radius: 999px;
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .numeros {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin: 22px 0 28px;
             }
 
             .numero {
-                width: 54px;
-                height: 54px;
-                font-size: 23px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 72px;
+                height: 72px;
+                border: 2px solid #d9d7d2;
+                border-radius: 50%;
+                background: #ffffff;
+                font-size: 28px;
+                font-weight: 700;
+                cursor: pointer;
+                color: #333333;
+            }
+
+            .numero:hover {
+                border-color: #d4b04d;
+                background: #fffaf0;
+            }
+
+            .numero.selecionado,
+            .numero.concluido {
+                border-color: #d4b04d;
+                background: #d4b04d;
+                color: #ffffff;
             }
 
             .desafio {
-                padding: 22px 15px;
+                display: none;
+                margin-top: 25px;
+                padding: 27px 28px 30px;
+                border: 1px solid #e4e0d8;
+                border-radius: 17px;
+                background: #faf9f6;
+                text-align: center;
             }
-        }
-    </style>
+
+            .desafio.ativo {
+                display: block;
+            }
+
+            .pista-titulo {
+                font-weight: 800;
+                font-size: 14px;
+                letter-spacing: 2px;
+                margin-bottom: 14px;
+                color: #d0ad4c;
+            }
+
+            .pista {
+                font-size: 16px;
+                line-height: 1.65;
+                margin-bottom: 23px;
+            }
+
+            .opcoes {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 9px;
+            }
+
+            .opcao {
+                border: 1px solid #d3d0c9;
+                background: #ffffff;
+                border-radius: 10px;
+                padding: 11px 17px;
+                cursor: pointer;
+                font-weight: 700;
+                font-size: 13px;
+                color: #333333;
+            }
+
+            .opcao:hover:not(:disabled) {
+                border-color: #d4b04d;
+                background: #fffaf0;
+            }
+
+            .opcao:disabled {
+                cursor: default;
+                opacity: 0.75;
+            }
+
+            .feedback {
+                margin-top: 18px;
+                font-weight: 700;
+                font-size: 15px;
+                min-height: 25px;
+            }
+
+            .final {
+                display: none;
+                margin-top: 25px;
+                padding: 25px 20px;
+                background: #faf7f0;
+                border: 1px solid #e4d7ae;
+                border-radius: 12px;
+                text-align: center;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 1.6;
+            }
+
+            .btn-recomecar-container {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .btn-recomecar {
+                background-color: #ffffff;
+                color: #d4b04d;
+                border: 2px solid #d4b04d;
+                border-radius: 8px;
+                padding: 12px 30px;
+                font-size: 14px;
+                font-weight: 800;
+                letter-spacing: 1.5px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-transform: uppercase;
+            }
+
+            .btn-recomecar:hover {
+                background-color: #d4b04d;
+                color: #ffffff;
+            }
+
+            @media (max-width: 650px) {
+                body {
+                    padding: 5px;
+                }
+
+                .container {
+                    padding: 28px 18px;
+                }
+
+                h1 {
+                    font-size: 22px;
+                }
+
+                .numero {
+                    width: 54px;
+                    height: 54px;
+                    font-size: 23px;
+                }
+
+                .desafio {
+                    padding: 22px 15px;
+                }
+            }
+        </style>
     </head>
 
     <body>
-    <div class="container">
+        <div class="container">
 
-        <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
+            <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
 
-        <div class="karla">
-            <strong>KARLA:</strong>
-            "Esses números não estão aqui por acaso.
-            Cada um representa um tipo de plástico.
-            Use as pistas para descobrir qual é qual!"
-        </div>
-
-        <h2>BANCO DE PALAVRAS</h2>
-
-        <div class="banco">
-            <span class="palavra">PP</span>
-            <span class="palavra">PET</span>
-            <span class="palavra">PVC</span>
-            <span class="palavra">PS</span>
-            <span class="palavra">LDPE</span>
-            <span class="palavra">OTHER</span>
-            <span class="palavra">HDPE</span>
-        </div>
-
-        <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
-
-        <div class="numeros">
-            <button class="numero" onclick="abrirDesafio(1)">1</button>
-            <button class="numero" onclick="abrirDesafio(2)">2</button>
-            <button class="numero" onclick="abrirDesafio(3)">3</button>
-            <button class="numero" onclick="abrirDesafio(4)">4</button>
-            <button class="numero" onclick="abrirDesafio(5)">5</button>
-            <button class="numero" onclick="abrirDesafio(6)">6</button>
-            <button class="numero" onclick="abrirDesafio(7)">7</button>
-        </div>
-
-        <div id="desafio" class="desafio">
-            <div class="pista-titulo" id="pistaTitulo"></div>
-            <div class="pista" id="pista"></div>
-            <div class="opcoes" id="opcoes"></div>
-            <div class="feedback" id="feedback"></div>
-        </div>
-
-        <div id="final" class="final">
-            <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
-            
-            <div class="btn-recomecar-container">
-                <button class="btn-recomecar" onclick="voltarParaCapa()">
-                    ↻ RECOMEÇAR HISTÓRIA
-                </button>
+            <div class="karla">
+                <strong>KARLA:</strong>
+                "Esses números não estão aqui por acaso.
+                Cada um representa um tipo de plástico.
+                Use as pistas para descobrir qual é qual!"
             </div>
+
+            <h2>BANCO DE PALAVRAS</h2>
+
+            <div class="banco">
+                <span class="palavra">PP</span>
+                <span class="palavra">PET</span>
+                <span class="palavra">PVC</span>
+                <span class="palavra">PS</span>
+                <span class="palavra">LDPE</span>
+                <span class="palavra">OTHER</span>
+                <span class="palavra">HDPE</span>
+            </div>
+
+            <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
+
+            <div class="numeros">
+                <button class="numero" onclick="abrirDesafio(1)">1</button>
+                <button class="numero" onclick="abrirDesafio(2)">2</button>
+                <button class="numero" onclick="abrirDesafio(3)">3</button>
+                <button class="numero" onclick="abrirDesafio(4)">4</button>
+                <button class="numero" onclick="abrirDesafio(5)">5</button>
+                <button class="numero" onclick="abrirDesafio(6)">6</button>
+                <button class="numero" onclick="abrirDesafio(7)">7</button>
+            </div>
+
+            <div id="desafio" class="desafio">
+                <div class="pista-titulo" id="pistaTitulo"></div>
+                <div class="pista" id="pista"></div>
+                <div class="opcoes" id="opcoes"></div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <div id="final" class="final">
+                <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
+
+                <div class="btn-recomecar-container">
+                    <button
+                        type="button"
+                        class="btn-recomecar"
+                        onclick="voltarParaCapa()">
+                        ↻ RECOMEÇAR HISTÓRIA
+                    </button>
+                </div>
+            </div>
+
         </div>
 
-    </div>
-
-    <script>
-        const desafios = {
-            1: { pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.", resposta: "PET" },
-            2: { pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.", resposta: "HDPE" },
-            3: { pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.", resposta: "PVC" },
-            4: { pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.", resposta: "LDPE" },
-            5: { pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.", resposta: "PP" },
-            6: { pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.", resposta: "PS" },
-            7: { pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.", resposta: "OTHER" }
-        };
-
-        const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
-        let numeroAtual = null;
-        let resolvidos = [];
-
-        function abrirDesafio(numero) {
-            numeroAtual = numero;
-            const d = desafios[numero];
-
-            document.getElementById("desafio").classList.add("ativo");
-            document.getElementById("final").style.display = "none";
-            document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
-            document.getElementById("pista").textContent = '"' + d.pista + '"';
-            document.getElementById("feedback").textContent = "";
-
-            criarOpcoes();
-
-            document.querySelectorAll(".numero").forEach((botao, i) => {
-                botao.classList.remove("selecionado");
-                if (i + 1 === numero) {
-                    botao.classList.add("selecionado");
+        <script>
+            const desafios = {
+                1: {
+                    pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
+                    resposta: "PET"
+                },
+                2: {
+                    pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
+                    resposta: "HDPE"
+                },
+                3: {
+                    pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
+                    resposta: "PVC"
+                },
+                4: {
+                    pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
+                    resposta: "LDPE"
+                },
+                5: {
+                    pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
+                    resposta: "PP"
+                },
+                6: {
+                    pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
+                    resposta: "PS"
+                },
+                7: {
+                    pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
+                    resposta: "OTHER"
                 }
-            });
-        }
+            };
 
-        function criarOpcoes() {
-            const area = document.getElementById("opcoes");
-            area.innerHTML = "";
+            const palavras = [
+                "PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"
+            ];
 
-            palavras.forEach(palavra => {
-                const botao = document.createElement("button");
-                botao.className = "opcao";
-                botao.textContent = palavra;
-                botao.onclick = () => verificarResposta(palavra);
-                area.appendChild(botao);
-            });
-        }
+            let numeroAtual = null;
+            const resolvidos = new Set();
 
-        function verificarResposta(resposta) {
-            const correta = desafios[numeroAtual].resposta;
-            const feedback = document.getElementById("feedback");
+            function abrirDesafio(numero) {
+                numeroAtual = numero;
+                const d = desafios[numero];
 
-            if (resposta === correta) {
-                feedback.textContent = "✓ Acertou!";
-                feedback.style.color = "#247a3d";
+                document.getElementById("desafio").classList.add("ativo");
+                document.getElementById("final").style.display = "none";
+                document.getElementById("pistaTitulo").textContent =
+                    "PISTA " + numero;
+                document.getElementById("pista").textContent =
+                    '"' + d.pista + '"';
+                document.getElementById("feedback").textContent = "";
 
-                if (!resolvidos.includes(numeroAtual)) {
-                    resolvidos.push(numeroAtual);
-                }
+                criarOpcoes();
 
-                document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
-                document.querySelectorAll(".opcao").forEach(botao => botao.disabled = true);
-
-                if (resolvidos.length === 7) {
-                    document.getElementById("desafio").classList.remove("ativo");
-                    document.getElementById("final").style.display = "block";
-                }
-            } else {
-                feedback.textContent = "✗ Tente novamente!";
-                feedback.style.color = "#b3261e";
+                document.querySelectorAll(".numero").forEach((botao, i) => {
+                    botao.classList.toggle("selecionado", i + 1 === numero);
+                    botao.classList.toggle("concluido", resolvidos.has(i + 1));
+                });
             }
-        }
 
-        function voltarParaCapa() {
-            // Força o recarregamento na janela mãe enviando a query string para o Streamlit
-            window.top.location.search = '?reiniciar=true';
-        }
-    </script>
+            function criarOpcoes() {
+                const area = document.getElementById("opcoes");
+                area.innerHTML = "";
 
+                palavras.forEach(palavra => {
+                    const botao = document.createElement("button");
+                    botao.type = "button";
+                    botao.className = "opcao";
+                    botao.textContent = palavra;
+                    botao.onclick = () => verificarResposta(palavra);
+                    area.appendChild(botao);
+                });
+            }
+
+            function verificarResposta(resposta) {
+                const correta = desafios[numeroAtual].resposta;
+                const feedback = document.getElementById("feedback");
+
+                if (resposta === correta) {
+                    feedback.textContent = "✓ Acertou!";
+                    feedback.style.color = "#247a3d";
+
+                    resolvidos.add(numeroAtual);
+
+                    document.querySelectorAll(".numero")[numeroAtual - 1]
+                        .classList.add("concluido");
+
+                    document.querySelectorAll(".opcao").forEach(botao => {
+                        botao.disabled = true;
+                    });
+
+                    if (resolvidos.size === 7) {
+                        document.getElementById("desafio")
+                            .classList.remove("ativo");
+                        document.getElementById("final").style.display = "block";
+                    }
+                } else {
+                    feedback.textContent = "✗ Tente novamente!";
+                    feedback.style.color = "#b3261e";
+                }
+            }
+
+            function voltarParaCapa() {
+                // Solicita ao componente Streamlit que reinicie a história.
+                // O evento é enviado ao pai do iframe.
+                window.parent.postMessage(
+                    {
+                        isStreamlitMessage: true,
+                        type: "streamlit:setComponentValue",
+                        value: "reiniciar"
+                    },
+                    "*"
+                );
+
+                // Fallback: navega para a URL atual com o parâmetro de reinício.
+                // É útil quando a aplicação permite navegação no frame pai.
+                try {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("reiniciar", "true");
+                    window.location.href = url.toString();
+                } catch (erro) {
+                    console.error("Não foi possível solicitar o reinício:", erro);
+                }
+            }
+        </script>
     </body>
     </html>
     """
