@@ -942,13 +942,43 @@ def renderizar_quiz(numero_pergunta):
 #-------------------------------------------------------------------------------
 #DESAFIO - IDENTIFIQUE O TIPO DE PLÁSTICO
 #-------------------------------------------------------------------------------
+                    pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
+
+                    resposta: "LDPE"
+
+                },
+
+                5: {
+
+                    pista: "Posso ser encontrado em potes, tampas e embalagens de alimentos. Sou conhecido por resistir bem ao calor.",
+
+                    resposta: "PP"
+
+                },
+
+                6: {
+
+                    pista: "Sou usado em alguns copos descartáveis, bandejas e embalagens. Meu nome começa com 'poliestireno'.",
+
+                    resposta: "PS"
+
+                },
+
+                7: {
+
+                    pista: "Não sou um único tipo de plástico. Essa categoria reúne outros plásticos que não se encaixam nos seis anteriores.",
+
+                    resposta: "OTHER"
+
+                }
+
+            };
 
             const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
 
             let numeroAtual = null;
 
             const resolvidos = new Set();
-
 
             function abrirDesafio(numero) {
 
@@ -964,7 +994,6 @@ def renderizar_quiz(numero_pergunta):
 
                 document.getElementById("feedback").textContent = "";
 
-
                 document.querySelectorAll(".numero").forEach((botao, i) => {
 
                     botao.classList.toggle("selecionado", i + 1 === numero);
@@ -973,11 +1002,9 @@ def renderizar_quiz(numero_pergunta):
 
                 });
 
-
                 const area = document.getElementById("opcoes");
 
                 area.innerHTML = "";
-
 
                 palavras.forEach(palavra => {
 
@@ -995,7 +1022,6 @@ def renderizar_quiz(numero_pergunta):
 
                 });
 
-
                 if (resolvidos.has(numero)) {
 
                     document.getElementById("feedback").textContent = "✓ Você já resolveu este desafio!";
@@ -1008,11 +1034,9 @@ def renderizar_quiz(numero_pergunta):
 
             }
 
-
             function verificarResposta(resposta) {
 
                 const feedback = document.getElementById("feedback");
-
 
                 if (resposta === desafios[numeroAtual].resposta) {
 
@@ -1022,11 +1046,9 @@ def renderizar_quiz(numero_pergunta):
 
                     resolvidos.add(numeroAtual);
 
-
                     document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
 
                     document.querySelectorAll(".opcao").forEach(botao => botao.disabled = true);
-
 
                     if (resolvidos.size === 7) {
 
@@ -1047,15 +1069,6 @@ def renderizar_quiz(numero_pergunta):
             }
 
         </script>
-
-    </body>
-
-    </html>
-
-    """
-
-
-    components.html(html_desafio, height=850, scrolling=True)
 
 # =========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
