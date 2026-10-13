@@ -1777,10 +1777,6 @@ elif cena_id == "desafio_quiz_2":
 def renderizar_desafio_lacuna_polimero():
     if st.session_state.pop("solicitar_reinicio_plasticos", False):
         st.session_state["cena_atual"] = "inicio"
-        st.session_state["quiz_pontuacao"] = 0
-        st.session_state["quiz_respondeu"] = False
-        st.session_state["quiz_resposta_dada"] = None
-        st.session_state["quiz_finalizado"] = False
         st.rerun()
 
     html_desafio = """
