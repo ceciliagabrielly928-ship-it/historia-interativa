@@ -945,33 +945,16 @@ def renderizar_quiz(numero_pergunta):
 iimport streamlit as st
 import streamlit.components.v1 as components
 
-
 def renderizar_desafio_polimero():
 
-    # Inicializa o estado necessário para a história.
-    valores_iniciais = {
-        "cena_atual": "inicio",
-        "quiz_pontuacao": 0,
-        "quiz_respondeu": False,
-        "quiz_resposta_dada": None,
-        "quiz_finalizado": False,
-    }
-
-    for chave, valor in valores_iniciais.items():
-        if chave not in st.session_state:
-            st.session_state[chave] = valor
-
-    # O reinício é solicitado por um parâmetro da URL.
-    if st.query_params.get("reiniciar") == "true":
+    # O botão nativo de reinício é processado pelo Streamlit.
+    if st.session_state.pop("solicitar_reinicio_plasticos", False):
         st.session_state["cena_atual"] = "inicio"
         st.session_state["quiz_pontuacao"] = 0
         st.session_state["quiz_respondeu"] = False
         st.session_state["quiz_resposta_dada"] = None
         st.session_state["quiz_finalizado"] = False
-
-        st.query_params.clear()
         st.rerun()
-        return
 
     html_desafio = """
     <!DOCTYPE html>
@@ -979,13 +962,8 @@ def renderizar_desafio_polimero():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
+            * { box-sizing: border-box; margin: 0; padding: 0; }
 
             body {
                 font-family: Arial, sans-serif;
@@ -1002,29 +980,16 @@ def renderizar_desafio_polimero():
                 border: 1px solid #e7e2da;
                 border-radius: 25px;
                 padding: 38px 45px 35px;
-                box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
+                box-shadow: 0 8px 28px rgba(0,0,0,.05);
             }
 
             h1 {
-                position: relative;
                 text-align: center;
                 font-size: 29px;
                 line-height: 1.3;
                 font-weight: 800;
                 margin-bottom: 43px;
                 color: #292929;
-            }
-
-            h1::after {
-                content: "";
-                position: absolute;
-                width: 55px;
-                height: 3px;
-                border-radius: 3px;
-                background: #d4b04d;
-                bottom: -19px;
-                left: 50%;
-                transform: translateX(-50%);
             }
 
             .karla {
@@ -1050,19 +1015,19 @@ def renderizar_desafio_polimero():
                 letter-spacing: 3px;
                 text-align: center;
                 margin: 27px 0 15px;
-                color: #555555;
+                color: #555;
             }
 
-            .banco {
+            .banco, .numeros, .opcoes {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 9px;
                 justify-content: center;
-                margin-bottom: 32px;
+                gap: 9px;
             }
 
+            .banco { margin-bottom: 32px; }
+
             .palavra {
-                background: #ffffff;
                 border: 1px solid #cbb15e;
                 border-radius: 999px;
                 padding: 8px 16px;
@@ -1070,9 +1035,6 @@ def renderizar_desafio_polimero():
             }
 
             .numeros {
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
                 gap: 12px;
                 margin: 22px 0 28px;
             }
@@ -1085,23 +1047,23 @@ def renderizar_desafio_polimero():
                 height: 72px;
                 border: 2px solid #d9d7d2;
                 border-radius: 50%;
-                background: #ffffff;
+                background: #fff;
                 font-size: 28px;
                 font-weight: 700;
                 cursor: pointer;
-                color: #333333;
+                color: #333;
             }
 
-            .numero:hover {
+            .numero:hover,
+            .opcao:hover:not(:disabled) {
                 border-color: #d4b04d;
                 background: #fffaf0;
             }
 
-            .numero.selecionado,
-            .numero.concluido {
+            .numero.selecionado, .numero.concluido {
                 border-color: #d4b04d;
                 background: #d4b04d;
-                color: #ffffff;
+                color: #fff;
             }
 
             .desafio {
@@ -1114,16 +1076,14 @@ def renderizar_desafio_polimero():
                 text-align: center;
             }
 
-            .desafio.ativo {
-                display: block;
-            }
+            .desafio.ativo { display: block; }
 
             .pista-titulo {
                 font-weight: 800;
                 font-size: 14px;
                 letter-spacing: 2px;
                 margin-bottom: 14px;
-                color: #d0ad4c;
+                color: #b28c24;
             }
 
             .pista {
@@ -1132,33 +1092,18 @@ def renderizar_desafio_polimero():
                 margin-bottom: 23px;
             }
 
-            .opcoes {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 9px;
-            }
-
             .opcao {
                 border: 1px solid #d3d0c9;
-                background: #ffffff;
+                background: #fff;
                 border-radius: 10px;
                 padding: 11px 17px;
                 cursor: pointer;
                 font-weight: 700;
                 font-size: 13px;
-                color: #333333;
+                color: #333;
             }
 
-            .opcao:hover:not(:disabled) {
-                border-color: #d4b04d;
-                background: #fffaf0;
-            }
-
-            .opcao:disabled {
-                cursor: default;
-                opacity: 0.75;
-            }
+            .opcao:disabled { cursor: default; opacity: .75; }
 
             .feedback {
                 margin-top: 18px;
@@ -1180,60 +1125,18 @@ def renderizar_desafio_polimero():
                 line-height: 1.6;
             }
 
-            .btn-recomecar-container {
-                margin-top: 20px;
-                display: flex;
-                justify-content: center;
-            }
-
-            .btn-recomecar {
-                background-color: #ffffff;
-                color: #d4b04d;
-                border: 2px solid #d4b04d;
-                border-radius: 8px;
-                padding: 12px 30px;
-                font-size: 14px;
-                font-weight: 800;
-                letter-spacing: 1.5px;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                text-transform: uppercase;
-            }
-
-            .btn-recomecar:hover {
-                background-color: #d4b04d;
-                color: #ffffff;
-            }
-
             @media (max-width: 650px) {
-                body {
-                    padding: 5px;
-                }
-
-                .container {
-                    padding: 28px 18px;
-                }
-
-                h1 {
-                    font-size: 22px;
-                }
-
-                .numero {
-                    width: 54px;
-                    height: 54px;
-                    font-size: 23px;
-                }
-
-                .desafio {
-                    padding: 22px 15px;
-                }
+                body { padding: 5px; }
+                .container { padding: 28px 18px; }
+                h1 { font-size: 22px; }
+                .numero { width: 54px; height: 54px; font-size: 23px; }
+                .desafio { padding: 22px 15px; }
             }
         </style>
     </head>
 
     <body>
         <div class="container">
-
             <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
 
             <div class="karla">
@@ -1244,7 +1147,6 @@ def renderizar_desafio_polimero():
             </div>
 
             <h2>BANCO DE PALAVRAS</h2>
-
             <div class="banco">
                 <span class="palavra">PP</span>
                 <span class="palavra">PET</span>
@@ -1256,7 +1158,6 @@ def renderizar_desafio_polimero():
             </div>
 
             <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
-
             <div class="numeros">
                 <button class="numero" onclick="abrirDesafio(1)">1</button>
                 <button class="numero" onclick="abrirDesafio(2)">2</button>
@@ -1268,25 +1169,18 @@ def renderizar_desafio_polimero():
             </div>
 
             <div id="desafio" class="desafio">
-                <div class="pista-titulo" id="pistaTitulo"></div>
-                <div class="pista" id="pista"></div>
-                <div class="opcoes" id="opcoes"></div>
-                <div class="feedback" id="feedback"></div>
+                <div id="pistaTitulo" class="pista-titulo"></div>
+                <div id="pista" class="pista"></div>
+                <div id="opcoes" class="opcoes"></div>
+                <div id="feedback" class="feedback"></div>
             </div>
 
             <div id="final" class="final">
                 <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
-
-                <div class="btn-recomecar-container">
-                    <button
-                        type="button"
-                        class="btn-recomecar"
-                        onclick="voltarParaCapa()">
-                        ↻ RECOMEÇAR HISTÓRIA
-                    </button>
-                </div>
+                <p style="margin-top:10px;font-size:14px;font-weight:400;">
+                    Volte à aplicação para iniciar a história novamente.
+                </p>
             </div>
-
         </div>
 
         <script>
@@ -1321,34 +1215,23 @@ def renderizar_desafio_polimero():
                 }
             };
 
-            const palavras = [
-                "PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"
-            ];
-
+            const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
             let numeroAtual = null;
             const resolvidos = new Set();
 
             function abrirDesafio(numero) {
                 numeroAtual = numero;
-                const d = desafios[numero];
-
                 document.getElementById("desafio").classList.add("ativo");
                 document.getElementById("final").style.display = "none";
-                document.getElementById("pistaTitulo").textContent =
-                    "PISTA " + numero;
-                document.getElementById("pista").textContent =
-                    '"' + d.pista + '"';
+                document.getElementById("pistaTitulo").textContent = "PISTA " + numero;
+                document.getElementById("pista").textContent = '"' + desafios[numero].pista + '"';
                 document.getElementById("feedback").textContent = "";
-
-                criarOpcoes();
 
                 document.querySelectorAll(".numero").forEach((botao, i) => {
                     botao.classList.toggle("selecionado", i + 1 === numero);
                     botao.classList.toggle("concluido", resolvidos.has(i + 1));
                 });
-            }
 
-            function criarOpcoes() {
                 const area = document.getElementById("opcoes");
                 area.innerHTML = "";
 
@@ -1360,47 +1243,32 @@ def renderizar_desafio_polimero():
                     botao.onclick = () => verificarResposta(palavra);
                     area.appendChild(botao);
                 });
+
+                if (resolvidos.has(numero)) {
+                    document.getElementById("feedback").textContent = "✓ Você já resolveu este desafio!";
+                    document.getElementById("feedback").style.color = "#247a3d";
+                    area.querySelectorAll("button").forEach(botao => botao.disabled = true);
+                }
             }
 
             function verificarResposta(resposta) {
-                const correta = desafios[numeroAtual].resposta;
                 const feedback = document.getElementById("feedback");
 
-                if (resposta === correta) {
+                if (resposta === desafios[numeroAtual].resposta) {
                     feedback.textContent = "✓ Acertou!";
                     feedback.style.color = "#247a3d";
-
                     resolvidos.add(numeroAtual);
 
-                    document.querySelectorAll(".numero")[numeroAtual - 1]
-                        .classList.add("concluido");
-
-                    document.querySelectorAll(".opcao").forEach(botao => {
-                        botao.disabled = true;
-                    });
+                    document.querySelectorAll(".numero")[numeroAtual - 1].classList.add("concluido");
+                    document.querySelectorAll(".opcao").forEach(botao => botao.disabled = true);
 
                     if (resolvidos.size === 7) {
-                        document.getElementById("desafio")
-                            .classList.remove("ativo");
+                        document.getElementById("desafio").classList.remove("ativo");
                         document.getElementById("final").style.display = "block";
                     }
                 } else {
                     feedback.textContent = "✗ Tente novamente!";
                     feedback.style.color = "#b3261e";
-                }
-            }
-
-            function voltarParaCapa() {
-                // A navegação ocorre na janela principal, não dentro do iframe.
-                // O parâmetro é lido pelo Python na próxima execução do Streamlit.
-                const destino = new URL(window.location.href);
-                destino.searchParams.set("reiniciar", "true");
-
-                try {
-                    window.parent.location.href = destino.toString();
-                } catch (erro) {
-                    // Alternativa para ambientes que bloqueiam o acesso ao pai.
-                    window.open(destino.toString(), "_top");
                 }
             }
         </script>
