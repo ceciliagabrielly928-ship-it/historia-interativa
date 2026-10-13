@@ -948,7 +948,20 @@ import streamlit.components.v1 as components
 
 def renderizar_desafio_polimero():
 
-    # Reinicializa o estado da história quando solicitado pela URL.
+    # Inicializa o estado necessário para a história.
+    valores_iniciais = {
+        "cena_atual": "inicio",
+        "quiz_pontuacao": 0,
+        "quiz_respondeu": False,
+        "quiz_resposta_dada": None,
+        "quiz_finalizado": False,
+    }
+
+    for chave, valor in valores_iniciais.items():
+        if chave not in st.session_state:
+            st.session_state[chave] = valor
+
+    # O reinício é solicitado por um parâmetro da URL.
     if st.query_params.get("reiniciar") == "true":
         st.session_state["cena_atual"] = "inicio"
         st.session_state["quiz_pontuacao"] = 0
@@ -985,7 +998,7 @@ def renderizar_desafio_polimero():
                 width: 100%;
                 max-width: 1000px;
                 margin: 0 auto;
-                background: #fff;
+                background: #ffffff;
                 border: 1px solid #e7e2da;
                 border-radius: 25px;
                 padding: 38px 45px 35px;
@@ -993,12 +1006,25 @@ def renderizar_desafio_polimero():
             }
 
             h1 {
+                position: relative;
                 text-align: center;
                 font-size: 29px;
                 line-height: 1.3;
                 font-weight: 800;
                 margin-bottom: 43px;
                 color: #292929;
+            }
+
+            h1::after {
+                content: "";
+                position: absolute;
+                width: 55px;
+                height: 3px;
+                border-radius: 3px;
+                background: #d4b04d;
+                bottom: -19px;
+                left: 50%;
+                transform: translateX(-50%);
             }
 
             .karla {
@@ -1024,21 +1050,19 @@ def renderizar_desafio_polimero():
                 letter-spacing: 3px;
                 text-align: center;
                 margin: 27px 0 15px;
-                color: #555;
-            }
-
-            .banco, .numeros, .opcoes {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 9px;
+                color: #555555;
             }
 
             .banco {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 9px;
+                justify-content: center;
                 margin-bottom: 32px;
             }
 
             .palavra {
+                background: #ffffff;
                 border: 1px solid #cbb15e;
                 border-radius: 999px;
                 padding: 8px 16px;
@@ -1046,26 +1070,38 @@ def renderizar_desafio_polimero():
             }
 
             .numeros {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
                 gap: 12px;
                 margin: 22px 0 28px;
             }
 
             .numero {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 width: 72px;
                 height: 72px;
                 border: 2px solid #d9d7d2;
                 border-radius: 50%;
-                background: #fff;
+                background: #ffffff;
                 font-size: 28px;
                 font-weight: 700;
                 cursor: pointer;
-                color: #333;
+                color: #333333;
             }
 
-            .numero.selecionado, .numero.concluido {
+            .numero:hover {
+                border-color: #d4b04d;
+                background: #fffaf0;
+            }
+
+            .numero.selecionado,
+            .numero.concluido {
                 border-color: #d4b04d;
                 background: #d4b04d;
-                color: #fff;
+                color: #ffffff;
             }
 
             .desafio {
@@ -1087,7 +1123,7 @@ def renderizar_desafio_polimero():
                 font-size: 14px;
                 letter-spacing: 2px;
                 margin-bottom: 14px;
-                color: #b28c24;
+                color: #d0ad4c;
             }
 
             .pista {
@@ -1096,15 +1132,27 @@ def renderizar_desafio_polimero():
                 margin-bottom: 23px;
             }
 
+            .opcoes {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 9px;
+            }
+
             .opcao {
                 border: 1px solid #d3d0c9;
-                background: #fff;
+                background: #ffffff;
                 border-radius: 10px;
                 padding: 11px 17px;
                 cursor: pointer;
                 font-weight: 700;
                 font-size: 13px;
-                color: #333;
+                color: #333333;
+            }
+
+            .opcao:hover:not(:disabled) {
+                border-color: #d4b04d;
+                background: #fffaf0;
             }
 
             .opcao:disabled {
@@ -1139,20 +1187,22 @@ def renderizar_desafio_polimero():
             }
 
             .btn-recomecar {
-                background: #fff;
-                color: #a88729;
+                background-color: #ffffff;
+                color: #d4b04d;
                 border: 2px solid #d4b04d;
                 border-radius: 8px;
                 padding: 12px 30px;
                 font-size: 14px;
                 font-weight: 800;
-                letter-spacing: 1px;
+                letter-spacing: 1.5px;
                 cursor: pointer;
+                transition: all 0.2s ease;
+                text-transform: uppercase;
             }
 
             .btn-recomecar:hover {
-                background: #d4b04d;
-                color: #fff;
+                background-color: #d4b04d;
+                color: #ffffff;
             }
 
             @media (max-width: 650px) {
@@ -1183,6 +1233,7 @@ def renderizar_desafio_polimero():
 
     <body>
         <div class="container">
+
             <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
 
             <div class="karla">
@@ -1217,21 +1268,25 @@ def renderizar_desafio_polimero():
             </div>
 
             <div id="desafio" class="desafio">
-                <div id="pistaTitulo" class="pista-titulo"></div>
-                <div id="pista" class="pista"></div>
-                <div id="opcoes" class="opcoes"></div>
-                <div id="feedback" class="feedback"></div>
+                <div class="pista-titulo" id="pistaTitulo"></div>
+                <div class="pista" id="pista"></div>
+                <div class="opcoes" id="opcoes"></div>
+                <div class="feedback" id="feedback"></div>
             </div>
 
             <div id="final" class="final">
                 <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
+
                 <div class="btn-recomecar-container">
-                    <button type="button" class="btn-recomecar"
-                            onclick="voltarParaCapa()">
+                    <button
+                        type="button"
+                        class="btn-recomecar"
+                        onclick="voltarParaCapa()">
                         ↻ RECOMEÇAR HISTÓRIA
                     </button>
                 </div>
             </div>
+
         </div>
 
         <script>
@@ -1275,20 +1330,25 @@ def renderizar_desafio_polimero():
 
             function abrirDesafio(numero) {
                 numeroAtual = numero;
+                const d = desafios[numero];
 
                 document.getElementById("desafio").classList.add("ativo");
                 document.getElementById("final").style.display = "none";
                 document.getElementById("pistaTitulo").textContent =
                     "PISTA " + numero;
                 document.getElementById("pista").textContent =
-                    '"' + desafios[numero].pista + '"';
+                    '"' + d.pista + '"';
                 document.getElementById("feedback").textContent = "";
+
+                criarOpcoes();
 
                 document.querySelectorAll(".numero").forEach((botao, i) => {
                     botao.classList.toggle("selecionado", i + 1 === numero);
                     botao.classList.toggle("concluido", resolvidos.has(i + 1));
                 });
+            }
 
+            function criarOpcoes() {
                 const area = document.getElementById("opcoes");
                 area.innerHTML = "";
 
@@ -1300,24 +1360,16 @@ def renderizar_desafio_polimero():
                     botao.onclick = () => verificarResposta(palavra);
                     area.appendChild(botao);
                 });
-
-                if (resolvidos.has(numero)) {
-                    document.getElementById("feedback").textContent =
-                        "✓ Você já resolveu este desafio!";
-                    document.getElementById("feedback").style.color =
-                        "#247a3d";
-                    area.querySelectorAll("button").forEach(b => {
-                        b.disabled = true;
-                    });
-                }
             }
 
             function verificarResposta(resposta) {
+                const correta = desafios[numeroAtual].resposta;
                 const feedback = document.getElementById("feedback");
 
-                if (resposta === desafios[numeroAtual].resposta) {
+                if (resposta === correta) {
                     feedback.textContent = "✓ Acertou!";
                     feedback.style.color = "#247a3d";
+
                     resolvidos.add(numeroAtual);
 
                     document.querySelectorAll(".numero")[numeroAtual - 1]
@@ -1339,18 +1391,16 @@ def renderizar_desafio_polimero():
             }
 
             function voltarParaCapa() {
-                /*
-                 * Atualiza a URL da página que hospeda o componente.
-                 * O Python detectará o parâmetro e reiniciará a história.
-                 */
-                const url = new URL(window.location.href);
-                url.searchParams.set("reiniciar", "true");
+                // A navegação ocorre na janela principal, não dentro do iframe.
+                // O parâmetro é lido pelo Python na próxima execução do Streamlit.
+                const destino = new URL(window.location.href);
+                destino.searchParams.set("reiniciar", "true");
 
-                // Tenta navegar na janela principal.
                 try {
-                    window.parent.location.href = url.toString();
+                    window.parent.location.href = destino.toString();
                 } catch (erro) {
-                    window.location.href = url.toString();
+                    // Alternativa para ambientes que bloqueiam o acesso ao pai.
+                    window.open(destino.toString(), "_top");
                 }
             }
         </script>
