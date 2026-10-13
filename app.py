@@ -942,6 +942,22 @@ def renderizar_quiz(numero_pergunta):
 #-------------------------------------------------------------------------------
 #DESAFIO - IDENTIFIQUE O TIPO DE PLÁSTICO
 #-------------------------------------------------------------------------------
+import streamlit as st
+import streamlit.components.v1 as components
+from pathlib import Path
+
+
+# ============================================================
+# 1. CRIA AUTOMATICAMENTE O COMPONENTE STREAMLIT
+# ============================================================
+
+DIRETORIO_COMPONENTE = Path(__file__).parent / "desafio_plasticos"
+DIRETORIO_COMPONENTE.mkdir(parents=True, exist_ok=True)
+
+ARQUIVO_HTML = DIRETORIO_COMPONENTE / "index.html"
+
+
+HTML_DESAFIO = r"""
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -966,11 +982,11 @@ body {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-    background: #fff;
+    background: #ffffff;
     border: 1px solid #e7e2da;
     border-radius: 25px;
     padding: 38px 45px 35px;
-    box-shadow: 0 8px 28px rgba(0,0,0,.05);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05);
 }
 
 h1 {
@@ -1008,7 +1024,9 @@ h2 {
     color: #555;
 }
 
-.banco, .numeros, .opcoes {
+.banco,
+.numeros,
+.opcoes {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -1046,15 +1064,22 @@ h2 {
     color: #333;
 }
 
-.numero:hover, .opcao:hover:not(:disabled) {
+.numero:hover,
+.opcao:hover:not(:disabled) {
     border-color: #d4b04d;
     background: #fffaf0;
 }
 
-.numero.selecionado, .numero.concluido {
+.numero.selecionado,
+.numero.concluido {
     border-color: #d4b04d;
     background: #d4b04d;
     color: #fff;
+}
+
+.numero:disabled {
+    cursor: default;
+    opacity: 1;
 }
 
 .desafio {
@@ -1098,7 +1123,7 @@ h2 {
 
 .opcao:disabled {
     cursor: default;
-    opacity: .75;
+    opacity: 0.75;
 }
 
 .feedback {
@@ -1175,13 +1200,13 @@ h2 {
     <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
 
     <div class="numeros">
-        <button class="numero" type="button" onclick="abrirDesafio(1)">1</button>
-        <button class="numero" type="button" onclick="abrirDesafio(2)">2</button>
-        <button class="numero" type="button" onclick="abrirDesafio(3)">3</button>
-        <button class="numero" type="button" onclick="abrirDesafio(4)">4</button>
-        <button class="numero" type="button" onclick="abrirDesafio(5)">5</button>
-        <button class="numero" type="button" onclick="abrirDesafio(6)">6</button>
-        <button class="numero" type="button" onclick="abrirDesafio(7)">7</button>
+        <button class="numero" type="button" data-numero="1">1</button>
+        <button class="numero" type="button" data-numero="2">2</button>
+        <button class="numero" type="button" data-numero="3">3</button>
+        <button class="numero" type="button" data-numero="4">4</button>
+        <button class="numero" type="button" data-numero="5">5</button>
+        <button class="numero" type="button" data-numero="6">6</button>
+        <button class="numero" type="button" data-numero="7">7</button>
     </div>
 
     <div id="desafio" class="desafio">
@@ -1201,44 +1226,6 @@ h2 {
 </div>
 
 <script>
-/*
- * Comunicação com o Streamlit.
- * Este arquivo é servido por declare_component, portanto
- * pode enviar o resultado usando o protocolo do componente.
- */
-
-function enviarParaStreamlit(valor) {
-    window.parent.postMessage(
-        {
-            isStreamlitMessage: true,
-            type: "streamlit:setComponentValue",
-            value: valor,
-            dataType: "json"
-        },
-        "*"
-    );
-}
-
-function ajustarAltura() {
-    window.parent.postMessage(
-        {
-            isStreamlitMessage: true,
-            type: "streamlit:setFrameHeight",
-            height: document.documentElement.scrollHeight
-        },
-        "*"
-    );
-}
-
-window.parent.postMessage(
-    {
-        isStreamlitMessage: true,
-        type: "streamlit:componentReady",
-        apiVersion: 1
-    },
-    "*"
-);
-
 const desafios = {
     1: {
         pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
@@ -1275,12 +1262,67 @@ const palavras = ["PP", "PET", "PVC", "PS", "LDPE", "OTHER", "HDPE"];
 let numeroAtual = null;
 const resolvidos = new Set();
 let concluido = false;
+let componenteInicializado = false;
 
-/*
- * O Python envia este parâmetro quando o desafio já foi
- * concluído ou quando a página é reconstruída.
- */
-function receberDadosStreamlit(evento) {
+
+/* ----------------------------------------------------------
+   COMUNICAÇÃO OFICIAL COM O COMPONENTE STREAMLIT
+---------------------------------------------------------- */
+
+function enviarMensagemStreamlit(tipo, extras = {}) {
+    window.parent.postMessage(
+        {
+            isStreamlitMessage: true,
+            type: tipo,
+            ...extras
+        },
+        "*"
+    );
+}
+
+function ajustarAltura() {
+    const altura = document.documentElement.scrollHeight;
+
+    enviarMensagemStreamlit("streamlit:setFrameHeight", {
+        height: altura
+    });
+}
+
+function enviarConclusaoAoPython() {
+    if (resolvidos.size !== 7) {
+        return;
+    }
+
+    concluido = true;
+
+    enviarMensagemStreamlit("streamlit:setComponentValue", {
+        value: "concluido",
+        dataType: "json"
+    });
+
+    mostrarConclusao();
+}
+
+function mostrarConclusao() {
+    document.getElementById("desafio").classList.remove("ativo");
+    document.getElementById("final").style.display = "block";
+
+    document.querySelector(".numeros").style.display = "none";
+    document.querySelector(".banco").style.display = "none";
+
+    document.querySelectorAll("h2").forEach(titulo => {
+        titulo.style.display = "none";
+    });
+
+    ajustarAltura();
+}
+
+
+/* ----------------------------------------------------------
+   RECEBE OS PARÂMETROS ENVIADOS PELO PYTHON
+---------------------------------------------------------- */
+
+window.addEventListener("message", function(evento) {
     const dados = evento.data;
 
     if (!dados || dados.type !== "streamlit:render") {
@@ -1294,13 +1336,26 @@ function receberDadosStreamlit(evento) {
         mostrarConclusao();
     }
 
-    ajustarAltura();
-}
+    if (!componenteInicializado) {
+        componenteInicializado = true;
 
-window.addEventListener("message", receberDadosStreamlit);
+        enviarMensagemStreamlit("streamlit:componentReady", {
+            apiVersion: 1
+        });
+
+        ajustarAltura();
+    }
+});
+
+
+/* ----------------------------------------------------------
+   ABRIR UMA PISTA
+---------------------------------------------------------- */
 
 function abrirDesafio(numero) {
-    if (concluido || resolvidos.has(numero)) return;
+    if (concluido || resolvidos.has(numero)) {
+        return;
+    }
 
     numeroAtual = numero;
 
@@ -1314,23 +1369,38 @@ function abrirDesafio(numero) {
         '"' + desafios[numero].pista + '"';
 
     const feedback = document.getElementById("feedback");
+
     feedback.textContent = "";
     feedback.style.color = "";
 
-    document.querySelectorAll(".numero").forEach((botao, i) => {
-        botao.classList.toggle("selecionado", i + 1 === numero);
-        botao.classList.toggle("concluido", resolvidos.has(i + 1));
+    document.querySelectorAll(".numero").forEach(botao => {
+        const numeroBotao = Number(botao.dataset.numero);
+
+        botao.classList.toggle(
+            "selecionado",
+            numeroBotao === numero
+        );
+
+        botao.classList.toggle(
+            "concluido",
+            resolvidos.has(numeroBotao)
+        );
     });
 
     const area = document.getElementById("opcoes");
+
     area.innerHTML = "";
 
     palavras.forEach(palavra => {
         const botao = document.createElement("button");
+
         botao.type = "button";
         botao.className = "opcao";
         botao.textContent = palavra;
-        botao.onclick = () => verificarResposta(palavra);
+
+        botao.addEventListener("click", function() {
+            verificarResposta(palavra);
+        });
 
         area.appendChild(botao);
     });
@@ -1338,65 +1408,179 @@ function abrirDesafio(numero) {
     ajustarAltura();
 }
 
+
+/* ----------------------------------------------------------
+   VERIFICAR A RESPOSTA
+---------------------------------------------------------- */
+
 function verificarResposta(resposta) {
-    if (concluido || numeroAtual === null) return;
+    if (concluido || numeroAtual === null) {
+        return;
+    }
+
+    if (resolvidos.has(numeroAtual)) {
+        return;
+    }
 
     const feedback = document.getElementById("feedback");
 
     if (resposta === desafios[numeroAtual].resposta) {
+
         feedback.textContent = "✓ Acertou!";
         feedback.style.color = "#247a3d";
 
         resolvidos.add(numeroAtual);
 
-        document.querySelectorAll(".numero")[numeroAtual - 1]
-            .classList.add("concluido");
+        document.querySelectorAll(".numero").forEach(botao => {
+            if (Number(botao.dataset.numero) === numeroAtual) {
+                botao.classList.add("concluido");
+            }
+        });
 
         document.querySelectorAll(".opcao").forEach(botao => {
             botao.disabled = true;
         });
 
         if (resolvidos.size === 7) {
-            concluirDesafio();
+            enviarConclusaoAoPython();
         } else {
             ajustarAltura();
         }
 
     } else {
+
         feedback.textContent = "✗ Tente novamente!";
         feedback.style.color = "#b3261e";
     }
 }
 
-function mostrarConclusao() {
-    document.getElementById("desafio").classList.remove("ativo");
-    document.getElementById("final").style.display = "block";
-    document.querySelector(".numeros").style.display = "none";
-    document.querySelector(".banco").style.display = "none";
 
-    document.querySelectorAll("h2").forEach(titulo => {
-        titulo.style.display = "none";
+/* ----------------------------------------------------------
+   CLIQUES NOS SETE NÚMEROS
+---------------------------------------------------------- */
+
+document.querySelectorAll(".numero").forEach(botao => {
+    botao.addEventListener("click", function() {
+        abrirDesafio(Number(this.dataset.numero));
     });
+});
 
-    ajustarAltura();
-}
 
-function concluirDesafio() {
-    if (resolvidos.size !== 7 || concluido) return;
+/* ----------------------------------------------------------
+   INICIALIZAÇÃO DO COMPONENTE
+---------------------------------------------------------- */
 
-    concluido = true;
-
-    mostrarConclusao();
-
-    // O valor é devolvido ao Python pelo componente.
-    enviarParaStreamlit("concluido");
-}
+enviarMensagemStreamlit("streamlit:componentReady", {
+    apiVersion: 1
+});
 
 ajustarAltura();
 </script>
 
 </body>
 </html>
+"""
+
+
+# Escreve o HTML no arquivo automaticamente.
+ARQUIVO_HTML.write_text(HTML_DESAFIO, encoding="utf-8")
+
+
+# Declara o componente depois de criar o arquivo HTML.
+desafio_plasticos_component = components.declare_component(
+    "desafio_plasticos",
+    path=str(DIRETORIO_COMPONENTE)
+)
+
+
+# ============================================================
+# 2. FUNÇÃO DO DESAFIO
+# ============================================================
+
+def renderizar_desafio_polimero():
+
+    # Inicializa os estados.
+    if "desafio_plasticos_concluido" not in st.session_state:
+        st.session_state["desafio_plasticos_concluido"] = False
+
+    if "desafio_plasticos_reset" not in st.session_state:
+        st.session_state["desafio_plasticos_reset"] = 0
+
+    # Reinicia a história quando solicitado.
+    if st.session_state.pop("solicitar_reinicio_plasticos", False):
+
+        st.session_state["cena_atual"] = "inicio"
+        st.session_state["quiz_pontuacao"] = 0
+        st.session_state["quiz_respondeu"] = False
+        st.session_state["quiz_resposta_dada"] = None
+        st.session_state["quiz_finalizado"] = False
+
+        st.session_state["desafio_plasticos_concluido"] = False
+
+        # Cria uma nova instância limpa do componente.
+        st.session_state["desafio_plasticos_reset"] += 1
+
+        st.rerun()
+
+    reset_id = st.session_state["desafio_plasticos_reset"]
+
+    # O componente devolve o resultado do JavaScript ao Python.
+    resultado = desafio_plasticos_component(
+        key=f"desafio_plasticos_{reset_id}",
+        concluido=st.session_state["desafio_plasticos_concluido"],
+        default="incompleto",
+        height=850,
+    )
+
+    # O estado só muda quando o componente devolve "concluido".
+    if (
+        resultado == "concluido"
+        and not st.session_state["desafio_plasticos_concluido"]
+    ):
+        st.session_state["desafio_plasticos_concluido"] = True
+        st.rerun()
+
+    # ========================================================
+    # 3. BOTÃO DE REINÍCIO
+    # ========================================================
+
+    # IMPORTANTE:
+    # Antes da conclusão, este botão não é criado.
+    if st.session_state["desafio_plasticos_concluido"]:
+
+        st.markdown(
+            """
+            <style>
+            .st-key-botao_recomecar_plasticos button {
+                background: transparent !important;
+                color: #d99518 !important;
+                border: 1px solid #e69a00 !important;
+                border-radius: 4px !important;
+                padding: 14px 20px !important;
+                font-size: 12px !important;
+                letter-spacing: 4px !important;
+                text-transform: uppercase !important;
+                width: 100%;
+            }
+
+            .st-key-botao_recomecar_plasticos button:hover {
+                background: #fffaf0 !important;
+                color: #b78316 !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        with st.container(key="botao_recomecar_plasticos"):
+
+            if st.button(
+                "↻ RECOMEÇAR HISTÓRIA",
+                key="recomecar_historia_plasticos",
+                use_container_width=True,
+            ):
+                st.session_state["solicitar_reinicio_plasticos"] = True
+                st.rerun()
 #=========================================================
 # FUNÇÃO PARA RENDERIZAR UMA CENA NORMAL
 # =========================================================
