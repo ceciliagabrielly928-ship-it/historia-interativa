@@ -942,11 +942,352 @@ def renderizar_quiz(numero_pergunta):
 #-------------------------------------------------------------------------------
 #DESAFIO - IDENTIFIQUE O TIPO DE PLÁSTICO
 #-------------------------------------------------------------------------------
+                                  padding: 38px 45px 35px;
+
+                box-shadow: 0 8px 28px rgba(0,0,0,.05);
+
+            }
+
+            h1 {
+
+                text-align: center;
+
+                font-size: 29px;
+
+                line-height: 1.3;
+
+                font-weight: 800;
+
+                margin-bottom: 43px;
+
+                color: #292929;
+
+            }
+
+            .karla {
+
+                background: #faf7f0;
+
+                border-left: 4px solid #d4b04d;
+
+                border-radius: 14px;
+
+                padding: 19px 22px;
+
+                margin-bottom: 30px;
+
+                font-size: 15px;
+
+                line-height: 1.6;
+
+            }
+
+            .karla strong {
+
+                display: block;
+
+                margin-bottom: 5px;
+
+                font-size: 13px;
+
+                letter-spacing: 1.5px;
+
+            }
+
+            h2 {
+
+                font-size: 15px;
+
+                font-weight: 800;
+
+                letter-spacing: 3px;
+
+                text-align: center;
+
+                margin: 27px 0 15px;
+
+                color: #555;
+
+            }
+
+            .banco, .numeros, .opcoes {
+
+                display: flex;
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+
+                gap: 9px;
+
+            }
+
+            .banco { margin-bottom: 32px; }
+
+            .palavra {
+
+                border: 1px solid #cbb15e;
+
+                border-radius: 999px;
+                            }
+
+            .numero:hover,
+
+            .opcao:hover:not(:disabled) {
+
+                border-color: #d4b04d;
+
+                background: #fffaf0;
+
+            }
+
+            .numero.selecionado, .numero.concluido {
+
+                border-color: #d4b04d;
+
+                background: #d4b04d;
+
+                color: #fff;
+
+            }
+
+            .desafio {
+
+                display: none;
+
+                margin-top: 25px;
+
+                padding: 27px 28px 30px;
+
+                border: 1px solid #e4e0d8;
+
+                border-radius: 17px;
+
+                background: #faf9f6;
+
+                text-align: center;
+
+            }
+
+            .desafio.ativo { display: block; }
+
+            .pista-titulo {
+
+                font-weight: 800;
+
+                font-size: 14px;
+
+                letter-spacing: 2px;
+
+                margin-bottom: 14px;
+
+                color: #b28c24;
+
+            }
+
+            .pista {
+
+                font-size: 16px;
+
+                line-height: 1.65;
+
+                margin-bottom: 23px;
+
+            }
+
+            .opcao {
+
+                border: 1px solid #d3d0c9;
+
+                background: #fff;
+
+                border-radius: 10px;
+
+                padding: 11px 17px;
+
+                cursor: pointer;
+
+                font-weight: 700;
+
+                font-size: 13px;
+
+                color: #333;
+
+            }
+
+            .opcao:disabled { cursor: default; opacity: .75; }
+
+            .feedback {
+
+                margin-top: 18px;
+
+                font-weight: 700;
+
+                font-size: 15px;
+
+                min-height: 25px;
+
+            }
+
+            .final {
+
+                display: none;
+
+                margin-top: 25px;
+
+                padding: 25px 20px;
+
+                background: #faf7f0;
+
+                border: 1px solid #e4d7ae;
+
+                border-radius: 12px;
+
+                text-align: center;
+
+                font-size: 18px;
+
+                font-weight: 700;
+
+                line-height: 1.6;
+
+            }
+
+            @media (max-width: 650px) {
+
+                body { padding: 5px; }
+             .container { padding: 28px 18px; }
+
+                h1 { font-size: 22px; }
+
+                .numero { width: 54px; height: 54px; font-size: 23px; }
+
+                .desafio { padding: 22px 15px; }
+
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <h1>DESAFIO — DECODIFIQUE OS PLÁSTICOS</h1>
+
+            <div class="karla">
+
+                <strong>KARLA:</strong>
+
+                "Esses números não estão aqui por acaso.
+
+                Cada um representa um tipo de plástico.
+
+                Use as pistas para descobrir qual é qual!"
+
+            </div>
+
+            <h2>BANCO DE PALAVRAS</h2>
+
+            <div class="banco">
+
+                <span class="palavra">PP</span>
+
+                <span class="palavra">PET</span>
+
+                <span class="palavra">PVC</span>
+
+                <span class="palavra">PS</span>
+
+                <span class="palavra">LDPE</span>
+
+                <span class="palavra">OTHER</span>
+
+                <span class="palavra">HDPE</span>
+
+            </div>
+
+            <h2>IDENTIFIQUE CADA PLÁSTICO</h2>
+
+            <div class="numeros">
+
+                <button class="numero" onclick="abrirDesafio(1)">1</button>
+
+                <button class="numero" onclick="abrirDesafio(2)">2</button>
+
+                <button class="numero" onclick="abrirDesafio(3)">3</button>
+
+                <button class="numero" onclick="abrirDesafio(4)">4</button>
+
+                <button class="numero" onclick="abrirDesafio(5)">5</button>
+
+                <button class="numero" onclick="abrirDesafio(6)">6</button>
+
+                <button class="numero" onclick="abrirDesafio(7)">7</button>
+
+            </div>
+
+            <div id="desafio" class="desafio">
+
+                <div id="pistaTitulo" class="pista-titulo"></div>
+
+                <div id="pista" class="pista"></div>
+
+                <div id="opcoes" class="opcoes"></div>
+
+                <div id="feedback" class="feedback"></div>
+
+            </div>
+
+            <div id="final" class="final">
+
+                <p>Parabéns! Você decodificou todos os tipos de plástico!</p>
+
+                <p style="margin-top:10px;font-size:14px;font-weight:400;">
+
+                    Volte à aplicação para iniciar a história novamente.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <script>
+
+            const desafios = {
+
+                1: {
+
+                    pista: "Sou transparente, leve e muito usado em garrafas de água e refrigerante. Minha sigla tem três letras.",
+
+                    resposta: "PET"
+
+                },
+
+                2: {
+
+                    pista: "Sou conhecido por ser resistente e apareço bastante em embalagens de produtos de limpeza, frascos e recipientes.",
+
+                    resposta: "HDPE"
+
+                },
+
+                3: {
+
+                    pista: "Posso aparecer em canos, tubos e alguns tipos de embalagens. Meu nome é formado por três letras.",
+
+                    resposta: "PVC"
+
+                },
+
+                4: {
+
                     pista: "Sou mais flexível e apareço bastante em sacolas plásticas, filmes e embalagens.",
 
                     resposta: "LDPE"
-
-                },
+                                    },
 
                 5: {
 
