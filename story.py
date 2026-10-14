@@ -51,7 +51,7 @@ HISTORY = {
     "decisao_01": {
         "tipo": "escolha",
         "imagem": "assets/images/decisao_01.png",
-        "pergunta": "O que Aline deve fazer com a garrafa?",
+        "pergunta": "O que Beatriz deve fazer com a garrafa?",
         "opcoes": {
             "Encaminhar para a coleta seletiva": "pagina_06a",
             "Descartar no lixo comum": "pagina_06b"
@@ -64,12 +64,6 @@ HISTORY = {
     "pagina_06b": {
         "tipo": "cena",
         "imagem": "assets/images/pagina_06b.png",
-        "proxima": "pagina_07b"
-    },
-    
-    "pagina_07b": {
-        "tipo": "cena",
-        "imagem": "assets/images/pagina_07b.png",
         "proxima": "feedback_01b"
     },
     
@@ -195,7 +189,7 @@ HISTORY = {
     "pagina_12b": {
         "tipo": "final",
         "imagem": "assets/images/pagina_12b.png",
-        "mensagem": "🎉 Parabéns! Vocês entenderam o espírito da coisa! O futuro se tornou um lugar melhor. A preservação do meio ambiente é um compromisso diário!"
+        "mensagem": "Parabéns! Vocês entenderam o espírito da coisa! O futuro se tornou um lugar melhor. A preservação do meio ambiente é um compromisso diário!"
     }
 }
 
