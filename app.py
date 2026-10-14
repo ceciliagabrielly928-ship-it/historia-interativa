@@ -674,47 +674,83 @@ def renderizar_desafio_plasticos():
         padding: 10px;
     }
 
+    /* =========================================
+       CARD ARREDONDADO — IGUAL AO DO QUIZ
+    ========================================= */
+
     .container {
         width: 100%;
         max-width: 1000px;
         margin: 0 auto;
-        padding: 10px 15px;
-        background: transparent;
+        background: #ffffff;
+        border: 1px solid #e7e2da;
+        border-radius: 20px;
+        padding: 40px 50px 45px;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
     }
 
-    h1 {
-        text-align: center;
-        font-size: 29px;
-        line-height: 1.3;
-        font-weight: 800;
-        letter-spacing: 2px;
-        margin-bottom: 30px;
-        color: #292929;
+    /* =========================================
+       HEADER PADRONIZADO — DESAFIO + LINHA DOURADA
+    ========================================= */
+
+    .desafio-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 30px auto;
+        width: 100%;
     }
+
+    .desafio-titulo {
+        color: #292929;
+        font-family: Arial, sans-serif;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-align: center;
+        margin-bottom: 13px;
+    }
+
+    .desafio-linha {
+        width: 55px;
+        height: 3px;
+        background: #d4b04d;
+        border-radius: 3px;
+        margin: 0 auto;
+    }
+
+    /* =========================================
+       CAIXA DA KARLA — MESMO ESTILO DA PERGUNTA DO QUIZ
+    ========================================= */
 
     .karla {
         background: #faf7f0;
         border-left: 4px solid #d4b04d;
         border-radius: 14px;
-        padding: 19px 22px;
-        margin-bottom: 30px;
+        padding: 20px 24px;
+        margin-bottom: 32px;
         font-size: 15px;
-        line-height: 1.6;
+        line-height: 1.7;
+        font-family: Arial, sans-serif;
+        color: #333333;
     }
     .karla strong {
         display: block;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
         font-size: 13px;
         letter-spacing: 1.5px;
+        color: #b28c24;
     }
 
     h2 {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 800;
         letter-spacing: 2px;
         text-align: center;
         margin: 27px 0 15px;
-        color: #555;
+        color: #666;
+        font-family: Arial, sans-serif;
     }
 
     .banco, .numeros, .opcoes {
@@ -728,8 +764,12 @@ def renderizar_desafio_plasticos():
     .palavra {
         border: 1px solid #cbb15e;
         border-radius: 999px;
-        padding: 8px 16px;
+        padding: 8px 18px;
         font-size: 13px;
+        font-weight: 700;
+        color: #bd9638;
+        background: #ffffff;
+        font-family: Arial, sans-serif;
     }
 
     .numeros { gap: 12px; margin: 22px 0 28px; }
@@ -747,6 +787,8 @@ def renderizar_desafio_plasticos():
         font-weight: 700;
         cursor: pointer;
         color: #333;
+        font-family: Arial, sans-serif;
+        transition: all 0.2s;
     }
 
     .numero:hover, .opcao:hover:not(:disabled) {
@@ -777,31 +819,42 @@ def renderizar_desafio_plasticos():
         letter-spacing: 2px;
         margin-bottom: 14px;
         color: #b28c24;
+        font-family: Arial, sans-serif;
     }
 
     .pista {
         font-size: 16px;
         line-height: 1.65;
         margin-bottom: 23px;
+        font-family: Arial, sans-serif;
+        color: #333;
     }
 
     .opcao {
-        border: 1px solid #d3d0c9;
+        border: 2px solid #d4b04d;
         background: #fff;
-        border-radius: 10px;
-        padding: 11px 17px;
+        border-radius: 8px;
+        padding: 11px 22px;
         cursor: pointer;
         font-weight: 700;
-        font-size: 13px;
-        color: #333;
+        font-size: 14px;
+        color: #bd9638;
+        font-family: Arial, sans-serif;
+        transition: all 0.2s;
     }
-    .opcao:disabled { cursor: default; opacity: 0.75; }
+    .opcao:hover:not(:disabled) {
+        background: #fffaf0;
+        border-color: #b88e30;
+        color: #b88e30;
+    }
+    .opcao:disabled { cursor: default; opacity: 0.6; }
 
     .feedback {
         margin-top: 18px;
         font-weight: 700;
         font-size: 15px;
         min-height: 25px;
+        font-family: Arial, sans-serif;
     }
 
     .final {
@@ -815,38 +868,55 @@ def renderizar_desafio_plasticos():
         font-size: 18px;
         font-weight: 700;
         line-height: 1.6;
+        font-family: Arial, sans-serif;
+        color: #333;
     }
 
+    /* =========================================
+       BOTÃO RECOMEÇAR — MESMO ESTILO DO QUIZ
+    ========================================= */
+
     .btn-recomecar {
-        margin-top: 22px;
-        background: #d4a843;
-        color: #0a0a0a;
-        border: none;
-        border-radius: 6px;
-        padding: 14px 34px;
-        font-size: 13px;
+        display: none;
+        margin: 26px auto 0 auto;
+        width: 100%;
+        max-width: 460px;
+        background: transparent;
+        color: #d4a843;
+        border: 2px solid #d4a843;
+        border-radius: 4px;
+        padding: 16px 40px;
+        font-size: 15px;
         font-weight: 700;
-        letter-spacing: 2.5px;
+        letter-spacing: 4px;
         text-transform: uppercase;
         cursor: pointer;
         font-family: Arial, sans-serif;
-        transition: background 0.2s;
+        transition: all 0.3s ease;
     }
-    .btn-recomecar:hover { background: #e8c86a; }
+    .btn-recomecar:hover {
+        background: #d4a843;
+        color: #0a0a0a;
+        box-shadow: 0 10px 40px rgba(212, 168, 67, 0.3);
+    }
 
     @media (max-width: 650px) {
         body { padding: 5px; }
-        .container { padding: 5px; }
-        h1 { font-size: 22px; }
+        .container { padding: 28px 20px; border-radius: 18px; }
+        .desafio-titulo { font-size: 22px; letter-spacing: 2px; }
         .numero { width: 50px; height: 50px; font-size: 21px; }
         .desafio { padding: 22px 15px; }
+        .btn-recomecar { font-size: 13px; padding: 14px 24px; letter-spacing: 3px; }
     }
     </style>
     </head>
     <body>
     <div class="container">
 
-    <h1>DESAFIO</h1>
+    <div class="desafio-header">
+        <div class="desafio-titulo">DESAFIO</div>
+        <div class="desafio-linha"></div>
+    </div>
 
     <div class="karla">
     <strong>KARLA:</strong>
@@ -978,7 +1048,7 @@ def renderizar_desafio_plasticos():
     </html>
     """
 
-    components.html(html_desafio, height=850, scrolling=True)
+    components.html(html_desafio, height=1000, scrolling=True)
 
 
 # =========================================================
@@ -997,14 +1067,14 @@ def renderizar_desafio_polimero():
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: Arial, sans-serif;
         background: transparent;
         color: #292929;
-        padding: 15px;
+        padding: 10px;
     }
 
     /* =========================================
-       CARD BRANCO BONITO — IGUAL AOS OUTROS DESAFIOS
+       CARD ARREDONDADO — IGUAL AO DO QUIZ
     ========================================= */
 
     .container {
@@ -1012,32 +1082,58 @@ def renderizar_desafio_polimero():
         max-width: 720px;
         margin: 0 auto;
         background: #ffffff;
-        border: 1px solid #ece7de;
-        border-radius: 22px;
-        padding: 48px 55px 42px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e7e2da;
+        border-radius: 20px;
+        padding: 45px 55px 45px;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
         text-align: center;
     }
 
-    h1 {
-        font-size: 26px;
-        font-weight: 800;
-        letter-spacing: 2px;
-        color: #1a1a1a;
-        margin-bottom: 34px;
-        line-height: 1.3;
-        text-align: center;
+    /* =========================================
+       HEADER PADRONIZADO — DESAFIO + LINHA DOURADA
+    ========================================= */
+
+    .desafio-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 32px auto;
+        width: 100%;
     }
+
+    .desafio-titulo {
+        color: #292929;
+        font-family: Arial, sans-serif;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-align: center;
+        margin-bottom: 13px;
+    }
+
+    .desafio-linha {
+        width: 55px;
+        height: 3px;
+        background: #d4b04d;
+        border-radius: 3px;
+        margin: 0 auto;
+    }
+
+    /* =========================================
+       TEXTO DO DESAFIO COM LACUNA
+    ========================================= */
 
     .texto-desafio {
         font-size: 17px;
         line-height: 1.9;
         color: #333333;
-        margin-bottom: 26px;
+        margin-bottom: 30px;
         max-width: 560px;
         margin-left: auto;
         margin-right: auto;
         text-align: center;
+        font-family: Arial, sans-serif;
     }
 
     .lacuna {
@@ -1048,6 +1144,10 @@ def renderizar_desafio_polimero():
         height: 1.1em;
         vertical-align: middle;
     }
+
+    /* =========================================
+       BOTÃO DICA
+    ========================================= */
 
     .btn-dica {
         background-color: #222222;
@@ -1064,7 +1164,7 @@ def renderizar_desafio_polimero():
         gap: 8px;
         margin-bottom: 22px;
         transition: background 0.2s;
-        font-family: inherit;
+        font-family: Arial, sans-serif;
     }
     .btn-dica:hover { background-color: #3b3b3b; }
 
@@ -1080,14 +1180,19 @@ def renderizar_desafio_polimero():
         text-align: left;
         max-width: 560px;
         line-height: 1.6;
+        font-family: Arial, sans-serif;
     }
+
+    /* =========================================
+       INPUT DE RESPOSTA
+    ========================================= */
 
     .input-resposta {
         width: 100%;
         max-width: 560px;
         padding: 16px 20px;
         font-size: 16px;
-        font-family: inherit;
+        font-family: Arial, sans-serif;
         border: 1.5px solid #d8d3ca;
         border-radius: 10px;
         outline: none;
@@ -1111,6 +1216,10 @@ def renderizar_desafio_polimero():
         cursor: not-allowed;
     }
 
+    /* =========================================
+       BOTÃO RESPONDER
+    ========================================= */
+
     .btn-acao {
         background-color: #222222;
         color: #ffffff;
@@ -1122,7 +1231,7 @@ def renderizar_desafio_polimero():
         letter-spacing: 1.5px;
         cursor: pointer;
         transition: background 0.2s;
-        font-family: inherit;
+        font-family: Arial, sans-serif;
     }
     .btn-acao:hover { background-color: #3b3b3b; }
 
@@ -1136,47 +1245,56 @@ def renderizar_desafio_polimero():
         font-size: 15px;
         margin-top: 22px;
         min-height: 24px;
+        font-family: Arial, sans-serif;
     }
 
     /* =========================================
-       BOTÃO RECOMEÇAR — SÓ APARECE AO ACERTAR
+       BOTÃO RECOMEÇAR — MESMO ESTILO DO QUIZ
+       (só aparece após acertar)
     ========================================= */
 
     .btn-recomecar {
-        display: none;                 /* escondido por padrão */
-        margin: 26px auto 0 auto;
-        background: #d4a843;
-        color: #0a0a0a;
-        border: none;
-        border-radius: 6px;
-        padding: 14px 38px;
-        font-size: 13px;
+        display: none;
+        margin: 30px auto 0 auto;
+        width: 100%;
+        max-width: 460px;
+        background: transparent;
+        color: #d4a843;
+        border: 2px solid #d4a843;
+        border-radius: 4px;
+        padding: 16px 40px;
+        font-size: 15px;
         font-weight: 700;
-        letter-spacing: 2.5px;
+        letter-spacing: 4px;
         text-transform: uppercase;
         cursor: pointer;
         font-family: Arial, sans-serif;
-        transition: background 0.2s, transform 0.2s;
+        transition: all 0.3s ease;
     }
     .btn-recomecar:hover {
-        background: #e8c86a;
-        transform: scale(1.02);
+        background: #d4a843;
+        color: #0a0a0a;
+        box-shadow: 0 10px 40px rgba(212, 168, 67, 0.3);
     }
 
     @media (max-width: 650px) {
-        body { padding: 10px 5px; }
-        .container { padding: 32px 22px 30px; border-radius: 18px; }
-        h1 { font-size: 20px; margin-bottom: 26px; }
+        body { padding: 5px; }
+        .container { padding: 32px 22px 32px; border-radius: 18px; }
+        .desafio-titulo { font-size: 22px; letter-spacing: 2px; }
         .texto-desafio { font-size: 15px; line-height: 1.8; }
         .lacuna { min-width: 90px; }
         .input-resposta { padding: 13px 16px; font-size: 15px; }
+        .btn-recomecar { font-size: 13px; padding: 14px 24px; letter-spacing: 3px; }
     }
     </style>
     </head>
     <body>
     <div class="container">
 
-        <h1>DESAFIO</h1>
+        <div class="desafio-header">
+            <div class="desafio-titulo">DESAFIO</div>
+            <div class="desafio-linha"></div>
+        </div>
 
         <div class="texto-desafio">
             O PET é um <span class="lacuna"></span> formado pela repetição de
@@ -1238,12 +1356,10 @@ def renderizar_desafio_polimero():
             feedback.textContent = "✓ Resposta correta! Parabéns!";
             feedback.style.color = "#286b2f";
 
-            // Bloqueia input e botão responder
             document.getElementById("respostaUsuario").disabled = true;
             document.getElementById("btnResponder").disabled = true;
 
-            // ✅ SÓ AGORA mostra o botão recomeçar
-            document.getElementById("btnRecomecar").style.display = "inline-block";
+            document.getElementById("btnRecomecar").style.display = "block";
 
         } else {
             feedback.textContent = "✗ Tente novamente!";
@@ -1275,7 +1391,7 @@ def renderizar_desafio_polimero():
     </html>
     """
 
-    components.html(html_desafio, height=620, scrolling=False)
+    components.html(html_desafio, height=700, scrolling=False)
 
 
 # =========================================================
@@ -1407,7 +1523,6 @@ elif cena_id == "desafio_plasticos":
 
 # =========================================================
 # DESAFIO — POLÍMERO (LACUNA)
-# Sem botão Python — o botão vive dentro do iframe agora
 # =========================================================
 
 elif cena_id == "desafio_polimero":
