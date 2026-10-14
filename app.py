@@ -721,7 +721,7 @@ def renderizar_desafio_plasticos():
     }
 
     /* =========================================
-       CAIXA DA KARLA — MESMO ESTILO DA PERGUNTA DO QUIZ
+       CAIXA DA KARLA
     ========================================= */
 
     .karla {
@@ -874,10 +874,12 @@ def renderizar_desafio_plasticos():
 
     /* =========================================
        BOTÃO RECOMEÇAR — MESMO ESTILO DO QUIZ
+       (aqui ele NÃO tem display:none porque já
+        fica dentro do .final, que controla a
+        visibilidade)
     ========================================= */
 
     .btn-recomecar {
-        display: none;
         margin: 26px auto 0 auto;
         width: 100%;
         max-width: 460px;
@@ -893,6 +895,7 @@ def renderizar_desafio_plasticos():
         cursor: pointer;
         font-family: Arial, sans-serif;
         transition: all 0.3s ease;
+        display: block;
     }
     .btn-recomecar:hover {
         background: #d4a843;
@@ -1049,7 +1052,6 @@ def renderizar_desafio_plasticos():
     """
 
     components.html(html_desafio, height=1000, scrolling=True)
-
 
 # =========================================================
 # DESAFIO — POLÍMERO (LACUNA / PREENCHER)
