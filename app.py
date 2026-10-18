@@ -7,6 +7,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 from story import HISTORY, get_cena
 from pathlib import Path
+import base64
 
 
 # =========================================================
@@ -22,7 +23,7 @@ st.set_page_config(
 
 
 # =========================================================
-# IMAGENS (RÁPIDO E SEM BASE64)
+# IMAGENS (VOLTANDO AO HTML PARA CENTRALIZAR)
 # =========================================================
 
 def caminho_imagem(caminho):
@@ -50,16 +51,43 @@ def caminho_imagem(caminho):
     return None
 
 
-def renderizar_imagem(caminho, alt="Imagem da história"):
+@st.cache_data(show_spinner=False)
+def imagem_data_uri(caminho):
     arquivo = caminho_imagem(caminho)
-
     if arquivo is None:
+        return None
+
+    mime = {
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".gif": "image/gif"
+    }.get(arquivo.suffix.lower(), "application/octet-stream")
+
+    dados = base64.b64encode(arquivo.read_bytes()).decode("ascii")
+    return f"data:{mime};base64,{dados}"
+
+
+def renderizar_imagem(caminho, alt="Imagem da história"):
+    uri = imagem_data_uri(caminho)
+
+    if uri is None:
         st.error(f"Imagem não encontrada: {caminho}")
         return False
 
-    # st.image nativo (rápido) com container falso para não esticar
-    st.image(str(arquivo), use_container_width=False)
-    
+    # O SEGREDO ESTÁ AQUI: A div pai (imagem-wrapper) usa flexbox para centralizar
+    st.markdown(
+        f"""
+        <div class="imagem-wrapper">
+            <div class="imagem-container">
+                <img src="{uri}" alt="{alt}">
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     return True
 
 
@@ -136,28 +164,32 @@ def aplicar_css():
         }
 
         /* =========================================
-           A SOLUÇÃO DEFINITIVA PARA A IMAGEM
+           IMAGEM PERFEITA E CENTRALIZADA
         ========================================= */
 
-        /* 1. Transforma a div invisível do Streamlit numa caixa de texto comum */
-        div[data-testid="stImage"] {
-            display: block !important;
-            text-align: center !important;
-            width: 100% !important;
-            margin: 0 auto 22px auto !important;
+        .imagem-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 22px;
         }
 
-        /* 2. A imagem vira "inline-block" e o texto centraliza ela */
-        div[data-testid="stImage"] img {
-            display: inline-block !important;
+        .imagem-container {
+            width: fit-content;
+            max-width: 100%;
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 24px;
+            overflow: hidden;
             box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+        }
+
+        .imagem-container img {
             max-height: 85vh;
-            max-width: min(1000px, 100%);
+            max-width: min(1000px, 100vw);
             height: auto;
             object-fit: contain;
+            display: block;
         }
 
         /* =========================================
@@ -259,7 +291,8 @@ def aplicar_css():
         @media (max-width: 768px) {
             .main-container { padding: 10px 10px 30px 10px; }
             .titulo { font-size: 2.2rem; }
-            div[data-testid="stImage"] img { border-radius: 16px; }
+            .imagem-container { border-radius: 16px; }
+            .imagem-container img { max-height: 70vh; }
             .stButton button {
                 font-size: 0.8rem !important;
                 padding: 14px 20px !important;
