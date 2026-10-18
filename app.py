@@ -312,7 +312,7 @@ def aplicar_css():
 PERGUNTAS_QUIZ = [
     {
         "pergunta":
-            "qual decisão ajuda a dar um destino correto ao material e evita que "
+            "Qual decisão ajuda a dar um destino correto ao material e evita que "
             "ele permaneça no ambiente causando impactos?",
         "alternativas": {
             "A": "Juntá-la com outros resíduos sem separar os materiais",
