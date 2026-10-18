@@ -136,23 +136,26 @@ def aplicar_css():
         }
 
         /* =========================================
-           IMAGEM (NATIVA E OTIMIZADA)
+           IMAGEM (NATIVA, OTIMIZADA E CENTRALIZADA)
         ========================================= */
 
-        /* O st.image cria essa div invisível por padrão */
+        /* Força o container do Streamlit a centralizar a imagem */
         div[data-testid="stImage"] {
-            width: fit-content !important;
-            max-width: min(1000px, 100%) !important;
+            display: flex !important;
+            justify-content: center !important;
+            width: 100% !important;
             margin: 0 auto 22px auto !important;
+        }
+
+        /* Aplica a borda bonitinha diretamente na imagem */
+        div[data-testid="stImage"] img {
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 24px;
-            overflow: hidden;
             box-shadow: 0 8px 28px rgba(0,0,0,0.10);
-        }
-
-        div[data-testid="stImage"] img {
             max-height: 85vh;
+            max-width: min(1000px, 100%);
+            height: auto;
             object-fit: contain;
             display: block;
         }
@@ -256,8 +259,7 @@ def aplicar_css():
         @media (max-width: 768px) {
             .main-container { padding: 10px 10px 30px 10px; }
             .titulo { font-size: 2.2rem; }
-            .imagem-container { border-radius: 16px; margin-bottom: 16px; }
-            .imagem-container img { max-height: 70vh; }
+            div[data-testid="stImage"] img { border-radius: 16px; }
             .stButton button {
                 font-size: 0.8rem !important;
                 padding: 14px 20px !important;
@@ -330,7 +332,7 @@ def ir_para_cena(cena_id):
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
     st.session_state.quiz_finalizado = False
-    st.rerun() # Devolvido para transição instantânea
+    st.rerun()
 
 
 def reiniciar_historia():
@@ -339,7 +341,7 @@ def reiniciar_historia():
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
     st.session_state.quiz_finalizado = False
-    st.rerun() # Devolvido para transição instantânea
+    st.rerun()
 
 
 def _checar_reset_via_url():
