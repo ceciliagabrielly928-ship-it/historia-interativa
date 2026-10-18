@@ -51,6 +51,7 @@ def caminho_imagem(caminho):
     return None
 
 
+@st.cache_data(show_spinner=False)
 def imagem_data_uri(caminho):
     arquivo = caminho_imagem(caminho)
 
@@ -162,11 +163,12 @@ def aplicar_css():
         }
 
         /* =========================================
-           IMAGEM
+           IMAGEM (AJUSTADA PARA FIT-CONTENT)
         ========================================= */
 
         .imagem-container {
-            width: min(1000px, 100%);
+            width: fit-content;
+            max-width: min(1000px, 100%);
             margin: 0 auto 22px auto;
             background: #ffffff;
             border: 1px solid #e5e5e5;
@@ -176,10 +178,9 @@ def aplicar_css():
         }
 
         .imagem-container img {
-            width: 100%;
+            max-width: 100%;
             max-height: 85vh;
             height: auto;
-            object-fit: contain;
             display: block;
             margin: 0 auto;
         }
@@ -304,7 +305,7 @@ def aplicar_css():
 PERGUNTAS_QUIZ = [
     {
         "pergunta":
-            "Karla mostra a garrafa de PET encontrada pelos amigos e pergunta: "
+            "Camila mostra a garrafa de PET encontrada pelos amigos e pergunta: "
             "qual decisão ajuda a dar um destino correto ao material e evita que "
             "ele permaneça no ambiente causando impactos?",
         "alternativas": {
@@ -357,7 +358,7 @@ def ir_para_cena(cena_id):
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
     st.session_state.quiz_finalizado = False
-    st.rerun()
+    # Removido o st.rerun() para melhorar a performance
 
 
 def reiniciar_historia():
@@ -366,7 +367,7 @@ def reiniciar_historia():
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
     st.session_state.quiz_finalizado = False
-    st.rerun()
+    # Removido o st.rerun() para melhorar a performance
 
 
 def _checar_reset_via_url():
@@ -573,8 +574,6 @@ def renderizar_quiz(numero_pergunta):
                         if letra == pergunta["correta"]:
                             st.session_state.quiz_pontuacao += 1
 
-                        st.rerun()
-
                 else:
 
                     resposta_dada = st.session_state.quiz_resposta_dada
@@ -721,10 +720,10 @@ def renderizar_desafio_plasticos():
     }
 
     /* =========================================
-       CAIXA DA KARLA
+       CAIXA DA CAMILA
     ========================================= */
 
-    .karla {
+    .camila {
         background: #faf7f0;
         border-left: 4px solid #d4b04d;
         border-radius: 14px;
@@ -735,7 +734,7 @@ def renderizar_desafio_plasticos():
         font-family: Arial, sans-serif;
         color: #333333;
     }
-    .karla strong {
+    .camila strong {
         display: block;
         margin-bottom: 6px;
         font-size: 13px;
@@ -874,9 +873,6 @@ def renderizar_desafio_plasticos():
 
     /* =========================================
        BOTÃO RECOMEÇAR — MESMO ESTILO DO QUIZ
-       (aqui ele NÃO tem display:none porque já
-        fica dentro do .final, que controla a
-        visibilidade)
     ========================================= */
 
     .btn-recomecar {
@@ -921,8 +917,8 @@ def renderizar_desafio_plasticos():
         <div class="desafio-linha"></div>
     </div>
 
-    <div class="karla">
-    <strong>KARLA:</strong>
+    <div class="camila">
+    <strong>CAMILA:</strong>
     "Esses números não estão aqui por acaso. Cada um representa um tipo de plástico. Use as pistas para descobrir qual é qual!"
     </div>
 
@@ -1052,6 +1048,7 @@ def renderizar_desafio_plasticos():
     """
 
     components.html(html_desafio, height=1000, scrolling=True)
+
 
 # =========================================================
 # DESAFIO — POLÍMERO (LACUNA / PREENCHER)
@@ -1574,7 +1571,7 @@ if cena.get("tipo") == "inicio":
         st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
         if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
             st.session_state.cena_atual = "pagina_01"
-            st.rerun()
+            # st.rerun() removido para performance
         st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -1634,7 +1631,7 @@ elif cena.get("tipo") == "final":
 
     if cena.get("mensagem"):
         st.markdown(
-            f'<p class="mensagem">✦ {cena["mensagem"]} ✦</p>',
+            f'<p class="mensagem">{cena["mensagem"]}</p>',
             unsafe_allow_html=True
         )
 
