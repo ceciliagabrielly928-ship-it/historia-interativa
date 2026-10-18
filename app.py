@@ -139,16 +139,19 @@ def aplicar_css():
            IMAGEM (NATIVA, OTIMIZADA E CENTRALIZADA)
         ========================================= */
 
-        /* Força o container do Streamlit a centralizar a imagem */
+        /* 1. Transforma o container do Streamlit em um flexbox para centralizar */
         div[data-testid="stImage"] {
             display: flex !important;
             justify-content: center !important;
+            align-items: center !important;
             width: 100% !important;
             margin: 0 auto 22px auto !important;
         }
 
-        /* Aplica a borda bonitinha diretamente na imagem */
+        /* 2. Aplica o visual e força a imagem a se centralizar dentro do flexbox */
         div[data-testid="stImage"] img {
+            display: block !important;
+            margin: 0 auto !important;
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 24px;
@@ -157,7 +160,6 @@ def aplicar_css():
             max-width: min(1000px, 100%);
             height: auto;
             object-fit: contain;
-            display: block;
         }
 
         /* =========================================
@@ -345,10 +347,6 @@ def reiniciar_historia():
 
 
 def _checar_reset_via_url():
-    """
-    Permite que botões DENTRO dos iframes (components.html)
-    acionem um recomeço de história via query param ?reset=1.
-    """
     try:
         reset = st.query_params.get("reset")
     except Exception:
