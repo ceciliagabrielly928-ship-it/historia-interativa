@@ -7,7 +7,6 @@ import streamlit as st
 import streamlit.components.v1 as components
 from story import HISTORY, get_cena
 from pathlib import Path
-import base64
 
 
 # =========================================================
@@ -51,42 +50,16 @@ def caminho_imagem(caminho):
     return None
 
 
-@st.cache_data(show_spinner=False)
-def imagem_data_uri(caminho):
+def renderizar_imagem(caminho, alt="Imagem da história"):
     arquivo = caminho_imagem(caminho)
 
     if arquivo is None:
-        return None
-
-    mime = {
-        ".png": "image/png",
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".webp": "image/webp",
-        ".gif": "image/gif"
-    }.get(arquivo.suffix.lower(), "application/octet-stream")
-
-    dados = base64.b64encode(arquivo.read_bytes()).decode("ascii")
-
-    return f"data:{mime};base64,{dados}"
-
-
-def renderizar_imagem(caminho, alt="Imagem da história"):
-    uri = imagem_data_uri(caminho)
-
-    if uri is None:
         st.error(f"Imagem não encontrada: {caminho}")
         return False
 
-    st.markdown(
-        f"""
-        <div class="imagem-container">
-            <img src="{uri}" alt="{alt}">
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
+    # O st.image nativo é muito mais rápido que a conversão para Base64
+    st.image(str(arquivo), use_container_width=False)
+    
     return True
 
 
@@ -163,13 +136,14 @@ def aplicar_css():
         }
 
         /* =========================================
-           IMAGEM (AJUSTADA PARA FIT-CONTENT)
+           IMAGEM (NATIVA E OTIMIZADA)
         ========================================= */
 
-        .imagem-container {
-            width: fit-content;
-            max-width: min(1000px, 100%);
-            margin: 0 auto 22px auto;
+        /* O st.image cria essa div invisível por padrão */
+        div[data-testid="stImage"] {
+            width: fit-content !important;
+            max-width: min(1000px, 100%) !important;
+            margin: 0 auto 22px auto !important;
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 24px;
@@ -177,12 +151,10 @@ def aplicar_css():
             box-shadow: 0 8px 28px rgba(0,0,0,0.10);
         }
 
-        .imagem-container img {
-            max-width: 100%;
+        div[data-testid="stImage"] img {
             max-height: 85vh;
-            height: auto;
+            object-fit: contain;
             display: block;
-            margin: 0 auto;
         }
 
         /* =========================================
@@ -358,7 +330,7 @@ def ir_para_cena(cena_id):
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
     st.session_state.quiz_finalizado = False
-    # Removido o st.rerun() para melhorar a performance
+    st.rerun() # Devolvido para transição instantânea
 
 
 def reiniciar_historia():
@@ -367,7 +339,7 @@ def reiniciar_historia():
     st.session_state.quiz_respondeu = False
     st.session_state.quiz_resposta_dada = None
     st.session_state.quiz_finalizado = False
-    # Removido o st.rerun() para melhorar a performance
+    st.rerun() # Devolvido para transição instantânea
 
 
 def _checar_reset_via_url():
@@ -574,6 +546,8 @@ def renderizar_quiz(numero_pergunta):
                         if letra == pergunta["correta"]:
                             st.session_state.quiz_pontuacao += 1
 
+                        st.rerun()
+
                 else:
 
                     resposta_dada = st.session_state.quiz_resposta_dada
@@ -673,10 +647,6 @@ def renderizar_desafio_plasticos():
         padding: 10px;
     }
 
-    /* =========================================
-       CARD ARREDONDADO — IGUAL AO DO QUIZ
-    ========================================= */
-
     .container {
         width: 100%;
         max-width: 1000px;
@@ -687,10 +657,6 @@ def renderizar_desafio_plasticos():
         padding: 40px 50px 45px;
         box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
     }
-
-    /* =========================================
-       HEADER PADRONIZADO — DESAFIO + LINHA DOURADA
-    ========================================= */
 
     .desafio-header {
         display: flex;
@@ -718,10 +684,6 @@ def renderizar_desafio_plasticos():
         border-radius: 3px;
         margin: 0 auto;
     }
-
-    /* =========================================
-       CAIXA DA CAMILA
-    ========================================= */
 
     .camila {
         background: #faf7f0;
@@ -870,10 +832,6 @@ def renderizar_desafio_plasticos():
         font-family: Arial, sans-serif;
         color: #333;
     }
-
-    /* =========================================
-       BOTÃO RECOMEÇAR — MESMO ESTILO DO QUIZ
-    ========================================= */
 
     .btn-recomecar {
         margin: 26px auto 0 auto;
@@ -1072,10 +1030,6 @@ def renderizar_desafio_polimero():
         padding: 10px;
     }
 
-    /* =========================================
-       CARD ARREDONDADO — IGUAL AO DO QUIZ
-    ========================================= */
-
     .container {
         width: 100%;
         max-width: 720px;
@@ -1087,10 +1041,6 @@ def renderizar_desafio_polimero():
         box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
         text-align: center;
     }
-
-    /* =========================================
-       HEADER PADRONIZADO — DESAFIO + LINHA DOURADA
-    ========================================= */
 
     .desafio-header {
         display: flex;
@@ -1119,10 +1069,6 @@ def renderizar_desafio_polimero():
         margin: 0 auto;
     }
 
-    /* =========================================
-       TEXTO DO DESAFIO COM LACUNA
-    ========================================= */
-
     .texto-desafio {
         font-size: 17px;
         line-height: 1.9;
@@ -1143,10 +1089,6 @@ def renderizar_desafio_polimero():
         height: 1.1em;
         vertical-align: middle;
     }
-
-    /* =========================================
-       BOTÃO DICA
-    ========================================= */
 
     .btn-dica {
         background-color: #222222;
@@ -1182,10 +1124,6 @@ def renderizar_desafio_polimero():
         font-family: Arial, sans-serif;
     }
 
-    /* =========================================
-       INPUT DE RESPOSTA
-    ========================================= */
-
     .input-resposta {
         width: 100%;
         max-width: 560px;
@@ -1215,10 +1153,6 @@ def renderizar_desafio_polimero():
         cursor: not-allowed;
     }
 
-    /* =========================================
-       BOTÃO RESPONDER
-    ========================================= */
-
     .btn-acao {
         background-color: #222222;
         color: #ffffff;
@@ -1246,11 +1180,6 @@ def renderizar_desafio_polimero():
         min-height: 24px;
         font-family: Arial, sans-serif;
     }
-
-    /* =========================================
-       BOTÃO RECOMEÇAR — MESMO ESTILO DO QUIZ
-       (só aparece após acertar)
-    ========================================= */
 
     .btn-recomecar {
         display: none;
@@ -1571,7 +1500,7 @@ if cena.get("tipo") == "inicio":
         st.markdown('<div class="btn-comecar">', unsafe_allow_html=True)
         if st.button("▶ COMEÇAR", key="comecar", use_container_width=True):
             st.session_state.cena_atual = "pagina_01"
-            # st.rerun() removido para performance
+            st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
 
 
