@@ -22,7 +22,7 @@ st.set_page_config(
 
 
 # =========================================================
-# IMAGENS
+# IMAGENS (RÁPIDO E SEM BASE64)
 # =========================================================
 
 def caminho_imagem(caminho):
@@ -57,7 +57,7 @@ def renderizar_imagem(caminho, alt="Imagem da história"):
         st.error(f"Imagem não encontrada: {caminho}")
         return False
 
-    # O st.image nativo é muito mais rápido que a conversão para Base64
+    # st.image nativo (rápido) com container falso para não esticar
     st.image(str(arquivo), use_container_width=False)
     
     return True
@@ -136,22 +136,20 @@ def aplicar_css():
         }
 
         /* =========================================
-           IMAGEM (NATIVA, OTIMIZADA E CENTRALIZADA)
+           A SOLUÇÃO DEFINITIVA PARA A IMAGEM
         ========================================= */
 
-        /* 1. Transforma o container do Streamlit em um flexbox para centralizar */
+        /* 1. Transforma a div invisível do Streamlit numa caixa de texto comum */
         div[data-testid="stImage"] {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
+            display: block !important;
+            text-align: center !important;
             width: 100% !important;
             margin: 0 auto 22px auto !important;
         }
 
-        /* 2. Aplica o visual e força a imagem a se centralizar dentro do flexbox */
+        /* 2. A imagem vira "inline-block" e o texto centraliza ela */
         div[data-testid="stImage"] img {
-            display: block !important;
-            margin: 0 auto !important;
+            display: inline-block !important;
             background: #ffffff;
             border: 1px solid #e5e5e5;
             border-radius: 24px;
