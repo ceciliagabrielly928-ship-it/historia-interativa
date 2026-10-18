@@ -312,7 +312,6 @@ def aplicar_css():
 PERGUNTAS_QUIZ = [
     {
         "pergunta":
-            "Camila mostra a garrafa de PET encontrada pelos amigos e pergunta: "
             "qual decisão ajuda a dar um destino correto ao material e evita que "
             "ele permaneça no ambiente causando impactos?",
         "alternativas": {
